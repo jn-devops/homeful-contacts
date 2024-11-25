@@ -30,6 +30,8 @@ const showingNavigationDropdown = ref(false);
                             </div>
 
                             <!-- Navigation Links -->
+
+                            <!-- Dashboard -->
                             <div
                                 class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex"
                             >
@@ -38,6 +40,54 @@ const showingNavigationDropdown = ref(false);
                                     :active="route().current('dashboard')"
                                 >
                                     Dashboard
+                                </NavLink>
+                            </div>
+
+                            <!-- Personal -->
+                            <div
+                                class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex"
+                            >
+                                <NavLink
+                                    :href="route('personal.edit')"
+                                    :active="route().current('personal.edit')"
+                                >
+                                    Personal
+                                </NavLink>
+                            </div>
+
+                            <!-- Spouse -->
+                            <div
+                                class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex"
+                            >
+                                <NavLink
+                                    :href="route('spouse')"
+                                    :active="route().current('spouse')"
+                                >
+                                    Spouse
+                                </NavLink>
+                            </div>
+
+                            <!-- AIF -->
+                            <div
+                                class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex"
+                            >
+                                <NavLink
+                                    :href="route('aif')"
+                                    :active="route().current('aif')"
+                                >
+                                    AIF
+                                </NavLink>
+                            </div>
+
+                            <!-- Co-borrower -->
+                            <div
+                                class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex"
+                            >
+                                <NavLink
+                                    :href="route('co-borrower')"
+                                    :active="route().current('co-borrower')"
+                                >
+                                    Co-Borrower
                                 </NavLink>
                             </div>
                         </div>

@@ -1,0 +1,160 @@
+<script setup>
+import InputError from '@/Components/InputError.vue';
+import InputLabel from '@/Components/InputLabel.vue';
+import PrimaryButton from '@/Components/PrimaryButton.vue';
+import TextInput from '@/Components/TextInput.vue';
+import { Link, useForm, usePage } from '@inertiajs/vue3';
+
+defineProps({
+    mustVerifyEmail: {
+        type: Boolean,
+    },
+    status: {
+        type: String,
+    },
+});
+
+const user = usePage().props.auth.user;
+
+const form = useForm({
+    first_name: user.contact?.first_name,
+    middle_name: user.contact?.middle_name,
+    last_name: user.contact?.last_name,
+    civil_status: user.contact?.civil_status,
+    sex: user.contact?.sex,
+    nationality: user.contact?.nationality,
+    date_of_birth: user.contact?.date_of_birth
+})
+</script>
+
+<template>
+    <section>
+<!--        <header>-->
+<!--            <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">-->
+<!--                Personal Information-->
+<!--            </h2>-->
+
+<!--            <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">-->
+<!--                Update your personal information.-->
+<!--            </p>-->
+<!--        </header>-->
+
+        <form
+            @submit.prevent="form.patch(route('personal.update'))"
+            class="mt-6 space-y-6"
+        >
+            <div>
+                <InputLabel for="first_name" value="First Name" />
+
+                <TextInput
+                    id="first_name"
+                    type="text"
+                    class="mt-1 block w-full"
+                    v-model="form.first_name"
+                    required
+                    autofocus
+                />
+
+                <InputError class="mt-2" :message="form.errors.first_name" />
+            </div>
+
+            <div>
+                <InputLabel for="middle_name" value="Middle Name" />
+
+                <TextInput
+                    id="middle_name"
+                    type="text"
+                    class="mt-1 block w-full"
+                    v-model="form.middle_name"
+                    required
+                />
+
+                <InputError class="mt-2" :message="form.errors.middle_name" />
+            </div>
+
+            <div>
+                <InputLabel for="last_name" value="Last Name" />
+
+                <TextInput
+                    id="last_name"
+                    type="text"
+                    class="mt-1 block w-full"
+                    v-model="form.last_name"
+                    required
+                />
+
+                <InputError class="mt-2" :message="form.errors.last_name" />
+            </div>
+
+            <div>
+                <InputLabel for="civil_status" value="Civil Status" />
+
+                <TextInput
+                    id="civil_status"
+                    type="text"
+                    class="mt-1 block w-full"
+                    v-model="form.civil_status"
+                />
+
+                <InputError class="mt-2" :message="form.errors.civil_status" />
+            </div>
+
+            <div>
+                <InputLabel for="sex" value="Sex" />
+
+                <TextInput
+                    id="sex"
+                    type="text"
+                    class="mt-1 block w-full"
+                    v-model="form.sex"
+                />
+
+                <InputError class="mt-2" :message="form.errors.sex" />
+            </div>
+
+            <div>
+                <InputLabel for="nationality" value="Nationality" />
+
+                <TextInput
+                    id="nationality"
+                    type="text"
+                    class="mt-1 block w-full"
+                    v-model="form.nationality"
+                />
+
+                <InputError class="mt-2" :message="form.errors.nationality" />
+            </div>
+
+            <div>
+                <InputLabel for="date_of_birth" value="Date of Birth" />
+
+                <TextInput
+                    id="date_of_birth"
+                    type="date"
+                    class="mt-1 block w-full"
+                    v-model="form.date_of_birth"
+                />
+
+                <InputError class="mt-2" :message="form.errors.date_of_birth" />
+            </div>
+
+            <div class="flex items-center gap-4">
+                <PrimaryButton :disabled="form.processing">Save</PrimaryButton>
+
+                <Transition
+                    enter-active-class="transition ease-in-out"
+                    enter-from-class="opacity-0"
+                    leave-active-class="transition ease-in-out"
+                    leave-to-class="opacity-0"
+                >
+                    <p
+                        v-if="form.recentlySuccessful"
+                        class="text-sm text-gray-600 dark:text-gray-400"
+                    >
+                        Saved.
+                    </p>
+                </Transition>
+            </div>
+        </form>
+    </section>
+</template>

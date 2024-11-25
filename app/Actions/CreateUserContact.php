@@ -2,14 +2,16 @@
 
 namespace App\Actions;
 
+use App\Enums\CivilStatus;
 use Homeful\References\Facades\References;
+use Illuminate\Validation\Rule;
 use Lorisleiva\Actions\Concerns\AsAction;
 use Illuminate\Support\Facades\Validator;
 use Homeful\References\Models\Reference;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Hash;
-use Homeful\Contacts\Models\Contact;
-use Illuminate\Support\{Arr, Str};
+use Illuminate\Support\Str;
+use App\Models\Contact;
 use App\Models\User;
 
 class CreateUserContact
@@ -29,7 +31,7 @@ class CreateUserContact
 
         $validator = Validator::make($attribs, [
             'middle_name' => ['required', 'string'],
-            'civil_status' => ['required', 'string'],
+            'civil_status' => ['required', Rule::enum(CivilStatus::class)],
             'sex' => ['required', 'string'],
             'nationality' => ['required', 'string'],
             'date_of_birth' => ['required', 'string'],

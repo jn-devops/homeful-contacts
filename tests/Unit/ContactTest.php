@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Foundation\Testing\{RefreshDatabase, WithFaker};
-use Homeful\Contacts\Models\Contact;
+use App\Models\Contact;
 
 uses(RefreshDatabase::class, WithFaker::class);
 
@@ -13,9 +13,9 @@ test('contact has minimum attributes', function () {
         'mobile' => '09181234567',
 
         'middle_name' => $this->faker->lastName(), //should be  optional
-        'civil_status' => $this->faker->word(),
-        'sex' => $this->faker->word(),
-        'nationality' => $this->faker->word(),
+        'civil_status' => \App\Enums\CivilStatus::random()->value,
+        'sex' => \App\Enums\Sex::random()->value,
+        'nationality' => \App\Enums\Nationality::random()->value,
         'date_of_birth' => $this->faker->date(),
     ]);
 

@@ -2,7 +2,7 @@
 
 use Illuminate\Foundation\Testing\{RefreshDatabase, WithFaker};
 use App\Actions\CreateUserContact;
-use App\Models\User;
+use App\Models\{Contact, User};
 
 uses(RefreshDatabase::class, WithFaker::class);
 
@@ -14,22 +14,22 @@ test('create contact user works', function () {
         'mobile' => '09171234567',
 
         'middle_name' => $middle_name = $this->faker->lastName(),
-        'civil_status' => $civil_status = $this->faker->word(),
-        'sex' => $sex = $this->faker->word(),
-        'nationality' => $nationality = $this->faker->word(),
+        'civil_status' => $civil_status = \App\Enums\CivilStatus::random()->value,
+        'sex' => $sex = \App\Enums\Sex::random()->value,
+        'nationality' => $nationality = \App\Enums\Nationality::random()->value,
         'date_of_birth' => $date_of_birth = $this->faker->date(),
     ];
 
    $reference = app(CreateUserContact::class)->run($attribs);
    $user = User::where('email', $email)->firstOrFail();
 
-    expect($reference->getContact()->is($user->contact))->toBeTrue();
+    expect($reference->getEntities(Contact::class)->first()->is($user->contact))->toBeTrue();
 
     expect($user->contact->first_name)->toBe($first_name);
     expect($user->contact->middle_name)->toBe($middle_name);
     expect($user->contact->last_name)->toBe($last_name);
-    expect($user->contact->civil_status)->toBe($civil_status);
-    expect($user->contact->sex)->toBe($sex);
-    expect($user->contact->nationality)->toBe($nationality);
+    expect($user->contact->civil_status)->toBe(\App\Enums\CivilStatus::from($civil_status));
+    expect($user->contact->sex)->toBe(\App\Enums\Sex::from($sex));
+    expect($user->contact->nationality)->toBe(\App\Enums\Nationality::from($nationality));
     expect($user->contact->date_of_birth->format('Y-m-d'))->toBe($date_of_birth);
 });
