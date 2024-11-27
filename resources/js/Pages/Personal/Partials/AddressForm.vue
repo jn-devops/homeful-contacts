@@ -46,7 +46,7 @@ const form = useForm({
             class="mt-6 space-y-6"
         >
             <h3 class="font-sans text-l text-gray-800 dark:text-gray-300 leading-tight">
-                {{ props.address_type }}
+                {{ props.address_type }} Address
             </h3>
 
             <div>
@@ -124,7 +124,7 @@ const form = useForm({
                 <InputLabel for="region" value="Region" />
 
                 <TextInput
-                    id="postal_code"
+                    id="region"
                     type="text"
                     class="mt-1 block w-full"
                     v-model="form.region"

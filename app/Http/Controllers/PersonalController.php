@@ -19,7 +19,9 @@ class PersonalController extends Controller
      */
     public function edit(Request $request): Response
     {
-        return Inertia::render('Personal/Edit', []);
+        return Inertia::render('Personal/Edit', [
+            'contact' => $request->user()->contact
+        ]);
     }
 
     /**

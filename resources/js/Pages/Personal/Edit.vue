@@ -29,6 +29,7 @@ const props = defineProps({
                     class="bg-white p-4 shadow sm:rounded-lg sm:p-8 dark:bg-gray-800"
                 >
                     <PersonalInformationForm
+                        :contact = "contact"
                         class="max-w-xl"
                     />
 

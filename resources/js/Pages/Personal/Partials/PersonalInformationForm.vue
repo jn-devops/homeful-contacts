@@ -3,18 +3,20 @@ import PrimaryButton from '@/Components/PrimaryButton.vue';
 import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import TextInput from '@/Components/TextInput.vue';
-import { useForm, usePage } from '@inertiajs/vue3';
+import { useForm } from '@inertiajs/vue3';
 
-const user = usePage().props.auth.user;
+const props = defineProps({
+    contact: Object,
+});
 
 const form = useForm({
-    first_name: user.contact?.first_name,
-    middle_name: user.contact?.middle_name,
-    last_name: user.contact?.last_name,
-    civil_status: user.contact?.civil_status,
-    sex: user.contact?.sex,
-    nationality: user.contact?.nationality,
-    date_of_birth: user.contact?.date_of_birth
+    first_name: props.contact?.first_name,
+    middle_name: props.contact?.middle_name,
+    last_name: props.contact?.last_name,
+    civil_status: props.contact?.civil_status,
+    sex: props.contact?.sex,
+    nationality: props.contact?.nationality,
+    date_of_birth: props.contact?.date_of_birth
 })
 </script>
 
