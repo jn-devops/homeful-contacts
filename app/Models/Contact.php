@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use Homeful\Contacts\Models\Contact as BaseContact;
-use App\Enums\{CivilStatus, Nationality, Sex};
+use App\Enums\{AddressType, CivilStatus, Nationality, Sex};
 use DateTimeInterface;
 
 class Contact extends BaseContact
@@ -18,7 +18,8 @@ class Contact extends BaseContact
         return [
             'sex' => Sex::class,
             'civil_status' => CivilStatus::class,
-            'nationality' => Nationality::class
+            'nationality' => Nationality::class,
+            'addresses.*.type' => AddressType::class
         ];
     }
 }

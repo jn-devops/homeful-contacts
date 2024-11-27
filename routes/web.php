@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\{PersonalController, ProfileController};
+use App\Http\Controllers\{AddressController, PersonalController, ProfileController};
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -41,6 +41,9 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/personal', [PersonalController::class, 'edit'])->name('personal.edit');
     Route::patch('/personal', [PersonalController::class, 'update'])->name('personal.update');
+
+    Route::get('/address', [AddressController::class, 'edit'])->name('personal.edit');
+    Route::patch('/address', [AddressController::class, 'update'])->name('address.update');
 });
 
 
