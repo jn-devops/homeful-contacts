@@ -9,13 +9,10 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Inertia\Response;
 use Inertia\Inertia;
-
+use Spatie\LaravelData\DataCollection;
 
 class AddressController extends Controller
 {
-    /**
-     * Display the contact's personal information form.
-     */
     public function edit(Request $request): Response
     {
         return Inertia::render('Personal/Edit', [
@@ -23,32 +20,53 @@ class AddressController extends Controller
         ]);
     }
 
-    /**
-     * Update the user's profile information.
-     */
     public function update(AddressUpdateRequest $request): RedirectResponse
     {
         $user = $request->user();
 
-        $records = [];
-        foreach ((array) $user->contact->addresses as $address){
-            $type = $address['type'];
-            $records[$type] = $address;
-        }
+        $records = $user->contact?->addresses?->toCollection()?->mapWithKeys(function ($item) {
+            return [$item->type->value => $item];
+        })->toArray() ?? [];
 
         $data = $request->validated();
         $type = $data['type'];
         $records[$type] = $data;
 
-        $addresses = [];
-        foreach($records as $type => $address){
-            $addresses [] = $address;
+        $address_records = [];
+        foreach($records as $type => $address_record){
+            $address_records [] = $address_record;
         }
 
-        $user->contact->update(['addresses' => $addresses]);
+        $user->contact->update(['addresses' => $address_records]);
         $user->contact->save();
         $user->save();
 
         return Redirect::route('personal.edit');
     }
+
+//    public function update(AddressUpdateRequest $request): RedirectResponse
+//    {
+//        $user = $request->user();
+//
+//        $records = [];
+//        foreach ((array) $user->contact->addresses as $address){
+//            $type = $address['type'];
+//            $records[$type] = $address;
+//        }
+//
+//        $data = $request->validated();
+//        $type = $data['type'];
+//        $records[$type] = $data;
+//
+//        $address_records = [];
+//        foreach($records as $type => $address_record){
+//            $address_records [] = $address_record;
+//        }
+//
+//        $user->contact->update(['addresses' => $address_records]);
+//        $user->contact->save();
+//        $user->save();
+//
+//        return Redirect::route('personal.edit');
+//    }
 }

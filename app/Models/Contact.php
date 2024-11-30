@@ -2,8 +2,11 @@
 
 namespace App\Models;
 
+use App\Enums\{AddressType, CivilStatus, Employment, EmploymentStatus, EmploymentType, Nationality, Sex};
+use App\Classes\EmploymentMetadata;
 use Homeful\Contacts\Models\Contact as BaseContact;
-use App\Enums\{AddressType, CivilStatus, Nationality, Sex};
+use Spatie\LaravelData\DataCollection;
+use App\Classes\AddressMetadata;
 use DateTimeInterface;
 
 class Contact extends BaseContact
@@ -19,7 +22,8 @@ class Contact extends BaseContact
             'sex' => Sex::class,
             'civil_status' => CivilStatus::class,
             'nationality' => Nationality::class,
-            'addresses.*.type' => AddressType::class
+            'addresses' => DataCollection::class . ':' . AddressMetadata::class,
+            'employment' => DataCollection::class . ':' . EmploymentMetadata::class,
         ];
     }
 }

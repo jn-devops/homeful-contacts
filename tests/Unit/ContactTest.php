@@ -43,15 +43,26 @@ test('contact can accept addresses', function (Contact $contact) {
     $contact->addresses = [
         [
             'type' => \App\Enums\AddressType::default(),
-            'ownership' => $this->faker->word(),
+            'ownership' => \App\Enums\Ownership::random(),
             'address1' => $this->faker->address(),
             'locality' => $this->faker->city(),
             'administrative_area' => $this->faker->randomElement(['NCR', 'Metro Manila', 'Cebu']),
             'postal_code' => $this->faker->postcode(),
             'region' => $this->faker->word(),
             'country' => 'PH',
-            ]
+        ]
     ];
-    dd($contact->addresses[0]);
-    dd(collect($contact->addresses)->groupBy('type'));
+    dd($contact->addresses->first()->type);
+    $address = $contact->addresses->where('type', \App\Enums\AddressType::PRIMARY->value)->first();
+    dd($address);
+    $address = array_shift($addresses);
+    dd($address['type']);
+})->with('contact');
+
+test('contact can accept employment', function (Contact $contact) {
+    $contact->employment = [
+        [
+            'type' => \App\Enums\Employment::default(),
+        ]
+    ];
 })->with('contact');

@@ -4,13 +4,12 @@ namespace App\Enums;
 
 use App\Traits\EnumUtils;
 
-enum AddressType: string
+enum Employment: string
 {
     use EnumUtils;
 
     case PRIMARY = 'Primary';
-    case SECONDARY = 'Secondary';
-    case WORK = 'Work';//Employer Address is probably better
+    case SPOUSE = 'Spouse';
 
     static function default(): self {
         return self::PRIMARY;

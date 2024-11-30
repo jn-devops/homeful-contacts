@@ -3,6 +3,7 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head } from '@inertiajs/vue3';
 import UpdateProfileInformationForm from "@/Pages/Profile/Partials/UpdateProfileInformationForm.vue";
 import PersonalInformationForm from "@/Pages/Personal/Partials/PersonalInformationForm.vue";
+import EmploymentForm from "@/Pages/Personal/Partials/EmploymentForm.vue";
 import AddressForm from "@/Pages/Personal/Partials/AddressForm.vue";
 import SectionBorder from "@/Components/SectionBorder.vue";
 
@@ -46,6 +47,22 @@ const props = defineProps({
                     <AddressForm
                         :contact = "contact"
                         address_type = "Secondary"
+                        class="max-w-xl"
+                    />
+
+                    <SectionBorder/>
+
+                    <EmploymentForm
+                        :contact = "contact"
+                        employment_type = "Primary"
+                        class="max-w-xl"
+                    />
+
+                    <SectionBorder/>
+
+                    <EmploymentForm
+                        :contact = "contact"
+                        employment_type = "Spouse"
                         class="max-w-xl"
                     />
                 </div>
