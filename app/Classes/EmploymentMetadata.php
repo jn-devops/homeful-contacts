@@ -13,6 +13,7 @@ class EmploymentMetadata extends Data
         public EmploymentType $employment_type,
         public float $monthly_gross_income,
         public string $current_position,
-        public EmployerMetadata|null $employer
+        public EmployerMetadata|null $employer,
+        public IdMetadata|null $id
     ) {}
 }

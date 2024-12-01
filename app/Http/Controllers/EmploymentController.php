@@ -3,11 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\EmploymentUpdateRequest;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use Inertia\Response;
 use Inertia\Inertia;
 
@@ -58,6 +57,15 @@ class EmploymentController extends Controller
             Arr::set($data, 'employer.address.region', $employer_address_region);
             $employer_address_country = Arr::pull($data, 'employer_address_country');
             Arr::set($data, 'employer.address.country', $employer_address_country);
+
+            $tin = Arr::pull($data, 'tin');
+            Arr::set($data, 'id.tin', $tin);
+            $pagibig = Arr::pull($data, 'pagibig');
+            Arr::set($data, 'id.pagibig', $pagibig);
+            $sss = Arr::pull($data, 'sss');
+            Arr::set($data, 'id.sss', $sss);
+            $gsis = Arr::pull($data, 'gsis');
+            Arr::set($data, 'id.gsis', $gsis);
         }
 
         $type = $data['type'];

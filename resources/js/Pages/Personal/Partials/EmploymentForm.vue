@@ -39,14 +39,19 @@ const form = useForm({
     employer_nationality: employment_record()?.employer?.nationality,
     employer_industry: employment_record()?.employer?.industry,
 
-    employer_address_type: employment_record()?.employer?.address?.type,
+    employer_address_type: employment_record()?.employer?.address?.type ?? 'Work',
     employer_address_ownership: employment_record()?.employer?.address?.ownership,
     employer_address_address1: employment_record()?.employer?.address?.address1,
     employer_address_locality: employment_record()?.employer?.address?.locality,
     employer_address_administrative_area: employment_record()?.employer?.address?.administrative_area,
     employer_address_postal_code: employment_record()?.employer?.address?.postal_code,
     employer_address_region: employment_record()?.employer?.address?.region,
-    employer_address_country: employment_record()?.employer?.address?.country ?? 'PH'
+    employer_address_country: employment_record()?.employer?.address?.country ?? 'PH',
+
+    tin: employment_record()?.id?.tin,
+    pagibig: employment_record()?.id?.pagibig,
+    sss: employment_record()?.id?.sss,
+    gsis: employment_record()?.id?.gsis,
 })
 </script>
 
@@ -182,7 +187,7 @@ const form = useForm({
                 <InputError class="mt-2" :message="form.errors.employer_industry" />
             </div>
 
-            //address
+<!--            address-->
 
             <div>
                 <InputLabel for="employer_address_type" value="Employer Address Type" />
@@ -287,6 +292,61 @@ const form = useForm({
                 />
 
                 <InputError class="mt-2" :message="form.errors.employer_address_country" />
+            </div>
+
+<!--            id-->
+
+            <div>
+                <InputLabel for="tin" value="TIN" />
+
+                <TextInput
+                    id="tin"
+                    type="text"
+                    class="mt-1 block w-full"
+                    v-model="form.tin"
+                    required
+                />
+
+                <InputError class="mt-2" :message="form.errors.tin" />
+            </div>
+
+            <div>
+                <InputLabel for="pagibig" value="Pag-IBIG" />
+
+                <TextInput
+                    id="pagibig"
+                    type="text"
+                    class="mt-1 block w-full"
+                    v-model="form.pagibig"
+                />
+
+                <InputError class="mt-2" :message="form.errors.pagibig" />
+            </div>
+
+            <div>
+                <InputLabel for="sss" value="SSS" />
+
+                <TextInput
+                    id="sss"
+                    type="text"
+                    class="mt-1 block w-full"
+                    v-model="form.sss"
+                />
+
+                <InputError class="mt-2" :message="form.errors.sss" />
+            </div>
+
+            <div>
+                <InputLabel for="gsis" value="GSIS" />
+
+                <TextInput
+                    id="gsis"
+                    type="text"
+                    class="mt-1 block w-full"
+                    v-model="form.gsis"
+                />
+
+                <InputError class="mt-2" :message="form.errors.gsis" />
             </div>
 
             <div class="flex items-center gap-4">

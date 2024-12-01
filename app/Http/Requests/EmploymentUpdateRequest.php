@@ -35,6 +35,11 @@ class EmploymentUpdateRequest extends FormRequest
             'employer_address_postal_code' => ['required_with:employer_address_type', 'string', 'max:25'],
             'employer_address_region' => ['required_with:employer_address_type', 'string', 'max:100'],
             'employer_address_country' => ['required_with:employer_address_type', 'string', 'max:100'],
+
+            'tin' => ['required', 'string', 'max:20'],
+            'pagibig' => ['nullable', 'string', 'max:20'],
+            'sss' => ['nullable', 'string', 'max:20'],
+            'gsis' => ['nullable', 'string', 'max:20'],
         ];
     }
 }

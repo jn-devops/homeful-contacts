@@ -2,9 +2,8 @@
 
 namespace App\Classes;
 
-use App\Enums\Industry;
+use App\Enums\{Industry, Nationality};
 use Spatie\LaravelData\Data;
-use App\Enums\Nationality;
 
 class EmployerMetadata extends Data
 {
