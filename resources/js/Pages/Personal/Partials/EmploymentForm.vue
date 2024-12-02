@@ -3,7 +3,7 @@ import PrimaryButton from '@/Components/PrimaryButton.vue';
 import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import TextInput from '@/Components/TextInput.vue';
-import { useForm } from '@inertiajs/vue3';
+import {useForm, usePage} from '@inertiajs/vue3';
 
 const props = defineProps({
     contact: Object,
@@ -77,6 +77,7 @@ const form = useForm({
                     autofocus
                 />
 
+                <div class="text-xs text-gray-600 dark:text-gray-400">{{ usePage().props.enums.employment_statuses.join(', ') }}</div>
                 <InputError class="mt-2" :message="form.errors.employment_status" />
             </div>
 
@@ -119,6 +120,7 @@ const form = useForm({
                     required
                 />
 
+                <div class="text-xs text-gray-600 dark:text-gray-400">{{ usePage().props.enums.employment_types.join(', ') }}</div>
                 <InputError class="mt-2" :message="form.errors.employment_type" />
             </div>
 
@@ -171,6 +173,7 @@ const form = useForm({
                     v-model="form.employer_nationality"
                 />
 
+                <div class="text-xs text-gray-600 dark:text-gray-400">{{ usePage().props.enums.nationalities.join(', ') }}</div>
                 <InputError class="mt-2" :message="form.errors.employer_nationality" />
             </div>
 
@@ -184,6 +187,7 @@ const form = useForm({
                     v-model="form.employer_industry"
                 />
 
+                <div class="text-xs text-gray-600 dark:text-gray-400">{{ usePage().props.enums.industries.join(', ') }}</div>
                 <InputError class="mt-2" :message="form.errors.employer_industry" />
             </div>
 

@@ -2,8 +2,16 @@
 
 namespace App\Http\Middleware;
 
-use App\Models\User;
 use Illuminate\Http\Request;
+use App\Enums\{AddressType,
+    CivilStatus,
+    Employment,
+    EmploymentStatus,
+    EmploymentType,
+    Industry,
+    Nationality,
+    Ownership,
+    Sex};
 use Inertia\Middleware;
 
 class HandleInertiaRequests extends Middleware
@@ -40,6 +48,17 @@ class HandleInertiaRequests extends Middleware
             'auth' => [
                 'user' => $user,
             ],
+            'enums' => [
+                'address_types' => AddressType::toArray(),
+                'employment_indices' => Employment::toArray(),
+                'civil_statuses' => CivilStatus::toArray(),
+                'sexes' => Sex::toArray(),
+                'nationalities' => Nationality::toArray(),
+                'ownerships' => Ownership::toArray(),
+                'employment_types' => EmploymentType::toArray(),
+                'employment_statuses' => EmploymentStatus::toArray(),
+                'industries' => Industry::toArray(),
+            ]
         ];
     }
 }

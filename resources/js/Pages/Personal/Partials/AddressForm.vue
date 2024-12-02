@@ -3,7 +3,7 @@ import PrimaryButton from '@/Components/PrimaryButton.vue';
 import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import TextInput from '@/Components/TextInput.vue';
-import { useForm } from '@inertiajs/vue3';
+import {useForm, usePage} from '@inertiajs/vue3';
 
 const props = defineProps({
     contact: Object,
@@ -61,6 +61,7 @@ const form = useForm({
                     autofocus
                 />
 
+                <div class="text-xs text-gray-600 dark:text-gray-400">{{ usePage().props.enums.ownerships.join(', ') }}</div>
                 <InputError class="mt-2" :message="form.errors.ownership" />
             </div>
 

@@ -11,8 +11,8 @@ trait EnumUtils
         $enums = self::cases(); return $enums[array_rand($enums)];
     }
 
-    static function toArray(): array {
-       return array_column(self::cases(), 'name');
+    static function toArray($column_key = 'value'): array {
+       return array_column(array: self::cases(), column_key: $column_key);
     }
 
     static function rule(): In
