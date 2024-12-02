@@ -2,15 +2,19 @@
 
 namespace App\Models;
 
-use App\Enums\{AddressType, CivilStatus, Employment, EmploymentStatus, EmploymentType, Nationality, Sex};
-use App\Classes\EmploymentMetadata;
 use Homeful\Contacts\Models\Contact as BaseContact;
-use Spatie\LaravelData\DataCollection;
-use App\Classes\AddressMetadata;
+use App\Classes\{AddressMetadata, ContactMetaData};
+use Spatie\LaravelData\{DataCollection, WithData};
+use App\Enums\{CivilStatus, Nationality, Sex};
+use App\Classes\EmploymentMetadata;
 use DateTimeInterface;
 
 class Contact extends BaseContact
 {
+    use WithData;
+
+    protected string $dataClass = ContactMetaData::class;
+
     protected function serializeDate(DateTimeInterface $date): string
     {
         return $date->format('Y-m-d');

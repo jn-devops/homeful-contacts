@@ -4,9 +4,12 @@ namespace App\Classes;
 
 use App\Enums\{Employment, EmploymentStatus, EmploymentType};
 use Spatie\LaravelData\Data;
+use App\Traits\WithAck;
 
 class EmploymentMetadata extends Data
 {
+    use WithAck;
+
     public function __construct(
         public Employment $type,
         public EmploymentStatus $employment_status,
