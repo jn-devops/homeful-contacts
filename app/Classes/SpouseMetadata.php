@@ -2,12 +2,11 @@
 
 namespace App\Classes;
 
-use Spatie\LaravelData\{Attributes\WithCast, Casts\DateTimeInterfaceCast, Data, DataCollection};
+use Spatie\LaravelData\{Data, DataCollection, Optional};
 use App\Enums\{CivilStatus, Nationality, Sex};
-use Illuminate\Support\Carbon;
 use App\Traits\WithAck;
 
-class ContactMetaData extends Data
+class SpouseMetadata extends Data
 {
     use WithAck;
 
@@ -17,17 +16,14 @@ class ContactMetaData extends Data
         public string $first_name,
         public string $middle_name,
         public string $last_name,
-        public string $email,
-        public string $mobile,
         public CivilStatus $civil_status,
         public Sex $sex,
         public Nationality $nationality,
-        #[WithCast(DateTimeInterfaceCast::class, timeZone: 'Asia/Manila')]
-        public Carbon $date_of_birth,
-        /** @var AddressMetadata[] */
-        public DataCollection $addresses,
+        public $date_of_birth,
         /** @var EmploymentMetadata[] */
-        public DataCollection $employment
+        public DataCollection|Optional $employment,
+        public ?string $email,
+        public ?string $mobile,
     ) {
         $this->name = implode(' ', array_filter([$this->first_name, $this->middle_name, $this->last_name]));
     }

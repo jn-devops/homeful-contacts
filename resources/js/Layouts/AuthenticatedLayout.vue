@@ -60,8 +60,8 @@ const showingNavigationDropdown = ref(false);
                                 class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex"
                             >
                                 <NavLink
-                                    :href="route('spouse')"
-                                    :active="route().current('spouse')"
+                                    :href="route('spouse.edit')"
+                                    :active="route().current('spouse.edit')"
                                 >
                                     Spouse
                                 </NavLink>

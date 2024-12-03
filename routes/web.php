@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\{AddressController, EmploymentController, PersonalController, ProfileController};
+use App\Http\Controllers\{AddressController, EmploymentController, PersonalController, ProfileController, SpouseController};
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -22,9 +22,9 @@ Route::get('/dashboard', function () {
 //    return Inertia::render('Personal/Edit');
 //})->middleware(['auth', 'verified'])->name('personal');
 
-Route::get('/spouse', function () {
-    return Inertia::render('Spouse/Edit');
-})->middleware(['auth', 'verified'])->name('spouse');
+//Route::get('/spouse', function () {
+//    return Inertia::render('Spouse/Edit');
+//})->middleware(['auth', 'verified'])->name('spouse');
 
 Route::get('/aif', function () {
     return Inertia::render('AIF/Edit');
@@ -47,6 +47,9 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/employment', [EmploymentController::class, 'edit'])->name('personal.edit');
     Route::patch('/employment', [EmploymentController::class, 'update'])->name('employment.update');
+
+    Route::get('/spouse', [SpouseController::class, 'edit'])->name('spouse.edit');
+    Route::patch('/spouse', [SpouseController::class, 'update'])->name('spouse.update');
 });
 
 
