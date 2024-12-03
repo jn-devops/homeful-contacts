@@ -2,7 +2,7 @@
 
 namespace App\Classes;
 
-use Spatie\LaravelData\{Data, DataCollection, Optional};
+use Spatie\LaravelData\{Data, DataCollection};
 use App\Enums\{CivilStatus, Nationality, Sex};
 use App\Traits\WithAck;
 
@@ -21,7 +21,7 @@ class SpouseMetadata extends Data
         public Nationality $nationality,
         public $date_of_birth,
         /** @var EmploymentMetadata[] */
-        public DataCollection|Optional $employment,
+        public ?DataCollection $employment,
         public ?string $email,
         public ?string $mobile,
     ) {

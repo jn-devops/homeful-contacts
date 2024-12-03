@@ -62,7 +62,7 @@ const props = defineProps({
 
                     <EmploymentForm
                         :contact = "contact"
-                        employment_type = "Spouse"
+                        employment_type = "Sideline"
                         class="max-w-xl"
                     />
 

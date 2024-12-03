@@ -1,10 +1,12 @@
 <script setup>
 
 import SpouseInformationForm from "@/Pages/Spouse/Partials/SpouseInformationForm.vue";
+import SpouseEmploymentForm from "@/Pages/Spouse/Partials/SpouseEmploymentForm.vue";
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import SectionBorder from "@/Components/SectionBorder.vue";
 
 import { Head } from '@inertiajs/vue3';
+import EmploymentForm from "@/Pages/Personal/Partials/EmploymentForm.vue";
 
 const props = defineProps({
     spouse: Object
@@ -33,6 +35,15 @@ const props = defineProps({
                         class="max-w-xl"
                     />
                 </div>
+
+                <SectionBorder/>
+
+                <SpouseEmploymentForm
+                    :spouse = "spouse"
+                    employment_type = "Primary"
+                    class="max-w-xl"
+                />
+
             </div>
 
         </div>

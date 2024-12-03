@@ -9,7 +9,7 @@ enum Employment: string
     use EnumUtils;
 
     case PRIMARY = 'Primary';
-    case SPOUSE = 'Spouse';
+    case SIDELINE = 'Sideline';
 
     static function default(): self {
         return self::PRIMARY;

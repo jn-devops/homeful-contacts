@@ -10,8 +10,9 @@ enum Ownership: string
 
     case OWNED = 'Owned';
     case RENTED = 'Rented';
+    case UNKNOWN = 'Unknown';
 
     static function default(): self {
-        return self::RENTED;
+        return self::UNKNOWN;
     }
 }

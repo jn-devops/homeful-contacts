@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
-use Homeful\Contacts\Models\Contact as BaseContact;
 use App\Classes\{AddressMetadata, ContactMetaData, SpouseMetadata};
+use Homeful\Contacts\Models\Contact as BaseContact;
 use Spatie\LaravelData\{DataCollection, WithData};
 use App\Enums\{CivilStatus, Nationality, Sex};
 use App\Classes\EmploymentMetadata;

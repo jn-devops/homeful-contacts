@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\{AddressController, EmploymentController, PersonalController, ProfileController, SpouseController};
+use App\Http\Controllers\{AddressController, EmploymentController, PersonalController, ProfileController, SpouseController, SpouseEmploymentController};
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -50,6 +50,9 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/spouse', [SpouseController::class, 'edit'])->name('spouse.edit');
     Route::patch('/spouse', [SpouseController::class, 'update'])->name('spouse.update');
+
+    Route::get('/spouse-employment', [SpouseEmploymentController::class, 'edit'])->name('spouse-employment.edit');
+    Route::patch('/spouse-employment', [SpouseEmploymentController::class, 'update'])->name('spouse-employment.update');
 });
 
 
