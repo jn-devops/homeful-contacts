@@ -37,12 +37,20 @@ const form = useForm({
     region: address()?.region,
     country: address()?.country ?? 'PH'
 })
+
+const updateAddress = () => {
+    form.patch(route('address.update'), {
+        errorBag: 'updateAddress',
+        preserveScroll: true,
+    });
+};
+
 </script>
 
 <template>
     <section>
         <form
-            @submit.prevent="form.patch(route('address.update'))"
+            @submit.prevent="updateAddress"
             class="mt-6 space-y-6"
         >
             <h3 class="font-sans text-l text-gray-800 dark:text-gray-300 leading-tight">

@@ -53,12 +53,20 @@ const form = useForm({
     sss: employment_record()?.id?.sss,
     gsis: employment_record()?.id?.gsis,
 })
+
+const updateEmployment = () => {
+    form.patch(route('employment.update'), {
+        errorBag: 'updateEmployment',
+        preserveScroll: true,
+    });
+};
+
 </script>
 
 <template>
     <section>
         <form
-            @submit.prevent="form.patch(route('employment.update'))"
+            @submit.prevent="updateEmployment"
             class="mt-6 space-y-6"
         >
             <h3 class="font-sans text-l text-gray-800 dark:text-gray-300 leading-tight">

@@ -18,12 +18,20 @@ const form = useForm({
     nationality: props.contact?.nationality,
     date_of_birth: props.contact?.date_of_birth
 })
+
+const updatePersonalInformation = () => {
+    form.patch(route('personal.update'), {
+        errorBag: 'updatePersonalInformation',
+        preserveScroll: true,
+    });
+};
+
 </script>
 
 <template>
     <section>
         <form
-            @submit.prevent="form.patch(route('personal.update'))"
+            @submit.prevent="updatePersonalInformation"
             class="mt-6 space-y-6"
         >
             <div>
