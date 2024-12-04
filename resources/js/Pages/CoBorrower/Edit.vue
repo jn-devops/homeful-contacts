@@ -2,6 +2,7 @@
 
 import SpouseInformationForm from "@/Pages/Spouse/Partials/SpouseInformationForm.vue";
 import SpouseEmploymentForm from "@/Pages/Spouse/Partials/SpouseEmploymentForm.vue";
+import CoBorrowerForm from "@/Pages/CoBorrower/Partials/CoBorrowerForm.vue";
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import SectionBorder from "@/Components/SectionBorder.vue";
 
@@ -9,7 +10,7 @@ import { Head } from '@inertiajs/vue3';
 import EmploymentForm from "@/Pages/Personal/Partials/EmploymentForm.vue";
 
 const props = defineProps({
-    spouse: Object
+    contact: Object
 });
 </script>
 
@@ -30,16 +31,17 @@ const props = defineProps({
                 <div
                     class="bg-white p-4 shadow sm:rounded-lg sm:p-8 dark:bg-gray-800"
                 >
-                    <SpouseInformationForm
-                        :spouse = "spouse"
+                    <CoBorrowerForm
+                        :contact = "contact"
+                        co_borrower_type = "Primary"
                         class="max-w-xl"
                     />
 
                     <SectionBorder/>
 
-                    <SpouseEmploymentForm
-                        :spouse = "spouse"
-                        employment_type = "Primary"
+                    <CoBorrowerForm
+                        :contact = "contact"
+                        co_borrower_type = "Secondary"
                         class="max-w-xl"
                     />
                 </div>

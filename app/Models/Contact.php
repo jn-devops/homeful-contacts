@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Classes\{AddressMetadata, ContactMetaData, SpouseMetadata};
+use App\Classes\{AddressMetadata, CoBorrowerMetadata, ContactMetaData, SpouseMetadata};
 use Homeful\Contacts\Models\Contact as BaseContact;
 use Spatie\LaravelData\{DataCollection, WithData};
 use App\Enums\{CivilStatus, Nationality, Sex};
@@ -28,7 +28,8 @@ class Contact extends BaseContact
             'nationality' => Nationality::class,
             'addresses' => DataCollection::class . ':' . AddressMetadata::class,
             'employment' => DataCollection::class . ':' . EmploymentMetadata::class,
-            'spouse' => SpouseMetadata::class
+            'spouse' => SpouseMetadata::class,
+            'co_borrowers' => DataCollection::class . ':' . CoBorrowerMetadata::class,
         ];
     }
 }

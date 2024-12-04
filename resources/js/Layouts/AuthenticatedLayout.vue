@@ -84,8 +84,8 @@ const showingNavigationDropdown = ref(false);
                                 class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex"
                             >
                                 <NavLink
-                                    :href="route('co-borrower')"
-                                    :active="route().current('co-borrower')"
+                                    :href="route('co_borrower.edit')"
+                                    :active="route().current('co_borrower.edit')"
                                 >
                                     Co-Borrower
                                 </NavLink>
