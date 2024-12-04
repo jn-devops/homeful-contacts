@@ -1,13 +1,9 @@
 <script setup>
-
-import SpouseInformationForm from "@/Pages/Spouse/Partials/SpouseInformationForm.vue";
-import SpouseEmploymentForm from "@/Pages/Spouse/Partials/SpouseEmploymentForm.vue";
-import CoBorrowerForm from "@/Pages/CoBorrower/Partials/CoBorrowerForm.vue";
+import CoBorrowerInformationForm from "@/Pages/CoBorrower/Partials/CoBorrowerInformationForm.vue";
+import CoBorrowerEmploymentForm from "@/Pages/CoBorrower/Partials/CoBorrowerEmploymentForm.vue";
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import SectionBorder from "@/Components/SectionBorder.vue";
-
 import { Head } from '@inertiajs/vue3';
-import EmploymentForm from "@/Pages/Personal/Partials/EmploymentForm.vue";
 
 const props = defineProps({
     contact: Object
@@ -22,7 +18,7 @@ const props = defineProps({
             <h2
                 class="text-xl font-semibold leading-tight text-gray-800 dark:text-gray-200"
             >
-                Spouse Information
+                Co-Borrower Information
             </h2>
         </template>
 
@@ -31,17 +27,25 @@ const props = defineProps({
                 <div
                     class="bg-white p-4 shadow sm:rounded-lg sm:p-8 dark:bg-gray-800"
                 >
-                    <CoBorrowerForm
+                    <CoBorrowerInformationForm
                         :contact = "contact"
                         co_borrower_type = "Primary"
                         class="max-w-xl"
                     />
 
+                    <CoBorrowerEmploymentForm
+                        :contact = "contact"
+                        co_borrower_type = "Primary"
+                        employment_type = "Primary"
+                        class="max-w-xl"
+                    />
+
                     <SectionBorder/>
 
-                    <CoBorrowerForm
+                    <CoBorrowerInformationForm
                         :contact = "contact"
                         co_borrower_type = "Secondary"
+                        employment_type = "Primary"
                         class="max-w-xl"
                     />
                 </div>

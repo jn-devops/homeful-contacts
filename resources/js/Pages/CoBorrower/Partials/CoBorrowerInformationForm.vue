@@ -11,7 +11,7 @@ const props = defineProps({
 });
 
 const co_borrowers = () => {
-    if (null != props.contact?.addresses) {
+    if (null != props.contact?.co_borrowers) {
         return Object.groupBy(props.contact?.co_borrowers, co_borrower => co_borrower.type)
     }
 
@@ -27,6 +27,16 @@ const co_borrower = () => {
     return null;
 };
 
+const co_borrower_employment_records = () => {
+    if (null != co_borrower()?.employment) {
+        return Object.groupBy(co_borrower().employment, employment => employment.type)
+    }
+
+    return null;
+};
+
+
+
 const form = useForm({
     type: props.co_borrower_type,
     first_name: co_borrower()?.first_name,
@@ -37,7 +47,8 @@ const form = useForm({
     nationality: co_borrower()?.nationality ?? usePage().props.auth.user.contact.nationality,
     date_of_birth: co_borrower()?.date_of_birth,
     email: co_borrower()?.email,
-    mobile: co_borrower()?.mobile
+    mobile: co_borrower()?.mobile,
+    employment: []
 })
 
 const updateCoBorrower = () => {

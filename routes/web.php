@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\{AddressController, CoBorrowerController, EmploymentController, PersonalController, ProfileController, SpouseController, SpouseEmploymentController};
+use App\Http\Controllers\{AddressController, CoBorrowerController, CoBorrowerEmploymentController, EmploymentController, PersonalController, ProfileController, SpouseController, SpouseEmploymentController};
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -56,6 +56,9 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/co_borrower', [CoBorrowerController::class, 'edit'])->name('co_borrower.edit');
     Route::patch('/co_borrower', [CoBorrowerController::class, 'update'])->name('co_borrower.update');
+
+    Route::get('/co_borrower-employment', [CoBorrowerEmploymentController::class, 'edit'])->name('co_borrower-employment.edit');
+    Route::patch('/co_borrower-employment', [CoBorrowerEmploymentController::class, 'update'])->name('co_borrower-employment.update');
 });
 
 

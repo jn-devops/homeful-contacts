@@ -26,6 +26,7 @@ class CoBorrowerUpdateRequest extends FormRequest
             'date_of_birth' => ['nullable', 'date'],
             'email' => ['nullable', 'email'],
             'mobile' => ['nullable', 'string', 'max:11'],
+            'employment' => ['nullable']
         ];
     }
 }

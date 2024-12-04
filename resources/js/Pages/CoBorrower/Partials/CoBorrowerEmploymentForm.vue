@@ -6,29 +6,48 @@ import TextInput from '@/Components/TextInput.vue';
 import {useForm, usePage} from '@inertiajs/vue3';
 
 const props = defineProps({
-    spouse: Object,
-    employment_type: String
+    contact: Object,
+    co_borrower_type: String,
+    employment_type: String,
 });
 
-const employment_records = () => {
-    if (null != props.spouse?.employment) {
-        return Object.groupBy(props.spouse?.employment, employment => employment.type)
+const co_borrowers = () => {
+    if (null != props.contact?.co_borrowers) {
+        return Object.groupBy(props.contact?.co_borrowers, co_borrower => co_borrower.type)
+    }
+
+    return null;
+};
+
+const co_borrower = () => {
+    if (co_borrowers())
+        if (props.co_borrower_type in co_borrowers()) {
+            return co_borrowers()[props.co_borrower_type][0]
+        }
+
+    return null;
+};
+
+const co_borrower_employment_records = () => {
+    if (null != co_borrower()?.employment) {
+        return Object.groupBy(co_borrower().employment, employment => employment.type)
     }
 
     return null;
 };
 
 const employment_record = () => {
-    if (employment_records())
-        if (props.employment_type in employment_records()) {
-            return employment_records()[props.employment_type][0]
+    if (co_borrower_employment_records())
+        if (props.employment_type in co_borrower_employment_records()) {
+            return co_borrower_employment_records()[props.employment_type][0]
         }
 
     return null;
 };
 
 const form = useForm({
-    type: props.employment_type,
+    co_borrower_type: props.co_borrower_type,
+    co_borrower_employment: props.employment_type,
     employment_status: employment_record()?.employment_status,
     monthly_gross_income: employment_record()?.monthly_gross_income,
     current_position: employment_record()?.current_position,
@@ -40,7 +59,7 @@ const form = useForm({
     employer_industry: employment_record()?.employer?.industry,
 
     employer_address_type: employment_record()?.employer?.address?.type ?? 'Work',
-    employer_address_ownership: employment_record()?.employer?.address?.ownership,
+    employer_address_ownership: employment_record()?.employer?.address?.ownership ?? 'Unknown',
     employer_address_address1: employment_record()?.employer?.address?.address1,
     employer_address_locality: employment_record()?.employer?.address?.locality,
     employer_address_administrative_area: employment_record()?.employer?.address?.administrative_area,
@@ -54,9 +73,9 @@ const form = useForm({
     gsis: employment_record()?.id?.gsis,
 })
 
-const updateSpouseEmployment = () => {
-    form.patch(route('spouse-employment.update'), {
-        errorBag: 'updateSpouseEmployment',
+const updateCoBorrowerEmployment = () => {
+    form.patch(route('co_borrower-employment.update'), {
+        errorBag: 'updateCoBorrowerEmployment',
         preserveScroll: true,
     });
 };
@@ -66,7 +85,7 @@ const updateSpouseEmployment = () => {
 <template>
     <section>
         <form
-            @submit.prevent="updateSpouseEmployment"
+            @submit.prevent="updateCoBorrowerEmployment"
             class="mt-6 space-y-6"
         >
             <h3 class="font-sans text-l text-gray-800 dark:text-gray-300 leading-tight">

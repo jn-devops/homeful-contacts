@@ -30,6 +30,7 @@ class Contact extends BaseContact
             'employment' => DataCollection::class . ':' . EmploymentMetadata::class,
             'spouse' => SpouseMetadata::class,
             'co_borrowers' => DataCollection::class . ':' . CoBorrowerMetadata::class,
+//            'co_borrowers' => 'array',
         ];
     }
 }

@@ -28,9 +28,9 @@ class ContactMetaData extends Data
         public DataCollection $addresses,
         /** @var EmploymentMetadata[] */
         public DataCollection $employment,
-        public SpouseMetadata $spouse,
+        public ?SpouseMetadata $spouse,
         /** @var CoBorrowerMetadata[] */
-        public DataCollection $co_borrowers
+        public ?DataCollection $co_borrowers
     ) {
         $this->name = implode(' ', array_filter([$this->first_name, $this->middle_name, $this->last_name]));
     }

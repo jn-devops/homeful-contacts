@@ -34,7 +34,7 @@ class CoBorrowerController extends Controller
         foreach($records as $type => $address_record){
             $co_borrower_records [] = $address_record;
         }
-//dd($co_borrower_records);
+
         $user->contact->update(['co_borrowers' => $co_borrower_records]);
         $user->contact->save();
         $user->save();
