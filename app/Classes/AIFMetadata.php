@@ -6,7 +6,7 @@ use Spatie\LaravelData\{Data, DataCollection};
 use App\Enums\{CivilStatus, Nationality, Sex};
 use App\Traits\WithAck;
 
-class SpouseMetadata extends Data
+class AIFMetadata extends Data
 {
     use WithAck;
 
@@ -22,8 +22,6 @@ class SpouseMetadata extends Data
         public Sex $sex,
         public Nationality $nationality,
         public $date_of_birth,
-        /** @var EmploymentMetadata[] */
-        public ?DataCollection $employment,
         public ?string $email,
         public ?string $mobile,
         public ?string $other_mobile,

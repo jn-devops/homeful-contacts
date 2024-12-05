@@ -51,7 +51,6 @@ const form = useForm({
     email: co_borrower()?.email,
     mobile: co_borrower()?.mobile,
     other_mobile: co_borrower()?.other_mobile,
-    help_number: co_borrower()?.help_number,
     landline: co_borrower()?.landline,
     employment: []
 })
@@ -238,19 +237,6 @@ const updateCoBorrower = () => {
                 />
 
                 <InputError class="mt-2" :message="form.errors.other_mobile" />
-            </div>
-
-            <div>
-                <InputLabel for="help_number" value="Help Number" />
-
-                <TextInput
-                    id="help_number"
-                    type="text"
-                    class="mt-1 block w-full"
-                    v-model="form.help_number"
-                />
-
-                <InputError class="mt-2" :message="form.errors.help_number" />
             </div>
 
             <div>

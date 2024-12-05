@@ -6,28 +6,28 @@ import TextInput from '@/Components/TextInput.vue';
 import { useForm, usePage } from '@inertiajs/vue3';
 
 const props = defineProps({
-    spouse: Object,
+    aif: Object,
 });
 
 const form = useForm({
-    first_name: props.spouse?.first_name,
-    middle_name: props.spouse?.middle_name,
-    last_name: props.spouse?.last_name,
-    name_suffix: props.spouse?.name_suffix,
-    mothers_maiden_name: props.spouse?.mothers_maiden_name,
-    civil_status: "Married",
-    sex: props.spouse?.sex ?? 'Male' === usePage().props.auth.user.contact.sex ? 'Female' : 'Male',
-    nationality: props.spouse?.nationality ?? usePage().props.auth.user.contact.nationality,
-    date_of_birth: props.spouse?.date_of_birth,
-    email: props.spouse?.email,
-    mobile: props.spouse?.mobile,
-    other_mobile: props.spouse?.other_mobile,
-    landline: props.spouse?.landline,
+    first_name: props.aif?.first_name,
+    middle_name: props.aif?.middle_name,
+    last_name: props.aif?.last_name,
+    name_suffix: props.aif?.name_suffix,
+    mothers_maiden_name: props.aif?.mothers_maiden_name,
+    civil_status: props.aif?.civil_status,
+    sex: props.aif?.sex,
+    nationality: props.aif?.nationality,
+    date_of_birth: props.aif?.date_of_birth,
+    email: props.aif?.email,
+    mobile: props.aif?.mobile,
+    other_mobile: props.aif?.other_mobile,
+    landline: props.aif?.landline,
 })
 
-const updateSpouseInformation = () => {
-    form.patch(route('spouse.update'), {
-        errorBag: 'updateSpouseInformation',
+const updateAIFInformation = () => {
+    form.patch(route('aif.update'), {
+        errorBag: 'updateAIFInformation',
         preserveScroll: true,
     });
 };
@@ -37,7 +37,7 @@ const updateSpouseInformation = () => {
 <template>
     <section>
         <form
-            @submit.prevent="updateSpouseInformation"
+            @submit.prevent="updateAIFInformation"
             class="mt-6 space-y-6"
         >
             <div>
@@ -107,6 +107,20 @@ const updateSpouseInformation = () => {
                 />
 
                 <InputError class="mt-2" :message="form.errors.mothers_maiden_name" />
+            </div>
+
+            <div>
+                <InputLabel for="civil_status" value="Civil Status" />
+
+                <TextInput
+                    id="civil_status"
+                    type="text"
+                    class="mt-1 block w-full"
+                    v-model="form.civil_status"
+                />
+
+                <div class="text-xs text-gray-600 dark:text-gray-400">{{ usePage().props.enums.civil_statuses.join(', ') }}</div>
+                <InputError class="mt-2" :message="form.errors.civil_status" />
             </div>
 
             <div>

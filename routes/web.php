@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\{AddressController, CoBorrowerController, CoBorrowerEmploymentController, EmploymentController, PersonalController, ProfileController, SpouseController, SpouseEmploymentController};
+use App\Http\Controllers\{AddressController, AIFController, CoBorrowerController, CoBorrowerEmploymentController, EmploymentController, PersonalController, ProfileController, SpouseController, SpouseEmploymentController};
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -26,9 +26,9 @@ Route::get('/dashboard', function () {
 //    return Inertia::render('Spouse/Edit');
 //})->middleware(['auth', 'verified'])->name('spouse');
 
-Route::get('/aif', function () {
-    return Inertia::render('AIF/Edit');
-})->middleware(['auth', 'verified'])->name('aif');
+//Route::get('/aif', function () {
+//    return Inertia::render('AIF/Edit');
+//})->middleware(['auth', 'verified'])->name('aif');
 
 //Route::get('/co-borrower', function () {
 //    return Inertia::render('CoBorrower/Edit');
@@ -59,6 +59,9 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/co_borrower-employment', [CoBorrowerEmploymentController::class, 'edit'])->name('co_borrower-employment.edit');
     Route::patch('/co_borrower-employment', [CoBorrowerEmploymentController::class, 'update'])->name('co_borrower-employment.update');
+
+    Route::get('/aif', [AIFController::class, 'edit'])->name('aif.edit');
+    Route::patch('/aif', [AIFController::class, 'update'])->name('aif.update');
 });
 
 

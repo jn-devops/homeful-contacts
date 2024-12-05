@@ -2,7 +2,11 @@
 
 namespace App\Classes;
 
-use Spatie\LaravelData\{Attributes\WithCast, Casts\DateTimeInterfaceCast, Data, DataCollection};
+use Spatie\LaravelData\{Attributes\MapInputName,
+    Attributes\WithCast,
+    Casts\DateTimeInterfaceCast,
+    Data,
+    DataCollection};
 use App\Enums\{CivilStatus, Nationality, Sex};
 use Illuminate\Support\Carbon;
 use App\Traits\WithAck;
@@ -35,7 +39,9 @@ class ContactMetaData extends Data
         public DataCollection $employment,
         public ?SpouseMetadata $spouse,
         /** @var CoBorrowerMetadata[] */
-        public ?DataCollection $co_borrowers
+        public ?DataCollection $co_borrowers,
+        #[MapInputName('order')]
+        public ?AIFMetadata $aif
     ) {
         $this->name = implode(' ', array_filter([$this->first_name, $this->middle_name, $this->last_name]));
     }
