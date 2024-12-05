@@ -25,6 +25,9 @@ class PersonalUpdateRequest extends FormRequest
             'sex' => ['nullable', Rule::enum(Sex::class)],
             'nationality' => ['nullable', Rule::enum(Nationality::class)],
             'date_of_birth' => ['nullable', 'date'],
+            'other_mobile' => 'nullable|string|max:20',
+            'help_number' => 'nullable|string|max:50',
+            'landline' => 'nullable|string|max:20',
         ];
     }
 }

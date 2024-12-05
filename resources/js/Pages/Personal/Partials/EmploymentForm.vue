@@ -12,7 +12,7 @@ const props = defineProps({
 
 const employment_records = () => {
     if (null != props.contact?.employment) {
-        return Object.groupBy(props.contact?.employment, address => address.type)
+        return Object.groupBy(props.contact?.employment, employment => employment.type)
     }
 
     return null;

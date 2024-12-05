@@ -50,6 +50,9 @@ const form = useForm({
     date_of_birth: co_borrower()?.date_of_birth,
     email: co_borrower()?.email,
     mobile: co_borrower()?.mobile,
+    other_mobile: co_borrower()?.other_mobile,
+    help_number: co_borrower()?.help_number,
+    landline: co_borrower()?.landline,
     employment: []
 })
 
@@ -222,6 +225,45 @@ const updateCoBorrower = () => {
                 />
 
                 <InputError class="mt-2" :message="form.errors.mobile" />
+            </div>
+
+            <div>
+                <InputLabel for="other_mobile" value="Other Mobile" />
+
+                <TextInput
+                    id="other_mobile"
+                    type="text"
+                    class="mt-1 block w-full"
+                    v-model="form.other_mobile"
+                />
+
+                <InputError class="mt-2" :message="form.errors.other_mobile" />
+            </div>
+
+            <div>
+                <InputLabel for="help_number" value="Help Number" />
+
+                <TextInput
+                    id="help_number"
+                    type="text"
+                    class="mt-1 block w-full"
+                    v-model="form.help_number"
+                />
+
+                <InputError class="mt-2" :message="form.errors.help_number" />
+            </div>
+
+            <div>
+                <InputLabel for="landline" value="Land Line" />
+
+                <TextInput
+                    id="landline"
+                    type="text"
+                    class="mt-1 block w-full"
+                    v-model="form.landline"
+                />
+
+                <InputError class="mt-2" :message="form.errors.landline" />
             </div>
 
             <div class="flex items-center gap-4">

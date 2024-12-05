@@ -28,6 +28,9 @@ class CoBorrowerMetadata extends Data
         public DataCollection $employment,
         public ?string $email,
         public ?string $mobile,
+        public ?string $other_mobile,
+        public ?string $help_number,
+        public ?string $landline,
     ) {
         $this->name = implode(' ', array_filter([$this->first_name, $this->middle_name, $this->last_name]));
     }
