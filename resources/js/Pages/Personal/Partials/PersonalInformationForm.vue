@@ -13,6 +13,8 @@ const form = useForm({
     first_name: props.contact?.first_name,
     middle_name: props.contact?.middle_name,
     last_name: props.contact?.last_name,
+    name_suffix: props.contact?.name_suffix,
+    mothers_maiden_name: props.contact?.mothers_maiden_name,
     civil_status: props.contact?.civil_status,
     sex: props.contact?.sex,
     nationality: props.contact?.nationality,
@@ -75,6 +77,32 @@ const updatePersonalInformation = () => {
                 />
 
                 <InputError class="mt-2" :message="form.errors.last_name" />
+            </div>
+
+            <div>
+                <InputLabel for="name_suffix" value="Suffix" />
+
+                <TextInput
+                    id="name_suffix"
+                    type="text"
+                    class="mt-1 block w-full"
+                    v-model="form.name_suffix"
+                />
+
+                <InputError class="mt-2" :message="form.errors.name_suffix" />
+            </div>
+
+            <div>
+                <InputLabel for="mothers_maiden_name" value="Mother's Maiden Name" />
+
+                <TextInput
+                    id="mothers_maiden_name"
+                    type="text"
+                    class="mt-1 block w-full"
+                    v-model="form.mothers_maiden_name"
+                />
+
+                <InputError class="mt-2" :message="form.errors.mothers_maiden_name" />
             </div>
 
             <div>

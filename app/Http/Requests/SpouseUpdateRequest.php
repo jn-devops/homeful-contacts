@@ -19,6 +19,8 @@ class SpouseUpdateRequest extends FormRequest
             'first_name' => ['required', 'string', 'max:50'],
             'middle_name' => ['nullable', 'string', 'max:50'],
             'last_name' => ['required', 'string', 'max:50'],
+            'name_suffix' => ['nullable', 'string', 'max:10'],
+            'mothers_maiden_name' => ['nullable', 'string', 'max:510'],
             'civil_status' => ['nullable', Rule::enum(CivilStatus::class)],
             'sex' => ['nullable', Rule::enum(Sex::class)],
             'nationality' => ['nullable', Rule::enum(Nationality::class)],

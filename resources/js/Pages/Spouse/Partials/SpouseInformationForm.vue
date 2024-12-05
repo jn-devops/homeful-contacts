@@ -13,6 +13,8 @@ const form = useForm({
     first_name: props.spouse?.first_name,
     middle_name: props.spouse?.middle_name,
     last_name: props.spouse?.last_name,
+    name_suffix: props.spouse?.name_suffix,
+    mothers_maiden_name: props.spouse?.mothers_maiden_name,
     civil_status: "Married",
     sex: props.spouse?.sex ?? 'Male' === usePage().props.auth.user.contact.sex ? 'Female' : 'Male',
     nationality: props.spouse?.nationality ?? usePage().props.auth.user.contact.nationality,
@@ -77,6 +79,32 @@ const updateSpouseInformation = () => {
                 />
 
                 <InputError class="mt-2" :message="form.errors.last_name" />
+            </div>
+
+            <div>
+                <InputLabel for="name_suffix" value="Suffix" />
+
+                <TextInput
+                    id="name_suffix"
+                    type="text"
+                    class="mt-1 block w-full"
+                    v-model="form.name_suffix"
+                />
+
+                <InputError class="mt-2" :message="form.errors.name_suffix" />
+            </div>
+
+            <div>
+                <InputLabel for="mothers_maiden_name" value="Mother's Maiden Name" />
+
+                <TextInput
+                    id="mothers_maiden_name"
+                    type="text"
+                    class="mt-1 block w-full"
+                    v-model="form.mothers_maiden_name"
+                />
+
+                <InputError class="mt-2" :message="form.errors.mothers_maiden_name" />
             </div>
 
             <div>

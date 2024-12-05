@@ -42,6 +42,8 @@ const form = useForm({
     first_name: co_borrower()?.first_name,
     middle_name: co_borrower()?.middle_name,
     last_name: co_borrower()?.last_name,
+    name_suffix: co_borrower()?.name_suffix,
+    mothers_maiden_name: co_borrower()?.mothers_maiden_name,
     civil_status: co_borrower()?.civil_status,
     sex: co_borrower()?.sex,
     nationality: co_borrower()?.nationality ?? usePage().props.auth.user.contact.nationality,
@@ -111,6 +113,32 @@ const updateCoBorrower = () => {
                 />
 
                 <InputError class="mt-2" :message="form.errors.last_name" />
+            </div>
+
+            <div>
+                <InputLabel for="name_suffix" value="Suffix" />
+
+                <TextInput
+                    id="name_suffix"
+                    type="text"
+                    class="mt-1 block w-full"
+                    v-model="form.name_suffix"
+                />
+
+                <InputError class="mt-2" :message="form.errors.name_suffix" />
+            </div>
+
+            <div>
+                <InputLabel for="mothers_maiden_name" value="Mother's Maiden Name" />
+
+                <TextInput
+                    id="mothers_maiden_name"
+                    type="text"
+                    class="mt-1 block w-full"
+                    v-model="form.mothers_maiden_name"
+                />
+
+                <InputError class="mt-2" :message="form.errors.mothers_maiden_name" />
             </div>
 
             <div>

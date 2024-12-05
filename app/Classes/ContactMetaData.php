@@ -17,6 +17,8 @@ class ContactMetaData extends Data
         public string $first_name,
         public string $middle_name,
         public string $last_name,
+        public ?string $name_suffix,
+        public ?string $mothers_maiden_name,
         public string $email,
         public string $mobile,
         public CivilStatus $civil_status,
