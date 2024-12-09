@@ -18,23 +18,7 @@ Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-//Route::get('/personal', function () {
-//    return Inertia::render('Personal/Edit');
-//})->middleware(['auth', 'verified'])->name('personal');
-
-//Route::get('/spouse', function () {
-//    return Inertia::render('Spouse/Edit');
-//})->middleware(['auth', 'verified'])->name('spouse');
-
-//Route::get('/aif', function () {
-//    return Inertia::render('AIF/Edit');
-//})->middleware(['auth', 'verified'])->name('aif');
-
-//Route::get('/co-borrower', function () {
-//    return Inertia::render('CoBorrower/Edit');
-//})->middleware(['auth', 'verified'])->name('co-borrower');
-
-Route::middleware('auth')->group(function () {
+Route::prefix('review')->middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');

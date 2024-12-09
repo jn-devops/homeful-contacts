@@ -4,9 +4,11 @@ namespace App\Classes;
 
 use Spatie\LaravelData\{Attributes\MapInputName,
     Attributes\WithCast,
+    Attributes\WithTransformer,
     Casts\DateTimeInterfaceCast,
     Data,
-    DataCollection};
+    DataCollection,
+    Transformers\DateTimeInterfaceTransformer};
 use App\Enums\{CivilStatus, Nationality, Sex};
 use Illuminate\Support\Carbon;
 use App\Traits\WithAck;
@@ -31,12 +33,13 @@ class ContactMetaData extends Data
         public CivilStatus $civil_status,
         public Sex $sex,
         public Nationality $nationality,
+        #[WithTransformer(DateTimeInterfaceTransformer::class, format: 'Y-m-d')]
         #[WithCast(DateTimeInterfaceCast::class, timeZone: 'Asia/Manila')]
         public Carbon $date_of_birth,
         /** @var AddressMetadata[] */
-        public DataCollection $addresses,
+        public ?DataCollection $addresses,
         /** @var EmploymentMetadata[] */
-        public DataCollection $employment,
+        public ?DataCollection $employment,
         public ?SpouseMetadata $spouse,
         /** @var CoBorrowerMetadata[] */
         public ?DataCollection $co_borrowers,
