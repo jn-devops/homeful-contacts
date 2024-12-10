@@ -2,13 +2,11 @@
 
 namespace App\Classes;
 
-use Spatie\LaravelData\{Attributes\MapInputName,
-    Attributes\WithCast,
-    Attributes\WithTransformer,
-    Casts\DateTimeInterfaceCast,
-    Data,
-    DataCollection,
-    Transformers\DateTimeInterfaceTransformer};
+use Spatie\LaravelData\Transformers\DateTimeInterfaceTransformer;
+use Spatie\LaravelData\Attributes\{WithCast, WithTransformer};
+use Spatie\LaravelData\Casts\DateTimeInterfaceCast;
+use Spatie\LaravelData\Attributes\MapInputName;
+use Spatie\LaravelData\{Data, DataCollection};
 use App\Enums\{CivilStatus, Nationality, Sex};
 use Illuminate\Support\Carbon;
 use App\Traits\WithAck;

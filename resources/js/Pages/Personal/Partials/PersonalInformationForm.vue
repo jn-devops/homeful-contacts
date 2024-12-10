@@ -19,6 +19,8 @@ const form = useForm({
     sex: props.contact?.sex,
     nationality: props.contact?.nationality,
     date_of_birth: props.contact?.date_of_birth,
+    email: props.contact?.email,
+    mobile: props.contact?.mobile,
     other_mobile: props.contact?.other_mobile,
     help_number: props.contact?.help_number,
     landline: props.contact?.landline,
@@ -161,6 +163,32 @@ const updatePersonalInformation = () => {
                 />
 
                 <InputError class="mt-2" :message="form.errors.date_of_birth" />
+            </div>
+
+            <div>
+                <InputLabel for="email" value="Primary Email Address" />
+
+                <TextInput
+                    id="email"
+                    type="text"
+                    class="mt-1 block w-full"
+                    v-model="form.email"
+                />
+
+                <InputError class="mt-2" :message="form.errors.email" />
+            </div>
+
+            <div>
+                <InputLabel for="mobile" value="Primary Mobile" />
+
+                <TextInput
+                    id="mobile"
+                    type="text"
+                    class="mt-1 block w-full"
+                    v-model="form.mobile"
+                />
+
+                <InputError class="mt-2" :message="form.errors.mobile" />
             </div>
 
             <div>
