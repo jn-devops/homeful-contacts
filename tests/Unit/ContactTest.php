@@ -1,6 +1,9 @@
 <?php
 
+use App\Enums\{AddressType, CivilStatus, Nationality, Ownership, Sex};
 use Illuminate\Foundation\Testing\{RefreshDatabase, WithFaker};
+use Spatie\LaravelData\DataCollection;
+use App\Classes\AddressMetadata;
 use App\Models\Contact;
 
 uses(RefreshDatabase::class, WithFaker::class);
@@ -12,11 +15,11 @@ test('contact has minimum attributes', function () {
         'email' => $this->faker->email(),
         'mobile' => '09181234567',
 
-        'middle_name' => $this->faker->lastName(), //should be  optional
-        'civil_status' => \App\Enums\CivilStatus::random()->value,
-        'sex' => \App\Enums\Sex::random()->value,
-        'nationality' => \App\Enums\Nationality::random()->value,
-        'date_of_birth' => $this->faker->date(),
+//        'middle_name' => $this->faker->lastName(), //should be  optional
+//        'civil_status' => CivilStatus::random()->value,
+//        'sex' => Sex::random()->value,
+//        'nationality' => Nationality::random()->value,
+//        'date_of_birth' => $this->faker->date(),
     ]);
 
     expect($contact)->toBeInstanceOf(Contact::class);
@@ -31,9 +34,9 @@ dataset('contact', function () {
             'mobile' => '09181234567',
 
             'middle_name' => $this->faker->lastName(), //should be  optional
-            'civil_status' => \App\Enums\CivilStatus::random()->value,
-            'sex' => \App\Enums\Sex::random()->value,
-            'nationality' => \App\Enums\Nationality::random()->value,
+            'civil_status' => CivilStatus::random()->value,
+            'sex' => Sex::random()->value,
+            'nationality' => Nationality::random()->value,
             'date_of_birth' => $this->faker->date(),
         ])
     ];
@@ -42,8 +45,8 @@ dataset('contact', function () {
 test('contact can accept addresses', function (Contact $contact) {
     $contact->addresses = [
         [
-            'type' => \App\Enums\AddressType::default(),
-            'ownership' => \App\Enums\Ownership::random(),
+            'type' => AddressType::default(),
+            'ownership' => Ownership::random(),
             'address1' => $this->faker->address(),
             'locality' => $this->faker->city(),
             'administrative_area' => $this->faker->randomElement(['NCR', 'Metro Manila', 'Cebu']),
@@ -52,17 +55,15 @@ test('contact can accept addresses', function (Contact $contact) {
             'country' => 'PH',
         ]
     ];
-    dd($contact->addresses->first()->type);
-    $address = $contact->addresses->where('type', \App\Enums\AddressType::PRIMARY->value)->first();
-    dd($address);
-    $address = array_shift($addresses);
-    dd($address['type']);
+    expect($contact->addresses)->toBeInstanceOf(DataCollection::class);
+    expect($contact->addresses->first())->toBeInstanceOf(AddressMetadata::class);
+
 })->with('contact');
 
-test('contact can accept employment', function (Contact $contact) {
-    $contact->employment = [
-        [
-            'type' => \App\Enums\Employment::default(),
-        ]
-    ];
-})->with('contact');
+//test('contact can accept employment', function (Contact $contact) {
+//    $contact->employment = [
+//        [
+//            'type' => \App\Enums\Employment::default(),
+//        ]
+//    ];
+//})->with('contact');

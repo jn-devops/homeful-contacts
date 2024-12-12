@@ -10,9 +10,9 @@ const props = defineProps({
 });
 
 const form = useForm({
-    first_name: props.contact?.first_name,
+    first_name: props.contact?.first_name ?? usePage().props.auth.user.first_name,
     middle_name: props.contact?.middle_name,
-    last_name: props.contact?.last_name,
+    last_name: props.contact?.last_name ?? usePage().props.auth.user.last_name,
     name_suffix: props.contact?.name_suffix,
     mothers_maiden_name: props.contact?.mothers_maiden_name,
     civil_status: props.contact?.civil_status,
@@ -64,7 +64,6 @@ const updatePersonalInformation = () => {
                     type="text"
                     class="mt-1 block w-full"
                     v-model="form.middle_name"
-                    required
                 />
 
                 <InputError class="mt-2" :message="form.errors.middle_name" />
@@ -160,6 +159,7 @@ const updatePersonalInformation = () => {
                     type="date"
                     class="mt-1 block w-full"
                     v-model="form.date_of_birth"
+                    required
                 />
 
                 <InputError class="mt-2" :message="form.errors.date_of_birth" />
