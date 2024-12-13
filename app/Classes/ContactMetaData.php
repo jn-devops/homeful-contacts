@@ -19,7 +19,7 @@ class ContactMetaData extends Data
 
     public function __construct(
         public string $first_name,
-        public string $middle_name,
+        public ?string $middle_name,
         public string $last_name,
         public ?string $name_suffix,
         public ?string $mothers_maiden_name,
@@ -28,9 +28,9 @@ class ContactMetaData extends Data
         public ?string $other_mobile,
         public ?string $help_number,
         public ?string $landline,
-        public CivilStatus $civil_status,
-        public Sex $sex,
-        public Nationality $nationality,
+        public CivilStatus|null $civil_status,
+        public Sex|null $sex,
+        public Nationality|null $nationality,
         #[WithTransformer(DateTimeInterfaceTransformer::class, format: 'Y-m-d')]
         #[WithCast(DateTimeInterfaceCast::class, timeZone: 'Asia/Manila')]
         public Carbon $date_of_birth,

@@ -12,11 +12,11 @@ class EmploymentMetadata extends Data
 
     public function __construct(
         public Employment $type,
-        public EmploymentStatus $employment_status,
-        public EmploymentType $employment_type,
         public float $monthly_gross_income,
-        public string $current_position,
+        public EmploymentStatus $employment_status,
         public EmployerMetadata|null $employer,
+        public EmploymentType|null $employment_type,
+        public string|null $current_position,
         public IdMetadata|null $id
     ) {}
 }

@@ -29,24 +29,25 @@ const employment_record = () => {
 
 const form = useForm({
     type: props.employment_type,
-    employment_status: employment_record()?.employment_status,
     monthly_gross_income: employment_record()?.monthly_gross_income,
-    current_position: employment_record()?.current_position,
-    employment_type: employment_record()?.employment_type,
+    employment_status: employment_record()?.employment_status ?? 'Regular',
+
     employer_name: employment_record()?.employer?.name,
+    employment_type: employment_record()?.employment_type,
+    current_position: employment_record()?.current_position,
     employer_email: employment_record()?.employer?.email,
     employer_contact_no: employment_record()?.employer?.contact_no,
     employer_nationality: employment_record()?.employer?.nationality,
     employer_industry: employment_record()?.employer?.industry,
 
-    employer_address_type: employment_record()?.employer?.address?.type ?? 'Work',
+    employer_address_type: employment_record()?.employer?.address?.type ?? employment_record()?.employer?.name ? 'Work' : null,
     employer_address_ownership: employment_record()?.employer?.address?.ownership,
     employer_address_address1: employment_record()?.employer?.address?.address1,
     employer_address_locality: employment_record()?.employer?.address?.locality,
     employer_address_administrative_area: employment_record()?.employer?.address?.administrative_area,
     employer_address_postal_code: employment_record()?.employer?.address?.postal_code,
     employer_address_region: employment_record()?.employer?.address?.region,
-    employer_address_country: employment_record()?.employer?.address?.country ?? 'PH',
+    employer_address_country: employment_record()?.employer?.address?.country ?? employment_record()?.employer?.name ? 'PH' : null,
 
     tin: employment_record()?.id?.tin,
     pagibig: employment_record()?.id?.pagibig,
@@ -74,6 +75,20 @@ const updateEmployment = () => {
             </h3>
 
             <div>
+                <InputLabel for="monthly_gross_income" value="Gross Monthly Income" />
+
+                <TextInput
+                    id="monthly_gross_income"
+                    type="number"
+                    class="mt-1 block w-full"
+                    v-model="form.monthly_gross_income"
+                    required
+                />
+
+                <InputError class="mt-2" :message="form.errors.monthly_gross_income" />
+            </div>
+
+            <div>
                 <InputLabel for="employment_status" value="Employment Status" />
 
                 <TextInput
@@ -90,17 +105,16 @@ const updateEmployment = () => {
             </div>
 
             <div>
-                <InputLabel for="monthly_gross_income" value="Gross Monthly Income" />
+                <InputLabel for="employer_name" value="Employer Name" />
 
                 <TextInput
-                    id="monthly_gross_income"
-                    type="number"
+                    id="employer_name"
+                    type="text"
                     class="mt-1 block w-full"
-                    v-model="form.monthly_gross_income"
-                    required
+                    v-model="form.employer_name"
                 />
 
-                <InputError class="mt-2" :message="form.errors.monthly_gross_income" />
+                <InputError class="mt-2" :message="form.errors.employer_name" />
             </div>
 
             <div>
@@ -111,7 +125,7 @@ const updateEmployment = () => {
                     type="text"
                     class="mt-1 block w-full"
                     v-model="form.current_position"
-                    required
+                    :required="form.employer_name"
                 />
 
                 <InputError class="mt-2" :message="form.errors.current_position" />
@@ -125,24 +139,11 @@ const updateEmployment = () => {
                     type="text"
                     class="mt-1 block w-full"
                     v-model="form.employment_type"
-                    required
+                    :required="form.employer_name"
                 />
 
                 <div class="text-xs text-gray-600 dark:text-gray-400">{{ usePage().props.enums.employment_types.join(', ') }}</div>
                 <InputError class="mt-2" :message="form.errors.employment_type" />
-            </div>
-
-            <div>
-                <InputLabel for="employer_name" value="Employer Name" />
-
-                <TextInput
-                    id="employer_name"
-                    type="text"
-                    class="mt-1 block w-full"
-                    v-model="form.employer_name"
-                />
-
-                <InputError class="mt-2" :message="form.errors.employer_name" />
             </div>
 
             <div>
@@ -300,7 +301,7 @@ const updateEmployment = () => {
                     type="text"
                     class="mt-1 block w-full"
                     v-model="form.employer_address_country"
-                    required
+                    :required="form.employer_name"
                 />
 
                 <InputError class="mt-2" :message="form.errors.employer_address_country" />
@@ -316,7 +317,7 @@ const updateEmployment = () => {
                     type="text"
                     class="mt-1 block w-full"
                     v-model="form.tin"
-                    required
+                    :required="form.employer_name"
                 />
 
                 <InputError class="mt-2" :message="form.errors.tin" />
