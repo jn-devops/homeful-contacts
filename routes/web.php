@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\{AddressController, AIFController, CoBorrowerController, CoBorrowerEmploymentController, EmploymentController, PersonalController, ProfileController, SpouseController, SpouseEmploymentController};
+use App\Http\Controllers\{AddressController, AIFController, CoBorrowerController, CoBorrowerEmploymentController, EmploymentController, MediaController, PersonalController, ProfileController, SpouseController, SpouseEmploymentController};
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -48,7 +48,11 @@ Route::prefix('review')->middleware('auth')->group(function () {
 
     Route::get('/aif', [AIFController::class, 'edit'])->name('aif.edit');
     Route::patch('/aif', [AIFController::class, 'update'])->name('aif.update');
+
+    Route::get('/media', [MediaController::class, 'edit'])->name('media.edit');
+    Route::post('/media', [MediaController::class, 'store'])->name('media.store');
 });
 
+Route::mediaLibrary();
 
 require __DIR__.'/auth.php';
