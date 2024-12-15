@@ -1,11 +1,9 @@
 <script setup>
 
-import ProUploadForm from '@/Pages/Media/Partials/ProUploadForm.vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import UploadForm from "@/Pages/Media/Partials/UploadForm.vue";
 import SectionBorder from "@/Components/SectionBorder.vue";
 import { Head } from '@inertiajs/vue3';
-import AIFInformationForm from "@/Pages/AIF/Partials/AIFInformationForm.vue";
 
 const props = defineProps({
     contact: Object
@@ -41,6 +39,14 @@ const props = defineProps({
                     <UploadForm
                         :contact = "contact"
                         name = "selfieImage"
+                        class="max-w-xl"
+                    />
+
+                    <SectionBorder/>
+
+                    <UploadForm
+                        :contact = "contact"
+                        name = "payslipImage"
                         class="max-w-xl"
                     />
 

@@ -15,7 +15,7 @@ class MediaUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['nullable', 'string'],
+            'name' => ['required', 'string'],
             'file' => ['required', 'file'],
         ];
     }

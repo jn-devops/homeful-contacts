@@ -45,11 +45,10 @@ const removeDocument = () => {
 
 <template>
     {{ filename }}
-
     <section>
         <form
             @submit.prevent="uploadDocument"
-            class="mt-6 space-y-6"
+            class="space-y-6"
         >
             <div>
                 <InputLabel for="file" :value=form.name />

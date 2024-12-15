@@ -12,7 +12,14 @@ class MediaController extends Controller
     public function edit(Request $request): Response
     {
         return Inertia::render('Media/Edit', [
-            'contact' => $request->user()->contact->append(['idImage', 'selfieImage'])
+            'contact' => $request->user()->contact->append([
+                'idImage',
+                'selfieImage',
+                'payslipImage',
+                'voluntarySurrenderFormDocument',
+                'usufructAgreementDocument',
+                'contractToSellDocument'
+            ])
         ]);
     }
 
@@ -23,7 +30,11 @@ class MediaController extends Controller
 
         $collection_name = match ($name) {
             'idImage' => 'id-images',
-            'selfieImage' => 'selfie-images'
+            'selfieImage' => 'selfie-images',
+            'payslipImage' => 'payslip-images',
+            'voluntarySurrenderFormDocument' => 'voluntary_surrender_form-documents',
+            'usufructAgreementDocument' => 'usufruct_agreement-documents',
+            'contractToSellDocument' => 'contract_to_sell-documents'
         };
 
         $user->contact->addMediaFromRequest('file')
