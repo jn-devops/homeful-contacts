@@ -32,6 +32,15 @@ const props = defineProps({
 
                     <UploadForm
                         :contact = "contact"
+                        name = "idImage"
+                        class="max-w-xl"
+                    />
+
+                    <SectionBorder/>
+
+                    <UploadForm
+                        :contact = "contact"
+                        name = "selfieImage"
                         class="max-w-xl"
                     />
 

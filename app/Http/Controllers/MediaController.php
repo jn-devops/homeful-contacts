@@ -12,30 +12,39 @@ class MediaController extends Controller
     public function edit(Request $request): Response
     {
         return Inertia::render('Media/Edit', [
-            'contact' => $request->user()->contact
+            'contact' => $request->user()->contact->append(['idImage', 'selfieImage'])
         ]);
     }
 
-
-    public function store(Request $request)
+    public function store(MediaUpdateRequest $request)
     {
         $user = $request->user();
-        $user->contact->addMediaFromRequest('file')
-            ->usingName('idImage')
-            ->toMediaCollection('id-images')
-            ->save();
+        $name = $request->validated('name');
 
-        return Redirect::route('media.edit');
+        $collection_name = match ($name) {
+            'idImage' => 'id-images',
+            'selfieImage' => 'selfie-images'
+        };
+
+        $user->contact->addMediaFromRequest('file')
+            ->usingName($name)
+            ->toMediaCollection($collection_name)
+            ->save();
+        $user->contact->save();
+
+        return back()->with('file_name', $name);
     }
 
-//    public function update(MediaUpdateRequest $request): RedirectResponse
-//    {
-//        $user = $request->user();
-//        $user->contact->addMediaFromRequest('file')->usingName('idImage')->toMediaCollection('id-images')->save();
-////        $user->contact->update(['order' => $request->validated()]);
-////        $user->contact->save();
-////        $user->save();
-//
-//        return Redirect::route('media.edit');
-//    }
+    public function destroy(Request $request)
+    {
+        $user = $request->user();
+        $user->refresh();
+        $name = $request->get('name');
+        $user->contact->refresh();
+        $media = $user->contact->getAttribute($name);
+        $user->contact->fresh()->deleteMedia($media);
+
+        return Redirect::route('media.edit');
+        return back();
+    }
 }

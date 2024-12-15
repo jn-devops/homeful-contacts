@@ -51,6 +51,7 @@ Route::prefix('review')->middleware('auth')->group(function () {
 
     Route::get('/media', [MediaController::class, 'edit'])->name('media.edit');
     Route::post('/media', [MediaController::class, 'store'])->name('media.store');
+    Route::delete('/media', [MediaController::class, 'destroy'])->name('media.destroy');
 });
 
 Route::mediaLibrary();
