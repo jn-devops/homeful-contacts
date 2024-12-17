@@ -1,114 +1,111 @@
 <script setup>
-import ConfirmationModal from '@/Components/ConfirmationModal.vue';
-import SecondaryButton from '@/Components/SecondaryButton.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
-import ActionMessage from '@/Components/ActionMessage.vue';
-import DangerButton from '@/Components/DangerButton.vue';
-import InputError from '@/Components/InputError.vue';
-import InputLabel from '@/Components/InputLabel.vue';
-import TextInput from '@/Components/TextInput.vue';
 import { router, useForm, usePage } from '@inertiajs/vue3';
-import { computed, ref, unref } from "vue";
+import InputLabel from '@/Components/InputLabel.vue';
+import {computed, ref, unref} from "vue";
+
+// Import filepond
+import vueFilePond, { setOptions } from 'vue-filepond';
+
+// Import filepond plugins
+import FilePondPluginFileValidateType from 'filepond-plugin-file-validate-type/dist/filepond-plugin-file-validate-type.esm.js';
+import FilePondPluginImagePreview from 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.esm.js';
+
+// Import filepond styles
+import 'filepond/dist/filepond.min.css';
+import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.css';
+import DangerButton from "@/Components/DangerButton.vue";
+import InputError from "@/Components/InputError.vue";
 
 const props = defineProps({
+    csrf_token: String,
     contact: Object,
-    name: String
+    name: String,
+    label: String
 });
+
+const filepondAvatarInput = ref(null); // Reference the input to clear the files later
 
 const form = useForm({
     name: props.name,
-    file: null,
+    file: null
 });
 
-const file_name = () => {
-    return props.contact[props.name].file_name
+const uploadMedia = () => {
+    form.patch(route('media.update'), {
+            onSuccess: () => {
+                // filepondAvatarInput.value.removeFiles();
+                // filepondAvatarInput.value = null;
+            },
+        });
 };
 
-const filename = computed(() => props.contact[props.name]?.file_name);
-const unwrappedFilename = computed(() => unref(filename));
-
-const uploadDocument = () => {
-    form.post(route('media.store'), {
-        errorBag: 'uploadDocument',
-        preserveScroll: true,
-    });
-};
-
-const removeDocument = () => {
+const removeMedia = () => {
     form.delete(route('media.destroy'), {
-        errorBag: 'removeDocument',
+        errorBag: 'removeMedia',
         preserveScroll: true,
     });
 };
+
+// Create FilePond component
+const FilePond = vueFilePond(FilePondPluginFileValidateType, FilePondPluginImagePreview);
+
+// Set global options on filepond init
+const handleFilePondInit = () => {
+    setOptions({
+        credits: false,
+        server: {
+            url: '/filepond',
+            headers: {
+                'X-CSRF-TOKEN': usePage().props.csrf_token,
+            }
+        }
+    });
+};
+// Set the server id from response
+const handleFilePondAvatarProcess = (error, file) => {
+    form.file = file.serverId;
+};
+// Remove the server id on file remove
+const handleFilePondAvatarRemoveFile = (error, file) => {
+    form.file = null;
+};
+
+const label = computed(() => props.label ?? props.name);
+const filename = computed(() => props.contact[props.name]?.file_name);
+const url = computed(() => props.contact[props.name]?.preview_url);
 
 </script>
 
 <template>
-    {{ filename }}
     <section>
         <form
-            @submit.prevent="uploadDocument"
+            @submit.prevent="uploadMedia"
             class="space-y-6"
         >
-            <div>
-                <InputLabel for="file" :value=form.name />
-
-                <div class="flex">
-                    <template v-if="filename">
-                        <TextInput
-                            :model-value="unwrappedFilename"
-                            type="text"
-                            class="mt-1 block w-full dark:text-orange-400 text-orange-600"
-                            readonly
-                        />
-                    </template>
-                    <template v-else>
-                        <TextInput
-                            id="file"
-                            @input="form.file = $event.target.files[0]; uploadDocument()"
-                            type="file"
-                            accept=".jpg,.jpeg"
-                            class="mt-1 block w-full inline-flex items-center px-4 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-500 rounded-md font-semibold text-xs text-gray-700 dark:text-gray-300 uppercase tracking-widest shadow-sm hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 disabled:opacity-25 transition ease-in-out duration-150"
-                        />
-
-                        <InputError class="mt-2" :message="form.errors.file" />
-                    </template>
-                </div>
+            <div class="mt-4">
+                <InputLabel for="file" :value=label />
             </div>
-
-            <div class="flex items-center gap-4">
-
-                <template v-if="filename">
-                    <DangerButton
-                        class="ml-3"
-                        :class="{ 'opacity-25': form.processing }"
-                        :disabled="form.processing"
-                        @click="removeDocument"
-                    >
-                        Remove Document
-                    </DangerButton>
-                </template>
-                <template v-else>
-                    <PrimaryButton :disabled="form.processing">Save</PrimaryButton>
-                    <Transition
-                        enter-active-class="transition ease-in-out"
-                        enter-from-class="opacity-0"
-                        leave-active-class="transition ease-in-out"
-                        leave-to-class="opacity-0"
-                    >
-                        <p
-                            v-if="form.recentlySuccessful"
-                            class="text-sm text-gray-600 dark:text-gray-400"
-                        >
-                            Saved.
-                        </p>
-                    </Transition>
-                </template>
-            </div>
+            <template v-if="url">
+                <img :src="url"/>
+                <DangerButton :disabled="form.processing" @click.prevent="removeMedia">
+                    Remove File
+                </DangerButton>
+            </template>
+            <template v-else>
+                <FilePond
+                    name="file"
+                    ref="filepondAvatarInput"
+                    class-name="my-pond"
+                    allow-multiple="false"
+                    accepted-file-types="image/*"
+                    @init="handleFilePondInit"
+                    @processfile="handleFilePondAvatarProcess"
+                    @removefile="handleFilePondAvatarRemoveFile"
+                />
+                <InputError class="mt-2" :message="form.errors.file" />
+                <PrimaryButton :disabled="form.processing">Upload File</PrimaryButton>
+            </template>
         </form>
     </section>
 </template>
-
-<style scoped>
-
-</style>

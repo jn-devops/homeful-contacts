@@ -58,7 +58,8 @@ class HandleInertiaRequests extends Middleware
                 'employment_types' => EmploymentType::toArray(),
                 'employment_statuses' => EmploymentStatus::toArray(),
                 'industries' => Industry::toArray(),
-            ]
+            ],
+            'csrf_token' => csrf_token(),
         ];
     }
 }

@@ -4,58 +4,54 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\{RedirectResponse, Request};
 use App\Http\Requests\MediaUpdateRequest;
-use Illuminate\Support\Facades\Redirect;
+use RahulHaque\Filepond\Facades\Filepond;
 use Inertia\{Inertia, Response};
+use Illuminate\Support\Arr;
 
 class MediaController extends Controller
 {
     public function edit(Request $request): Response
     {
         return Inertia::render('Media/Edit', [
-            'contact' => $request->user()->contact->append([
-                'idImage',
-                'selfieImage',
-                'payslipImage',
-                'voluntarySurrenderFormDocument',
-                'usufructAgreementDocument',
-                'contractToSellDocument'
-            ])
+            'contact' => $request->user()->contact
+                ->append(array_keys($this->getMediaMatrix()))
         ]);
     }
 
-    public function store(MediaUpdateRequest $request)
+    public function update(MediaUpdateRequest $request): RedirectResponse
     {
-        $user = $request->user();
         $name = $request->validated('name');
+        $collection_name = Arr::get($this->getMediaMatrix(), $name);
+        $fileInfo = Filepond::field($request->get('file'));
+        $user = $request->user();
 
-        $collection_name = match ($name) {
-            'idImage' => 'id-images',
-            'selfieImage' => 'selfie-images',
-            'payslipImage' => 'payslip-images',
-            'voluntarySurrenderFormDocument' => 'voluntary_surrender_form-documents',
-            'usufructAgreementDocument' => 'usufruct_agreement-documents',
-            'contractToSellDocument' => 'contract_to_sell-documents'
-        };
-
-        $user->contact->addMediaFromRequest('file')
+        $user->contact->addMedia($fileInfo->getFile()->getPathname())
             ->usingName($name)
             ->toMediaCollection($collection_name)
             ->save();
         $user->contact->save();
+        $fileInfo->delete();
 
-        return back()->with('file_name', $name);
+        return redirect()->back()->with('name', $name);
     }
 
-    public function destroy(Request $request)
+    public function destroy(Request $request): RedirectResponse
     {
         $user = $request->user();
-        $user->refresh();
         $name = $request->get('name');
-        $user->contact->refresh();
         $media = $user->contact->getAttribute($name);
-        $user->contact->fresh()->deleteMedia($media);
+        $user->contact->deleteMedia($media);
 
-        return Redirect::route('media.edit');
-        return back();
+        return redirect()->back();
+    }
+
+    protected function getMediaMatrix(): array
+    {
+        return [
+            'idImage' => 'id-images',
+            'selfieImage' => 'selfie-images',
+            'payslipImage' => 'payslip-images',
+            'signatureImage' => 'signature-image' //TODO: change to 'signature-images in jn-devops/contacts
+        ];
     }
 }

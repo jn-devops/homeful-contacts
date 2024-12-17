@@ -50,6 +50,7 @@ Route::prefix('review')->middleware('auth')->group(function () {
     Route::patch('/aif', [AIFController::class, 'update'])->name('aif.update');
 
     Route::get('/media', [MediaController::class, 'edit'])->name('media.edit');
+    Route::patch('/media', [MediaController::class, 'update'])->name('media.update');
     Route::post('/media', [MediaController::class, 'store'])->name('media.store');
     Route::delete('/media', [MediaController::class, 'destroy'])->name('media.destroy');
 });

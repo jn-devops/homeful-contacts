@@ -16,7 +16,13 @@ class MediaUpdateRequest extends FormRequest
     {
         return [
             'name' => ['required', 'string'],
-            'file' => ['required', 'file'],
+            'file' => [
+                'required',
+                Rule::filepond([
+                    'max:1024',
+                    'image:jpeg,png',
+                ]),
+            ],
         ];
     }
 }

@@ -31,6 +31,7 @@ const props = defineProps({
                     <UploadForm
                         :contact = "contact"
                         name = "idImage"
+                        label = "ID"
                         class="max-w-xl"
                     />
 
@@ -39,6 +40,7 @@ const props = defineProps({
                     <UploadForm
                         :contact = "contact"
                         name = "selfieImage"
+                        label = "Selfie"
                         class="max-w-xl"
                     />
 
@@ -47,9 +49,18 @@ const props = defineProps({
                     <UploadForm
                         :contact = "contact"
                         name = "payslipImage"
+                        label = "Pay Slip"
                         class="max-w-xl"
                     />
 
+                    <SectionBorder/>
+
+                    <UploadForm
+                        :contact = "contact"
+                        name = "signatureImage"
+                        label = "Signature"
+                        class="max-w-xl"
+                    />
                 </div>
             </div>
 

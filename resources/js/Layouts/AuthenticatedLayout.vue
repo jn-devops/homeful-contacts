@@ -99,7 +99,7 @@ const showingNavigationDropdown = ref(false);
                                     :href="route('media.edit')"
                                     :active="route().current('media.edit')"
                                 >
-                                    Media
+                                    Files
                                 </NavLink>
                             </div>
                         </div>
