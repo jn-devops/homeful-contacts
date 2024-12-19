@@ -4,7 +4,11 @@ import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
-import { Head, Link, useForm } from '@inertiajs/vue3';
+import { Head, Link, router, useForm } from '@inertiajs/vue3';
+
+const props = defineProps({
+    callback: String
+});
 
 const form = useForm({
     name: '',
@@ -17,8 +21,14 @@ const form = useForm({
 const submit = () => {
     form.post(route('register'), {
         onFinish: () => form.reset('password', 'password_confirmation'),
+        onSuccess: (response) => {
+            if (props.callback) {
+                window.location.href = props.callback;
+            }
+        },
     });
 };
+
 </script>
 
 <template>

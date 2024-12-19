@@ -8,6 +8,7 @@ use Illuminate\Auth\Events\Registered;
 use App\Http\Controllers\Controller;
 use Illuminate\Validation\Rules;
 use Inertia\{Inertia, Response};
+use Illuminate\Support\Arr;
 use App\Models\User;
 
 class RegisteredUserController extends Controller
@@ -15,17 +16,16 @@ class RegisteredUserController extends Controller
     /**
      * Display the registration view.
      */
-    public function create(): Response
+    public function create(Request $request): Response
     {
-        return Inertia::render('Auth/Register');
+        session($request->only('callback'));
+
+        return Inertia::render('Auth/Register', [
+            'callback' => $request->get('callback')
+        ]);
     }
 
-    /**
-     * Handle an incoming registration request.
-     *
-     * @throws \Illuminate\Validation\ValidationException
-     */
-    public function store(Request $request): RedirectResponse
+    public function store(Request $request)
     {
         $request->validate([
             'name' => ['required', 'string', 'max:255', 'regex:/^(\w+) (.*)$/'],
@@ -45,6 +45,8 @@ class RegisteredUserController extends Controller
 
         Auth::login($user);
 
-        return redirect(route('dashboard', absolute: false));
+        return session('callback')
+            ? redirect()->back()
+            : redirect(route('dashboard', absolute: false));
     }
 }
