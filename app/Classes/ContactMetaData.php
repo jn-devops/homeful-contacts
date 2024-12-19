@@ -33,7 +33,7 @@ class ContactMetaData extends Data
         public Nationality|null $nationality,
         #[WithTransformer(DateTimeInterfaceTransformer::class, format: 'Y-m-d')]
         #[WithCast(DateTimeInterfaceCast::class, timeZone: 'Asia/Manila')]
-        public Carbon $date_of_birth,
+        public Carbon|null $date_of_birth,
         /** @var AddressMetadata[] */
         public ?DataCollection $addresses,
         /** @var EmploymentMetadata[] */

@@ -2,15 +2,16 @@
 
 namespace App\Actions;
 
-use App\Enums\CivilStatus;
 use Homeful\References\Facades\References;
-use Illuminate\Validation\Rule;
 use Lorisleiva\Actions\Concerns\AsAction;
 use Illuminate\Support\Facades\Validator;
 use Homeful\References\Models\Reference;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Hash;
+use App\Events\UserContactCreated;
+use Illuminate\Validation\Rule;
 use Illuminate\Support\Str;
+use App\Enums\CivilStatus;
 use App\Models\Contact;
 use App\Models\User;
 
@@ -53,7 +54,7 @@ class CreateUserContact
             }
         }
 
-        event(new Registered($user));
+       event(new UserContactCreated($user));
 
         return $reference;
     }
