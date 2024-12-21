@@ -15,6 +15,9 @@ use App\Enums\CivilStatus;
 use App\Models\Contact;
 use App\Models\User;
 
+/**
+ * @deprecated
+ */
 class CreateUserContact
 {
     use AsAction;

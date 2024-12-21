@@ -16,6 +16,7 @@ const form = useForm({
     mobile: '',
     password: '',
     password_confirmation: '',
+    monthly_gross_income: 0,
 });
 
 const submit = () => {
@@ -116,6 +117,24 @@ const submit = () => {
                     class="mt-2"
                     :message="form.errors.password_confirmation"
                 />
+            </div>
+
+            <div class="mt-4">
+                <InputLabel
+                    for="monthly_gross_income"
+                    value="Gross Monthly Income"
+                />
+
+                <TextInput
+                    id="monthly_gross_income"
+                    type="number"
+                    class="mt-1 block w-full"
+                    v-model="form.monthly_gross_income"
+                    min="0"
+                    required
+                />
+
+                <InputError class="mt-2" :message="form.errors.monthly_gross_income" />
             </div>
 
             <div class="mt-4 flex items-center justify-end">

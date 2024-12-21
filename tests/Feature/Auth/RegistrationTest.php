@@ -13,6 +13,7 @@ test('new users can register', function () {
         'mobile' => '09171234567',
         'password' => 'password',
         'password_confirmation' => 'password',
+        'gross_monthly_income' => 15000
     ]);
 
     $this->assertAuthenticated();

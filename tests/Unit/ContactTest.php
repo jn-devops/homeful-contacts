@@ -1,8 +1,8 @@
 <?php
 
-use App\Enums\{AddressType, CivilStatus, Nationality, Ownership, Sex};
+use App\Enums\{AddressType, CivilStatus, Employment, EmploymentStatus, Nationality, Ownership, Sex};
+use App\Classes\{AddressMetadata, ContactMetaData, EmploymentMetadata};
 use Illuminate\Foundation\Testing\{RefreshDatabase, WithFaker};
-use App\Classes\{AddressMetadata, ContactMetaData};
 use Spatie\LaravelData\DataCollection;
 use App\Models\Contact;
 
@@ -85,10 +85,14 @@ test('contact can accept minimum address attributes', function (Contact $contact
     expect($contact->addresses->first())->toBeInstanceOf(AddressMetadata::class);
 })->with('contact');
 
-//test('contact can accept employment', function (Contact $contact) {
-//    $contact->employment = [
-//        [
-//            'type' => \App\Enums\Employment::default(),
-//        ]
-//    ];
-//})->with('contact');
+test('contact can accept employment', function (Contact $contact) {
+    $employment = EmploymentMetadata::from([
+        'type' => Employment::default(),
+        'monthly_gross_income' => 100000,
+        'employment_status' => EmploymentStatus::default()
+    ]);
+    $contact->employment = [$employment];
+    $contact->save();
+    expect($contact->employment)->toBeInstanceOf(DataCollection::class);
+    expect($contact->employment->first())->toBeInstanceOf(EmploymentMetadata::class);
+})->with('contact');
