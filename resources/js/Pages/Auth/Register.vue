@@ -7,7 +7,11 @@ import TextInput from '@/Components/TextInput.vue';
 import { Head, Link, router, useForm } from '@inertiajs/vue3';
 
 const props = defineProps({
-    callback: String
+    callback: String,
+    showGMI: {
+        type: Boolean,
+        default: false
+    }
 });
 
 const form = useForm({
@@ -119,23 +123,26 @@ const submit = () => {
                 />
             </div>
 
-            <div class="mt-4">
-                <InputLabel
-                    for="monthly_gross_income"
-                    value="Gross Monthly Income"
-                />
+            <template v-if="showGMI">
+                <div class="mt-4">
+                    <InputLabel
+                        for="monthly_gross_income"
+                        value="Gross Monthly Income"
+                    />
 
-                <TextInput
-                    id="monthly_gross_income"
-                    type="number"
-                    class="mt-1 block w-full"
-                    v-model="form.monthly_gross_income"
-                    min="0"
-                    required
-                />
+                    <TextInput
+                        id="monthly_gross_income"
+                        type="number"
+                        class="mt-1 block w-full"
+                        v-model="form.monthly_gross_income"
+                        min="0"
+                        required
+                    />
 
-                <InputError class="mt-2" :message="form.errors.monthly_gross_income" />
-            </div>
+                    <InputError class="mt-2" :message="form.errors.monthly_gross_income" />
+                </div>
+            </template>
+
 
             <div class="mt-4 flex items-center justify-end">
                 <Link

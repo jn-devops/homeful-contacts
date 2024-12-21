@@ -15,7 +15,8 @@ class RegisteredUserController extends Controller
         session($request->only('callback'));
 
         return Inertia::render('Auth/Register', [
-            'callback' => $request->get('callback')
+            'callback' => $request->get('callback'),
+            'showGMI' => (bool) $request->get('showGMI'),
         ]);
     }
 
