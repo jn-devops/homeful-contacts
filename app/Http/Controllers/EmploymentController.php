@@ -14,7 +14,7 @@ class EmploymentController extends Controller
 {
     public function edit(Request $request): Response
     {
-        return Inertia::render('Personal/Edit', [
+        return Inertia::render('Employment/Edit', [
             'contact' => $request->user()->contact
         ]);
     }
@@ -80,6 +80,6 @@ class EmploymentController extends Controller
         $user->contact->save();
         $user->save();
 
-        return Redirect::route('personal.edit');
+        return redirect()->back();
     }
 }

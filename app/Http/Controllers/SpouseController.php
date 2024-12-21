@@ -23,6 +23,6 @@ class SpouseController extends Controller
         $user->contact->save();
         $user->save();
 
-        return Redirect::route('spouse.edit');
+        return redirect()->back();
     }
 }

@@ -23,6 +23,6 @@ class AIFController extends Controller
         $user->contact->save();
         $user->save();
 
-        return Redirect::route('aif.edit');
+        return redirect()->back();
     }
 }

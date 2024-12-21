@@ -39,6 +39,6 @@ class CoBorrowerController extends Controller
         $user->contact->save();
         $user->save();
 
-        return Redirect::route('co_borrower.edit');
+        return redirect()->back();
     }
 }

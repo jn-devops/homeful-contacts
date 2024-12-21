@@ -28,10 +28,10 @@ Route::prefix('review')->middleware('auth')->group(function () {
     Route::get('/personal', [PersonalController::class, 'edit'])->name('personal.edit');
     Route::patch('/personal', [PersonalController::class, 'update'])->name('personal.update');
 
-    Route::get('/address', [AddressController::class, 'edit'])->name('personal.edit');
+    Route::get('/address', [AddressController::class, 'edit'])->name('address.edit');
     Route::patch('/address', [AddressController::class, 'update'])->name('address.update');
 
-    Route::get('/employment', [EmploymentController::class, 'edit'])->name('personal.edit');
+    Route::get('/employment', [EmploymentController::class, 'edit'])->name('employment.edit');
     Route::patch('/employment', [EmploymentController::class, 'update'])->name('employment.update');
 
     Route::get('/spouse', [SpouseController::class, 'edit'])->name('spouse.edit');

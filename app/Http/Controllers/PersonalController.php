@@ -33,6 +33,6 @@ class PersonalController extends Controller
             $user->contact->save();
         }
 
-        return Redirect::route('personal.edit');
+        return redirect()->back();
     }
 }
