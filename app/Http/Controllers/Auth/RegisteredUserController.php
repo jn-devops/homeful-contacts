@@ -15,8 +15,8 @@ class RegisteredUserController extends Controller
         session($request->only('callback'));
 
         return Inertia::render('Auth/Register', [
-            'callback' => $request->get('callback'),
-            'showGMI' => (bool) $request->get('showGMI'),
+            'callback' => $request->get('callback', config('homeful-contacts.callback')),
+            'showGMI' => config('homeful-contacts.show_gmi') || $request->get('showGMI'),
         ]);
     }
 

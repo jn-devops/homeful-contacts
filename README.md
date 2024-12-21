@@ -28,6 +28,9 @@ https://contacts.homeful.ph/register?callback=https://google.com&showGMI=true
 "date_of_birth": "1970-04-21",
 "monthly_gross_income": 0
 }'`
+#### edit default values in .env
+CALLBACK=https://google.com\
+SHOW_GMI=TRUE
 
 ## Security Vulnerabilities
 
