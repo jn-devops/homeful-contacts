@@ -2671,16 +2671,16 @@
         },
         {
             "name": "homeful/references",
-            "version": "v1.1.8",
+            "version": "v1.2.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/jn-devops/references.git",
-                "reference": "3e0db84fa42e2d77090bb500ed3dbe470cb8cde7"
+                "reference": "ba2b32d52da7dbea32b3ec528ba25f4b9ac0203e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/jn-devops/references/zipball/3e0db84fa42e2d77090bb500ed3dbe470cb8cde7",
-                "reference": "3e0db84fa42e2d77090bb500ed3dbe470cb8cde7",
+                "url": "https://api.github.com/repos/jn-devops/references/zipball/ba2b32d52da7dbea32b3ec528ba25f4b9ac0203e",
+                "reference": "ba2b32d52da7dbea32b3ec528ba25f4b9ac0203e",
                 "shasum": ""
             },
             "require": {
@@ -2707,12 +2707,12 @@
             "type": "library",
             "extra": {
                 "laravel": {
-                    "providers": [
-                        "Homeful\\References\\ReferencesServiceProvider"
-                    ],
                     "aliases": {
                         "References": "Homeful\\References\\Facades\\References"
-                    }
+                    },
+                    "providers": [
+                        "Homeful\\References\\ReferencesServiceProvider"
+                    ]
                 }
             },
             "autoload": {
@@ -2746,7 +2746,7 @@
             ],
             "support": {
                 "issues": "https://github.com/jn-devops/references/issues",
-                "source": "https://github.com/jn-devops/references/tree/v1.1.8"
+                "source": "https://github.com/jn-devops/references/tree/v1.2.2"
             },
             "funding": [
                 {
@@ -2754,7 +2754,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-11-24T23:39:31+00:00"
+            "time": "2024-12-21T13:18:11+00:00"
         },
         {
             "name": "inertiajs/inertia-laravel",

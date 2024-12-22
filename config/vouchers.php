@@ -51,7 +51,7 @@ return [
     'models' => [
         'entity' => FrittenKeeZ\Vouchers\Models\VoucherEntity::class,
         'redeemer' => FrittenKeeZ\Vouchers\Models\Redeemer::class,
-        'voucher' => \Homeful\References\Models\Reference::class,
+        'voucher' => \App\Models\Reference::class,
     ],
 
     'tables' => [

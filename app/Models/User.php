@@ -17,6 +17,8 @@ use TheIconic\NameParser\Parser;
  * @property string $email
  * @property string $mobile
  * @property Contact $contact
+ * @property string $first_name
+ * @property string $last_name
  *
  * @method int getKey()
  */

@@ -17,10 +17,6 @@ class Contact extends BaseContact
 
     protected string $dataClass = ContactMetaData::class;
 
-//    protected $appends = [
-//        'idImage'
-//    ];
-
     protected function serializeDate(DateTimeInterface $date): string
     {
         return $date->format('Y-m-d');

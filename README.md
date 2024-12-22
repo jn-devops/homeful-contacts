@@ -1,7 +1,6 @@
 ## About Homeful Contacts
 
 ## Usage
-
 ### Registration
 #### Normal
 https://contacts.homeful.ph/register
@@ -32,6 +31,31 @@ https://contacts.homeful.ph/register?callback=https://google.com&showGMI=true
 CALLBACK=https://google.com\
 SHOW_GMI=TRUE
 
+## API
+### Register Contact
+POST http://contacts.homeful.ph/api/register
+
+sample json payload<p>
+`{
+    "name": "Mary Cruz",
+    "email": "mary.cruz@gmail.com",
+    "mobile": "09171234567",
+    "password": "#Password1",
+    "password_confirmation": "#Password1",
+    "middle_name": "Rose",
+    "civil_status": "Single",
+    "sex": "Female",
+    "nationality": "Filipino",
+    "date_of_birth": "1999-03-17",
+    "monthly_gross_income": 53700
+}`
+
+### Get Reference JSON
+GET https://contacts.homeful.ph/api/references/{reference}
+
+### Get Contact JSON
+GET https://contacts.homeful.ph/api/contacts/{mobile}
+
 ## Security Vulnerabilities
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Anaïs Santos via [devops@joy-nostalg.com](mailto:devops@joy-nostalg.com). All security vulnerabilities will be promptly addressed.
+If you discover a security vulnerability within Homeful Contacts, please send an e-mail to Anaïs Santos via [devops@joy-nostalg.com](mailto:devops@joy-nostalg.com). All security vulnerabilities will be promptly addressed.

@@ -4,12 +4,13 @@ namespace App\Actions;
 
 use App\Enums\{CivilStatus, Employment, EmploymentStatus, Nationality, Sex};
 use Illuminate\Validation\{Rule, Rules, ValidationException};
+use App\Classes\{EmploymentMetadata, ReferenceMetadata};
+use Homeful\References\Facades\References;
+use App\Models\{Contact, Reference, User};
 use Lorisleiva\Actions\Concerns\AsAction;
 use Lorisleiva\Actions\ActionRequest;
 use Illuminate\Support\Facades\Hash;
-use App\Classes\EmploymentMetadata;
 use App\Events\ContactRegistered;
-use App\Models\{Contact, User};
 use Illuminate\Support\Arr;
 use App\Data\UserData;
 use App\Rules\Income;
@@ -20,14 +21,28 @@ class RegisterContact
 
     protected User $user;
 
+    protected Reference $reference;
+
     protected function register(array $validated): User
     {
+        //hash the validated password, a Laravel best practice
+        //as per documentation the hashed password stored in the database will be compared with the password value
+        // passed to the Auth::attempt method via the array
         $validated['password'] = Hash::make($validated['password']);
+
+        //pull the gmi from the list of attributes for processing
+        //it is not needed in the persisting of the contact
+        //but will be used later in the employment
         $gmi = (float) Arr::pull($validated, 'monthly_gross_income');
+
+        //persist the user using the validated attributes sans the gmi attribute
         $user = app(User::class)->create($validated);
+
+        //persist the contact model
         $attributes = array_merge((array) UserData::from($user), $validated);
         $contact = app(Contact::class)->create($attributes);
 
+        //if the gmi attribute is valid then add it to the contact model
         if ($gmi > 0.0) {
             $employment = EmploymentMetadata::from([
                 'type' => Employment::default(),
@@ -38,10 +53,19 @@ class RegisterContact
             $contact->save();
         }
 
+        //associate the contact with the user
         $user->contact()->associate($contact);
         $user->save();
+
         event(new ContactRegistered($user->contact));
 
+        //create a reference for the contact
+        //and temporary save it to $this->reference class property for further processing
+        $this->reference = References::create();
+        $this->reference->addEntities($contact);
+
+        //return the user, not the reference
+        //it needs to be authorized in the registration controller
         return $user;
     }
 
@@ -71,11 +95,11 @@ class RegisterContact
 
     public function asController(ActionRequest $request): void
     {
-        $this->user = $this->register($request->validated());
+        $this->register($request->validated());
     }
 
-    public function jsonResponse(): UserData
+    public function jsonResponse(): ReferenceMetadata
     {
-        return UserData::from($this->user);
+        return ReferenceMetadata::from($this->reference);
     }
 }
