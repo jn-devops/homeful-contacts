@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests;
 
-use App\Enums\{AddressType, Employment, EmploymentStatus, EmploymentType, Industry, Nationality, Ownership};
+use Homeful\Contacts\Enums\{AddressType, Employment, EmploymentStatus, EmploymentType, Industry, Nationality, Ownership};
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 

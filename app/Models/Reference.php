@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use Homeful\References\Models\Reference as BaseReference;
-use App\Classes\ContactMetaData;
+use Homeful\Contacts\Classes\ContactMetaData;
 
 class Reference extends BaseReference
 {

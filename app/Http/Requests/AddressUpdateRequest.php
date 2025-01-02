@@ -2,8 +2,8 @@
 
 namespace App\Http\Requests;
 
+use Homeful\Contacts\Enums\{AddressType, Ownership};
 use Illuminate\Foundation\Http\FormRequest;
-use App\Enums\{AddressType, Ownership};
 use Illuminate\Validation\Rule;
 
 

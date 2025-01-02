@@ -6,6 +6,9 @@ use App\Enums\{Industry, Nationality};
 use Spatie\LaravelData\Data;
 use App\Traits\WithAck;
 
+/**
+ * @deprecated
+ */
 class EmployerMetadata extends Data
 {
     use WithAck;

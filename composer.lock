@@ -2963,16 +2963,16 @@
         },
         {
             "name": "jn-devops/common",
-            "version": "v1.3.1",
+            "version": "v1.3.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/jn-devops/common.git",
-                "reference": "7385edcd95432ce465e37173c9e49030c207a4c0"
+                "reference": "2c208c1e2e487f59755b896b706c72741fb319bc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/jn-devops/common/zipball/7385edcd95432ce465e37173c9e49030c207a4c0",
-                "reference": "7385edcd95432ce465e37173c9e49030c207a4c0",
+                "url": "https://api.github.com/repos/jn-devops/common/zipball/2c208c1e2e487f59755b896b706c72741fb319bc",
+                "reference": "2c208c1e2e487f59755b896b706c72741fb319bc",
                 "shasum": ""
             },
             "require": {
@@ -2999,12 +2999,12 @@
             "type": "library",
             "extra": {
                 "laravel": {
-                    "providers": [
-                        "Homeful\\Common\\CommonServiceProvider"
-                    ],
                     "aliases": {
                         "Common": "Homeful\\Common\\Facades\\Common"
-                    }
+                    },
+                    "providers": [
+                        "Homeful\\Common\\CommonServiceProvider"
+                    ]
                 }
             },
             "autoload": {
@@ -3036,7 +3036,7 @@
             ],
             "support": {
                 "issues": "https://github.com/jn-devops/common/issues",
-                "source": "https://github.com/jn-devops/common/tree/v1.3.1"
+                "source": "https://github.com/jn-devops/common/tree/v1.3.3"
             },
             "funding": [
                 {
@@ -3044,20 +3044,20 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-09-27T04:58:51+00:00"
+            "time": "2025-01-02T08:01:34+00:00"
         },
         {
             "name": "jn-devops/contacts",
-            "version": "v1.6.0",
+            "version": "v1.6.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/jn-devops/contacts.git",
-                "reference": "ba1300866d98ee5479d9da997c91fcda5987fec2"
+                "reference": "3ed56eadf3edfef7a695cb14d2fd391c2921010f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/jn-devops/contacts/zipball/ba1300866d98ee5479d9da997c91fcda5987fec2",
-                "reference": "ba1300866d98ee5479d9da997c91fcda5987fec2",
+                "url": "https://api.github.com/repos/jn-devops/contacts/zipball/3ed56eadf3edfef7a695cb14d2fd391c2921010f",
+                "reference": "3ed56eadf3edfef7a695cb14d2fd391c2921010f",
                 "shasum": ""
             },
             "require": {
@@ -3068,6 +3068,7 @@
                 "php": "^8.2",
                 "spatie/laravel-data": "^4.6",
                 "spatie/laravel-medialibrary": "^11.5",
+                "spatie/laravel-model-status": "^1.18",
                 "spatie/laravel-package-tools": "^1.16"
             },
             "require-dev": {
@@ -3120,7 +3121,7 @@
             ],
             "support": {
                 "issues": "https://github.com/jn-devops/contacts/issues",
-                "source": "https://github.com/jn-devops/contacts/tree/v1.6.0"
+                "source": "https://github.com/jn-devops/contacts/tree/v1.6.5"
             },
             "funding": [
                 {
@@ -3128,20 +3129,20 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-12-12T00:09:26+00:00"
+            "time": "2025-01-02T08:45:11+00:00"
         },
         {
             "name": "jn-devops/contracts",
-            "version": "v1.3.5",
+            "version": "v1.3.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/jn-devops/contracts.git",
-                "reference": "d22c28927a3300b5925469a7d6ded74662ba1fcb"
+                "reference": "a86aa84088d9a3bb60fa5553ca1b0b3b95066177"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/jn-devops/contracts/zipball/d22c28927a3300b5925469a7d6ded74662ba1fcb",
-                "reference": "d22c28927a3300b5925469a7d6ded74662ba1fcb",
+                "url": "https://api.github.com/repos/jn-devops/contracts/zipball/a86aa84088d9a3bb60fa5553ca1b0b3b95066177",
+                "reference": "a86aa84088d9a3bb60fa5553ca1b0b3b95066177",
                 "shasum": ""
             },
             "require": {
@@ -3173,12 +3174,12 @@
             "type": "library",
             "extra": {
                 "laravel": {
-                    "providers": [
-                        "Homeful\\Contracts\\ContractsServiceProvider"
-                    ],
                     "aliases": {
                         "Contracts": "Homeful\\Contracts\\Facades\\Contracts"
-                    }
+                    },
+                    "providers": [
+                        "Homeful\\Contracts\\ContractsServiceProvider"
+                    ]
                 }
             },
             "autoload": {
@@ -3207,7 +3208,7 @@
             ],
             "support": {
                 "issues": "https://github.com/jn-devops/contracts/issues",
-                "source": "https://github.com/jn-devops/contracts/tree/v1.3.5"
+                "source": "https://github.com/jn-devops/contracts/tree/v1.3.6"
             },
             "funding": [
                 {
@@ -3215,7 +3216,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-11-17T12:42:02+00:00"
+            "time": "2024-12-31T08:53:05+00:00"
         },
         {
             "name": "jn-devops/mortgage",
@@ -7438,6 +7439,77 @@
                 }
             ],
             "time": "2024-09-27T07:54:08+00:00"
+        },
+        {
+            "name": "spatie/laravel-model-status",
+            "version": "1.18.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/spatie/laravel-model-status.git",
+                "reference": "c84bbed462b962474b993ca0ab901707f9b0ed7f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/spatie/laravel-model-status/zipball/c84bbed462b962474b993ca0ab901707f9b0ed7f",
+                "reference": "c84bbed462b962474b993ca0ab901707f9b0ed7f",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/support": "^10.0|^11.0",
+                "php": "^8.2"
+            },
+            "require-dev": {
+                "orchestra/testbench": "^8.0|^9.0",
+                "pestphp/pest": "^2.34"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Spatie\\ModelStatus\\ModelStatusServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Spatie\\ModelStatus\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Thomas Verhelst",
+                    "email": "tvke91@gmail.com",
+                    "homepage": "https://spatie.be",
+                    "role": "Developer"
+                },
+                {
+                    "name": "Freek Van der Herten",
+                    "email": "freek@spatie.be",
+                    "homepage": "https://spatie.be",
+                    "role": "Developer"
+                }
+            ],
+            "description": "A package to enable assigning statuses to Eloquent Models",
+            "homepage": "https://github.com/spatie/laravel-model-status",
+            "keywords": [
+                "laravel-status",
+                "spatie"
+            ],
+            "support": {
+                "issues": "https://github.com/spatie/laravel-model-status/issues",
+                "source": "https://github.com/spatie/laravel-model-status/tree/1.18.0"
+            },
+            "funding": [
+                {
+                    "url": "https://spatie.be/open-source/support-us",
+                    "type": "custom"
+                }
+            ],
+            "time": "2024-05-27T09:27:53+00:00"
         },
         {
             "name": "spatie/laravel-package-tools",

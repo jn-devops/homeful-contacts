@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests;
 
-use App\Enums\{CivilStatus, Nationality, Sex};
+use Homeful\Contacts\Enums\{CivilStatus, Nationality, Sex};
 use Propaganistas\LaravelPhone\Rules\Phone;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;

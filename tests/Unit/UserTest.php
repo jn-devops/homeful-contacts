@@ -1,12 +1,9 @@
 <?php
 
-use App\Enums\{AddressType, CivilStatus, Nationality, Ownership, Sex};
-use App\Data\UserData;
-use Illuminate\Support\Str;
 use Illuminate\Foundation\Testing\{RefreshDatabase, WithFaker};
-use App\Classes\{AddressMetadata, ContactMetaData};
-use Spatie\LaravelData\DataCollection;
 use App\Models\{Contact, User};
+use Illuminate\Support\Str;
+use App\Data\UserData;
 
 uses(RefreshDatabase::class, WithFaker::class);
 
@@ -37,4 +34,5 @@ test('user registration via end point persists contact', function () {
     expect($user)->toBeInstanceOf(User::class);
     expect($contact)->toBeInstanceOf(Contact::class);
     expect($user->contact->is($contact));
+//    expect($contact->name)->toBe('Test User');
 });

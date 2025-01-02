@@ -11,6 +11,9 @@ use App\Enums\{CivilStatus, Nationality, Sex};
 use Illuminate\Support\Carbon;
 use App\Traits\WithAck;
 
+/**
+ * @deprecated
+ */
 class ContactMetaData extends Data
 {
     use WithAck;

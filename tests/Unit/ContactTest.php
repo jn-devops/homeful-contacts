@@ -1,7 +1,7 @@
 <?php
 
-use App\Enums\{AddressType, CivilStatus, Employment, EmploymentStatus, Nationality, Ownership, Sex};
-use App\Classes\{AddressMetadata, ContactMetaData, EmploymentMetadata};
+use Homeful\Contacts\Enums\{AddressType, CivilStatus, Employment, EmploymentStatus, Nationality, Ownership, Sex};
+use Homeful\Contacts\Classes\{AddressMetadata, ContactMetaData, EmploymentMetadata};
 use Illuminate\Foundation\Testing\{RefreshDatabase, WithFaker};
 use Spatie\LaravelData\DataCollection;
 use App\Models\Contact;

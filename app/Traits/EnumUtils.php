@@ -5,6 +5,9 @@ namespace App\Traits;
 use Illuminate\Validation\Rules\In;
 use Illuminate\Validation\Rule;
 
+/**
+ * @deprecated
+ */
 trait EnumUtils
 {
     static function random(): self {

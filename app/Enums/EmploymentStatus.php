@@ -4,6 +4,9 @@ namespace App\Enums;
 
 use App\Traits\EnumUtils;
 
+/**
+ * @deprecated
+ */
 enum EmploymentStatus: string
 {
     use EnumUtils;

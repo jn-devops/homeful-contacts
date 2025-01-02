@@ -2,7 +2,7 @@
 
 namespace App\Data;
 
-use App\Classes\ContactMetaData;
+use Homeful\Contacts\Classes\ContactMetaData;
 use Spatie\LaravelData\Data;
 
 class UserData extends Data

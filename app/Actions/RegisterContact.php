@@ -2,9 +2,9 @@
 
 namespace App\Actions;
 
-use App\Enums\{CivilStatus, Employment, EmploymentStatus, Nationality, Sex};
+use Homeful\Contacts\Enums\{CivilStatus, Employment, EmploymentStatus, Nationality, Sex};
+use Homeful\Contacts\Classes\{EmploymentMetadata, ReferenceMetadata};
 use Illuminate\Validation\{Rule, Rules, ValidationException};
-use App\Classes\{EmploymentMetadata, ReferenceMetadata};
 use Homeful\References\Facades\References;
 use App\Models\{Contact, Reference, User};
 use Lorisleiva\Actions\Concerns\AsAction;

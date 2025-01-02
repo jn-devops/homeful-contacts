@@ -6,6 +6,9 @@ use App\Enums\{AddressType, Ownership};
 use Spatie\LaravelData\Data;
 use App\Traits\WithAck;
 
+/**
+ * @deprecated
+ */
 class AddressMetadata extends Data
 {
     use WithAck;

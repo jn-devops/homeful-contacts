@@ -2,13 +2,12 @@
 
 namespace App\Models;
 
-use App\Classes\{AddressMetadata, AIFMetadata, CoBorrowerMetadata, ContactMetaData, SpouseMetadata};
+use Homeful\Contacts\Classes\{AddressMetadata, AIFMetadata, CoBorrowerMetadata, ContactMetaData, EmploymentMetadata, SpouseMetadata};
 use Propaganistas\LaravelPhone\Exceptions\CountryCodeException;
+use Homeful\Contacts\Enums\{CivilStatus, Nationality, Sex};
 use Homeful\Contacts\Models\Contact as BaseContact;
 use Spatie\LaravelData\{DataCollection, WithData};
 use Illuminate\Database\Eloquent\Casts\Attribute;
-use App\Enums\{CivilStatus, Nationality, Sex};
-use App\Classes\EmploymentMetadata;
 use DateTimeInterface;
 
 class Contact extends BaseContact

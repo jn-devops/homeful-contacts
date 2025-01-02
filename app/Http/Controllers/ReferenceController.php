@@ -2,10 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Classes\ReferenceMetadata;
+use Homeful\Contacts\Classes\ReferenceMetadata;
 use Illuminate\Http\Request;
 use App\Models\Reference;
-
 
 class ReferenceController extends Controller
 {

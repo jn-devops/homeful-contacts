@@ -6,6 +6,9 @@ use Spatie\LaravelData\{Data, DataCollection};
 use App\Enums\{CivilStatus, Nationality, Sex};
 use App\Traits\WithAck;
 
+/**
+ * @deprecated
+ */
 class SpouseMetadata extends Data
 {
     use WithAck;

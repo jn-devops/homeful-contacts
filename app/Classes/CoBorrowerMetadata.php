@@ -7,6 +7,9 @@ use App\Enums\{CivilStatus, Nationality, Sex};
 use App\Enums\CoBorrowerType;
 use App\Traits\WithAck;
 
+/**
+ * @deprecated
+ */
 class CoBorrowerMetadata extends Data
 {
     use WithAck;

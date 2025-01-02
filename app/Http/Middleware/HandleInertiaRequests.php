@@ -2,16 +2,10 @@
 
 namespace App\Http\Middleware;
 
+use Homeful\Contacts\Enums\{AddressType, CivilStatus, Employment,
+    EmploymentStatus, EmploymentType, Industry,
+    Nationality, Ownership, Sex};
 use Illuminate\Http\Request;
-use App\Enums\{AddressType,
-    CivilStatus,
-    Employment,
-    EmploymentStatus,
-    EmploymentType,
-    Industry,
-    Nationality,
-    Ownership,
-    Sex};
 use Inertia\Middleware;
 
 class HandleInertiaRequests extends Middleware

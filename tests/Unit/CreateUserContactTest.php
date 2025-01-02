@@ -28,8 +28,8 @@ test('create contact user works', function () {
     expect($user->contact->first_name)->toBe($first_name);
     expect($user->contact->middle_name)->toBe($middle_name);
     expect($user->contact->last_name)->toBe($last_name);
-    expect($user->contact->civil_status)->toBe(\App\Enums\CivilStatus::from($civil_status));
-    expect($user->contact->sex)->toBe(\App\Enums\Sex::from($sex));
-    expect($user->contact->nationality)->toBe(\App\Enums\Nationality::from($nationality));
+    expect($user->contact->civil_status)->toBe(\Homeful\Contacts\Enums\CivilStatus::from($civil_status));
+    expect($user->contact->sex)->toBe(\Homeful\Contacts\Enums\Sex::from($sex));
+    expect($user->contact->nationality)->toBe(\Homeful\Contacts\Enums\Nationality::from($nationality));
     expect($user->contact->date_of_birth->format('Y-m-d'))->toBe($date_of_birth);
 });

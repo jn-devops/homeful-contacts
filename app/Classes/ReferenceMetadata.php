@@ -5,6 +5,9 @@ namespace App\Classes;
 use Illuminate\Support\Carbon;
 use Spatie\LaravelData\Data;
 
+/**
+ * @deprecated
+ */
 class ReferenceMetadata extends Data
 {
     public function __construct(
