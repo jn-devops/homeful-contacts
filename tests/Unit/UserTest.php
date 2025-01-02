@@ -34,5 +34,5 @@ test('user registration via end point persists contact', function () {
     expect($user)->toBeInstanceOf(User::class);
     expect($contact)->toBeInstanceOf(Contact::class);
     expect($user->contact->is($contact));
-//    expect($contact->name)->toBe('Test User');
+    expect($contact->name)->toBe('Test User');
 });
