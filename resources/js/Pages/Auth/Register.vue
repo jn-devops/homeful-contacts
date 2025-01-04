@@ -8,7 +8,7 @@ import { Head, Link, router, useForm } from '@inertiajs/vue3';
 
 const props = defineProps({
     callback: String,
-    showGMI: {
+    showExtra: {
         type: Boolean,
         default: false
     }
@@ -20,6 +20,7 @@ const form = useForm({
     mobile: '',
     password: '',
     password_confirmation: '',
+    date_of_birth: null,
     monthly_gross_income: 0,
 });
 
@@ -123,7 +124,19 @@ const submit = () => {
                 />
             </div>
 
-            <template v-if="showGMI">
+            <template v-if="showExtra">
+                <div class="mt-4">
+                    <InputLabel for="date_of_birth" value="Date of Birth" />
+
+                    <TextInput
+                        id="date_of_birth"
+                        type="date"
+                        class="mt-1 block w-full"
+                        v-model="form.date_of_birth"
+                    />
+
+                    <InputError class="mt-2" :message="form.errors.date_of_birth" />
+                </div>
                 <div class="mt-4">
                     <InputLabel
                         for="monthly_gross_income"

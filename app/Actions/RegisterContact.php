@@ -21,7 +21,7 @@ class RegisterContact
 
     protected User $user;
 
-    protected Reference $reference;
+    public Reference $reference;
 
     protected function register(array $validated): User
     {
@@ -102,4 +102,10 @@ class RegisterContact
     {
         return ReferenceMetadata::from($this->reference);
     }
+
+    public function getReference(): Reference
+    {
+        return $this->reference;
+    }
+
 }

@@ -19,6 +19,7 @@ use TheIconic\NameParser\Parser;
  * @property Contact $contact
  * @property string $first_name
  * @property string $last_name
+ * @property string $name_suffix
  *
  * @method int getKey()
  */
@@ -42,7 +43,8 @@ class User extends Authenticatable
 
     protected $appends = [
         'first_name',
-        'last_name'
+        'last_name',
+        'name_suffix'
     ];
 
     /**
@@ -87,5 +89,13 @@ class User extends Authenticatable
         $name = $parser->parse($this->name);
 
         return $name->getLastname();
+    }
+
+    public function getNameSuffixAttribute(): string
+    {
+        $parser = new Parser;
+        $name = $parser->parse($this->name);
+
+        return $name->getSuffix();
     }
 }

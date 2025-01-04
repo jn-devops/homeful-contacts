@@ -13,6 +13,7 @@ class UserData extends Data
         public string $mobile,
         public string $first_name,
         public string $last_name,
+        public ?string $name_suffix,
         public ContactMetaData|null $contact
     ) {}
 }
