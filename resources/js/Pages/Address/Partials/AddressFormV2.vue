@@ -5,6 +5,8 @@ import DatePicker from '@/Components/Inputs/DatePicker.vue';
 import SelectInput from '@/Components/Inputs/SelectComboboxes.vue';
 import SuccessToast from '@/Components/Notification/SuccessToast.vue';
 import {useForm, usePage} from '@inertiajs/vue3';
+import WarningToast from '@/Components/Notification/WarningToast.vue';
+
 
 const props = defineProps({
     contact: Object,
@@ -61,7 +63,16 @@ const ownershipList = usePage().props.enums.ownerships.map(item => ({
             leave-active-class="transition ease-in-out"
             leave-to-class="opacity-0"
         >
-            <SuccessToast v-if="form.recentlySuccessful" />
+            <SuccessToast 
+                v-if="form.recentlySuccessful"
+                :message="'Successfully Saved ' + props.address_type + ' Address'"
+            />
+        </Transition>
+        <Transition>
+            <WarningToast 
+                v-if="form.hasErrors"
+                message="There are validation errors. Kindly double check the form."
+            />
         </Transition>
 
         <form
@@ -77,6 +88,7 @@ const ownershipList = usePage().props.enums.ownerships.map(item => ({
                         label="Ownership"
                         :options="ownershipList"
                         :errorMessage="form.errors.ownership"
+                        required
                     />
                 </div>
                 <div class="col-span-full lg:col-span-5">
@@ -85,6 +97,7 @@ const ownershipList = usePage().props.enums.ownerships.map(item => ({
                         label="Address"
                         placeholder="Enter Address"
                         :errorMessage="form.errors.address1"
+                        required
                     />
                 </div>
                 <div class="col-span-full lg:col-span-5">
@@ -93,6 +106,7 @@ const ownershipList = usePage().props.enums.ownerships.map(item => ({
                         label="City"
                         placeholder="Enter City"
                         :errorMessage="form.errors.locality"
+                        required
                     />
                 </div>
                 <div class="col-span-full lg:col-span-4">
@@ -101,6 +115,7 @@ const ownershipList = usePage().props.enums.ownerships.map(item => ({
                         label="Province"
                         placeholder="Enter Province"
                         :errorMessage="form.errors.administrative_area"
+                        required
                     />
                 </div>
                 <div class="col-span-full lg:col-span-4">
@@ -109,6 +124,7 @@ const ownershipList = usePage().props.enums.ownerships.map(item => ({
                         label="Region"
                         placeholder="Enter Region"
                         :errorMessage="form.errors.region"
+                        required
                     />
                 </div>
                 <div class="col-span-full lg:col-span-2">
@@ -117,6 +133,7 @@ const ownershipList = usePage().props.enums.ownerships.map(item => ({
                         label="Zip Code"
                         placeholder="Enter Zip Code"
                         :errorMessage="form.errors.postal_code"
+                        required
                     />
                 </div>
                 <div class="col-span-full lg:col-span-2">
@@ -125,6 +142,7 @@ const ownershipList = usePage().props.enums.ownerships.map(item => ({
                         label="Country"
                         placeholder="Enter Country"
                         :errorMessage="form.errors.country"
+                        required
                     />
                 </div>
             </div>

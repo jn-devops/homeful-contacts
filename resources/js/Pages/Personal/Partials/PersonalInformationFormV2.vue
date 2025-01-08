@@ -4,6 +4,7 @@ import TextInput from '@/Components/Inputs/TextInput.vue';
 import DatePicker from '@/Components/Inputs/DatePicker.vue';
 import SelectInput from '@/Components/Inputs/SelectComboboxes.vue';
 import SuccessToast from '@/Components/Notification/SuccessToast.vue';
+import WarningToast from '@/Components/Notification/WarningToast.vue';
 import { useForm, usePage } from '@inertiajs/vue3';
 
 const props = defineProps({
@@ -58,7 +59,16 @@ const nationalityList = usePage().props.enums.nationalities.map(item => ({
             leave-active-class="transition ease-in-out"
             leave-to-class="opacity-0"
         >
-            <SuccessToast v-if="form.recentlySuccessful" />
+            <SuccessToast 
+                v-if="form.recentlySuccessful"
+                message="Successfully Saved Personal Data"
+            />
+        </Transition>
+        <Transition>
+            <WarningToast 
+                v-if="form.hasErrors"
+                message="There are validation errors. Kindly double check the form."
+            />
         </Transition>
         <form
             @submit.prevent="updatePersonalInformation"

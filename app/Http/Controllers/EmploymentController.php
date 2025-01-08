@@ -14,7 +14,7 @@ class EmploymentController extends Controller
 {
     public function edit(Request $request): Response
     {
-        return Inertia::render('Employment/Edit', [
+        return Inertia::render('Employment/EditV2', [
             'contact' => $request->user()->contact
         ]);
     }
