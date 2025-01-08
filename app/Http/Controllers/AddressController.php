@@ -13,7 +13,7 @@ class AddressController extends Controller
 {
     public function edit(Request $request): Response
     {
-        return Inertia::render('Address/Edit', [
+        return Inertia::render('Address/EditV2', [
             'contact' => $request->user()->contact
         ]);
     }

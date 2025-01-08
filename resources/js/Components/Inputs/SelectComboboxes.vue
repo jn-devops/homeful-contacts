@@ -1,5 +1,5 @@
 <script setup>
-    import { computed, ref, watch } from 'vue'
+    import { computed, ref, watch, watchEffect } from 'vue'
     import { CheckIcon, ChevronUpDownIcon } from '@heroicons/vue/20/solid'
     import {
         Combobox,
@@ -58,7 +58,7 @@
     <Combobox as="div" v-model="selectedOption" @update:modelValue="query = ''">
         <ComboboxLabel class="block text-sm/6 font-medium text-gray-900">{{ label }} <span v-if="required" class="text-red-600">*</span></ComboboxLabel>
         <div class="relative mt-2">
-            <ComboboxInput class="block w-full rounded-md bg-white py-1.5 pl-3 pr-12 text-base text-gray-900 focus:ring-0 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-[#CC035C] sm:text-sm/6" @change="query = $event.target.value" @blur="query = ''" :display-value="(option) => option?.name" />
+            <ComboboxInput class="block w-full rounded-md bg-white py-1.5 pl-3 pr-12 text-base text-gray-900 focus:ring-0 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-[#CC035C] sm:text-sm/6" @change="query = $event.target.value" @blur="query = ''" :display-value="(option) => option?.name" placeholder="Select from the options" />
             <ComboboxButton class="absolute inset-y-0 right-0 flex items-center rounded-r-md px-2 focus:outline-none">
                 <ChevronUpDownIcon class="size-5 text-gray-400" aria-hidden="true" />
             </ComboboxButton>

@@ -44,7 +44,7 @@ const dateFormat  =  {
             v-model="model"
             as-single
             :formatter="dateFormat"
-            class="h-9 focus:ring-0 focus:border-[#CC035C] focus:border-2"
+            class="h-9 focus:ring-0 focus:outline-[#CC035C] focus:outline-2"
         />
         <p v-if="errorMessage" class="mt-2 text-sm text-red-600" id="email-error">{{ errorMessage }}</p>
         <p v-if="helperMessage" class="mt-2 text-sm text-gray-500" id="email-description">{{ helperMessage }}</p>

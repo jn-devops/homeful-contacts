@@ -23,6 +23,14 @@ const props = defineProps({
     type: String,
     default: null,
   },
+  type: {
+    type: String,
+    default: 'text',
+  },
+  max: {
+    type: Number,
+    default: null,
+  },
 });
 
 const model = defineModel({
@@ -38,6 +46,14 @@ onMounted(() => {
 });
 
 defineExpose({ focus: () => input.value.focus() });
+
+function filterInput(event) {
+  if(props.type == 'number'){
+    const value = event.target.value;
+    model.value = value.replace(/[^0-9]/g, '');
+  }
+}
+
 </script>
 <template>
     <div>
@@ -45,7 +61,9 @@ defineExpose({ focus: () => input.value.focus() });
         <div class="mt-2 grid grid-cols-1">
             <input 
                 v-model="model"
+                :maxlength="max"
                 ref="input"
+                @input="filterInput"
                 class="col-start-1 row-start-1 block w-full rounded-md bg-white py-1.5 pl-3 pr-10 text-base focus:ring-0 outline outline-1 -outline-offset-1 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-[#CC035C] sm:pr-9 sm:text-sm/6"
                 :class="errorMessage ? 'text-red-900 outline-red-300 placeholder:text-red-300' : 'text-gray-900 outline-gray-300 placeholder:text-gray-400'" 
                 :placeholder="placeholder" 

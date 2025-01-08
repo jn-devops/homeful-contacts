@@ -51,15 +51,15 @@ const nationalityList = usePage().props.enums.nationalities.map(item => ({
 </script>
 
 <template>
-    <Transition
-        enter-active-class="transition ease-in-out"
-        enter-from-class="opacity-0"
-        leave-active-class="transition ease-in-out"
-        leave-to-class="opacity-0"
-    >
-        <SuccessToast v-if="form.recentlySuccessful" />
-    </Transition>
     <section>
+        <Transition
+            enter-active-class="transition ease-in-out"
+            enter-from-class="opacity-0"
+            leave-active-class="transition ease-in-out"
+            leave-to-class="opacity-0"
+        >
+            <SuccessToast v-if="form.recentlySuccessful" />
+        </Transition>
         <form
             @submit.prevent="updatePersonalInformation"
             class="mt-6 space-y-6"
@@ -150,7 +150,8 @@ const nationalityList = usePage().props.enums.nationalities.map(item => ({
                     <TextInput 
                         v-model="form.mobile"
                         label="Mobile Number"
-                        max="10"
+                        max="11"
+                        type="number"
                         placeholder="09********"
                         :errorMessage="form.errors.mobile"
                     />
@@ -181,10 +182,16 @@ const nationalityList = usePage().props.enums.nationalities.map(item => ({
                 </div>
             </div>
             <div class="w-full text-center pb-10">
-                <PrimaryButton :disabled="form.processing" type="submit" customClass="w-32">
-                    <p class="text-white font-bold text-center">
-                        Save
-                    </p>
+                <PrimaryButton :disabled="form.processing" type="submit" customClass="w-auto">
+                    <div class="flex flex-row items-center gap-2">
+                        <svg class="w-6 h-6 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                            <path fill-rule="evenodd" d="M5 3a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V7.414A2 2 0 0 0 20.414 6L18 3.586A2 2 0 0 0 16.586 3H5Zm3 11a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v6H8v-6Zm1-7V5h6v2a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1Z" clip-rule="evenodd"/>
+                            <path fill-rule="evenodd" d="M14 17h-4v-2h4v2Z" clip-rule="evenodd"/>
+                        </svg>
+                        <p class="text-white font-bold text-center">
+                            Save Personal Data
+                        </p>
+                    </div>
                 </PrimaryButton>
             </div>
         </form>
