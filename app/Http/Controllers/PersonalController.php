@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\CivilStatus;
 use Illuminate\Http\{RedirectResponse, Request};
 use App\Http\Requests\PersonalUpdateRequest;
 use Illuminate\Support\Facades\Redirect;
@@ -12,8 +13,8 @@ class PersonalController extends Controller
 {
     public function edit(Request $request): Response
     {
-        return Inertia::render('Personal/Edit', [
-            'contact' => $request->user()->contact->getData()
+        return Inertia::render('Personal/EditV2', [
+            'contact' => $request->user()->contact->getData(),
         ]);
     }
 
