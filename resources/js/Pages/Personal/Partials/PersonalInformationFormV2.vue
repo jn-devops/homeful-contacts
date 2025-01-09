@@ -6,6 +6,7 @@ import SelectInput from '@/Components/Inputs/SelectComboboxes.vue';
 import SuccessToast from '@/Components/Notification/SuccessToast.vue';
 import WarningToast from '@/Components/Notification/WarningToast.vue';
 import { useForm, usePage } from '@inertiajs/vue3';
+import { ref, watch } from 'vue';
 
 const props = defineProps({
     contact: Object,
@@ -49,6 +50,16 @@ const nationalityList = usePage().props.enums.nationalities.map(item => ({
     name: item
 }));
 
+const hasValidationError = ref(false);
+
+function closeToastFunction(){
+    hasValidationError.value = false;
+}
+
+watch(form, (newValue, oldValue) => {
+    hasValidationError.value = (form.hasErrors) ? true : false;
+});
+
 </script>
 
 <template>
@@ -64,9 +75,15 @@ const nationalityList = usePage().props.enums.nationalities.map(item => ({
                 message="Successfully Saved Personal Data"
             />
         </Transition>
-        <Transition>
+        <Transition
+            enter-active-class="transition ease-in-out"
+            enter-from-class="opacity-0"
+            leave-active-class="transition ease-in-out"
+            leave-to-class="opacity-0"
+        >
             <WarningToast 
-                v-if="form.hasErrors"
+                v-if="hasValidationError"
+                @close-toast="closeToastFunction"
                 message="There are validation errors. Kindly double check the form."
             />
         </Transition>

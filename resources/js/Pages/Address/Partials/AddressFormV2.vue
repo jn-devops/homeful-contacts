@@ -4,7 +4,8 @@ import TextInput from '@/Components/Inputs/TextInput.vue';
 import DatePicker from '@/Components/Inputs/DatePicker.vue';
 import SelectInput from '@/Components/Inputs/SelectComboboxes.vue';
 import SuccessToast from '@/Components/Notification/SuccessToast.vue';
-import {useForm, usePage} from '@inertiajs/vue3';
+import {useForm, usePage, } from '@inertiajs/vue3';
+import { ref, watch } from 'vue';
 import WarningToast from '@/Components/Notification/WarningToast.vue';
 
 
@@ -53,6 +54,16 @@ const ownershipList = usePage().props.enums.ownerships.map(item => ({
     name: item
 }));
 
+const hasValidationError = ref(false);
+
+function closeToastFunction(){
+    hasValidationError.value = false;
+}
+
+watch(form, (newValue, oldValue) => {
+    hasValidationError.value = (form.hasErrors) ? true : false;
+});
+
 </script>
 
 <template>
@@ -68,9 +79,15 @@ const ownershipList = usePage().props.enums.ownerships.map(item => ({
                 :message="'Successfully Saved ' + props.address_type + ' Address'"
             />
         </Transition>
-        <Transition>
+        <Transition
+            enter-active-class="transition ease-in-out"
+            enter-from-class="opacity-0"
+            leave-active-class="transition ease-in-out"
+            leave-to-class="opacity-0"
+        >
             <WarningToast 
-                v-if="form.hasErrors"
+                v-if="hasValidationError"
+                @close-toast="closeToastFunction"
                 message="There are validation errors. Kindly double check the form."
             />
         </Transition>
