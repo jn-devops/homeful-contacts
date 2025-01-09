@@ -9,23 +9,23 @@ import { useForm, usePage } from '@inertiajs/vue3';
 import { ref, watch } from 'vue';
 
 const props = defineProps({
-    spouse: Object,
+    aif: Object,
 });
 
 const form = useForm({
-    first_name: props.spouse?.first_name,
-    middle_name: props.spouse?.middle_name,
-    last_name: props.spouse?.last_name,
-    name_suffix: props.spouse?.name_suffix,
-    mothers_maiden_name: props.spouse?.mothers_maiden_name,
-    civil_status: "Married",
-    sex: props.spouse?.sex ?? 'Male' === usePage().props.auth.user.contact.sex ? 'Female' : 'Male',
-    nationality: props.spouse?.nationality ?? usePage().props.auth.user.contact.nationality,
-    date_of_birth: props.spouse?.date_of_birth,
-    email: props.spouse?.email,
-    mobile: props.spouse?.mobile,
-    other_mobile: props.spouse?.other_mobile,
-    landline: props.spouse?.landline,
+    first_name: props.aif?.first_name,
+    middle_name: props.aif?.middle_name,
+    last_name: props.aif?.last_name,
+    name_suffix: props.aif?.name_suffix,
+    mothers_maiden_name: props.aif?.mothers_maiden_name,
+    civil_status: props.aif?.civil_status,
+    sex: props.aif?.sex,
+    nationality: props.aif?.nationality,
+    date_of_birth: props.aif?.date_of_birth,
+    email: props.aif?.email,
+    mobile: props.aif?.mobile,
+    other_mobile: props.aif?.other_mobile,
+    landline: props.aif?.landline,
 })
 
 const civilStatusList = usePage().props.enums.civil_statuses.map(item => ({
@@ -42,9 +42,9 @@ const nationalityList = usePage().props.enums.nationalities.map(item => ({
     name: item
 }));
 
-const updateSpouseInformation = () => {
-    form.patch(route('spouse.update'), {
-        errorBag: 'updateSpouseInformation',
+const updateAIFInformation = () => {
+    form.patch(route('aif.update'), {
+        errorBag: 'updateAIFInformation',
         preserveScroll: true,
     });
 };
@@ -71,8 +71,7 @@ watch(form, (newValue, oldValue) => {
         >
             <SuccessToast 
                 v-if="form.recentlySuccessful"
-                message="Successfully Saved Spouse Personal Data"
-
+                message="Successfully Saved AIF Data"
             />
         </Transition>
         <Transition
@@ -88,12 +87,10 @@ watch(form, (newValue, oldValue) => {
             />
         </Transition>
         <form
-            @submit.prevent="updateSpouseInformation"
+            @submit.prevent="updateAIFInformation"
             class="mt-6 space-y-6"
         >
-            <h3 class="font-bold text-[#CC035C] mt-4 uppercase">Spouse Personal Information</h3>
-
-            <div class="grid grid-cols-12 gap-4">
+        <div class="grid grid-cols-12 gap-4">
                 <div class="col-span-full lg:col-span-3">
                     <TextInput 
                         v-model="form.first_name"
@@ -218,7 +215,7 @@ watch(form, (newValue, oldValue) => {
                             <path fill-rule="evenodd" d="M14 17h-4v-2h4v2Z" clip-rule="evenodd"/>
                         </svg>
                         <p class="text-white font-bold text-center">
-                            Save Personal Information
+                            Save AIF Information
                         </p>
                     </div>
                 </PrimaryButton>

@@ -11,7 +11,7 @@ class AIFController extends Controller
 {
     public function edit(Request $request): Response
     {
-        return Inertia::render('AIF/Edit', [
+        return Inertia::render('AIF/EditV2', [
             'aif' => $request->user()->contact?->order
         ]);
     }

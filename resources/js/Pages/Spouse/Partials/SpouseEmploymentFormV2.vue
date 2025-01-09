@@ -102,9 +102,21 @@ watch(form, (newValue, oldValue) => {
             leave-active-class="transition ease-in-out"
             leave-to-class="opacity-0"
         >
+            <SuccessToast 
+                v-if="form.recentlySuccessful"
+                message="Successfully Saved Spouse Employment Data"
+
+            />
+        </Transition>
+        <Transition
+            enter-active-class="transition ease-in-out"
+            enter-from-class="opacity-0"
+            leave-active-class="transition ease-in-out"
+            leave-to-class="opacity-0"
+        >
             <WarningToast 
                 v-if="hasValidationError"
-                @close-toast="closeToastFunction" 
+                @close-toast="closeToastFunction"
                 message="There are validation errors. Kindly double check the form."
             />
         </Transition>
