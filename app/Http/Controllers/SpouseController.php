@@ -11,7 +11,7 @@ class SpouseController extends Controller
 {
     public function edit(Request $request): Response
     {
-        return Inertia::render('Spouse/Edit', [
+        return Inertia::render('Spouse/EditV2', [
             'spouse' => $request->user()->contact?->spouse
         ]);
     }
