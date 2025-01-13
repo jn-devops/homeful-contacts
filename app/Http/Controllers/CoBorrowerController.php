@@ -13,7 +13,7 @@ class CoBorrowerController extends Controller
 {
     public function edit(Request $request): Response
     {
-        return Inertia::render('CoBorrower/Edit', [
+        return Inertia::render('CoBorrower/EditV2', [
             'contact' => $request->user()->contact
         ]);
     }
