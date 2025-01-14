@@ -4,6 +4,7 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayoutV2.vue';
 import UploadForm from "@/Pages/Media/Partials/UploadForm.vue";
 import SectionBorder from "@/Components/SectionBorder.vue";
 import { Head } from '@inertiajs/vue3';
+import Signature from './Partials/Signature.vue';
 
 const props = defineProps({
     contact: Object
@@ -11,7 +12,7 @@ const props = defineProps({
 </script>
 
 <template>
-    <Head title="Spouse Information" />
+    <Head title="Attachments" />
 
     <AuthenticatedLayout>
         <div class="mx-auto max-w-7xl px-6 lg:px-8">
@@ -38,12 +39,20 @@ const props = defineProps({
                         label = "Pay Slip"
                     />
                 </div>
-                <div class="col-span-full lg:col-span-6 xl:col-span-4">
+                <!-- <div class="col-span-full lg:col-span-6 xl:col-span-4">
                     <UploadForm
                         :contact = "contact"
                         name = "signatureImage"
                         label = "Signature"
                     />
+                </div> -->
+                <div class="col-span-full lg:col-span-6 xl:col-span-4">
+                    <p class="text-sm font-medium text-gray-700 w-full text-start pb-4">Signature</p>
+                    <div class="w-full h-[300px] flex flex-col items-center justify-center bg-white rounded-lg">
+                        <Signature 
+                            :contact="contact"
+                        />
+                    </div>
                 </div>
             </div>
         </div>
