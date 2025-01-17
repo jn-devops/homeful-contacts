@@ -22,6 +22,7 @@ use TheIconic\NameParser\Parser;
  * @property string $name_suffix
  *
  * @method int getKey()
+ * @method void notify($instance)
  */
 class User extends Authenticatable
 {
@@ -73,6 +74,11 @@ class User extends Authenticatable
     public function contact(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(Contact::class);
+    }
+
+    public function routeNotificationForEngageSpark(): string
+    {
+        return $this->mobile;
     }
 
     public function getFirstNameAttribute(): string

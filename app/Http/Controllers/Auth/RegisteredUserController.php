@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use Illuminate\Http\{RedirectResponse, Request};
 use Illuminate\Validation\ValidationException;
 use Homeful\References\Models\Reference;
+use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use App\Actions\RegisterContact;
@@ -31,6 +32,8 @@ class RegisteredUserController extends Controller
         $action = new RegisterContact;
         $user = $action->handle($request->all());
         $reference = $action->getReference();
+
+        event(new Registered($user));
 
         Auth::login($user);
 
