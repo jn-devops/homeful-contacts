@@ -10,17 +10,25 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use App\Actions\RegisterContact;
 use Inertia\{Inertia, Response};
+use Illuminate\Support\Str;
 use Spatie\Url\Url;
 
 class RegisteredUserController extends Controller
 {
+    const REGISTER_VIEW = 'Auth/Register';
+
     public function create(Request $request): Response
     {
-        session($request->only('callback'));
+        $this->setCallbackToSession($request);
 
-        return Inertia::render('Auth/Register', [
-            'callback' => $request->get('callback', config('homeful-contacts.callback')),
-            'showExtra' => config('homeful-contacts.show_gmi') || $request->get('showExtra'),
+        $callback = $request->get('callback', config('homeful-contacts.callback'));
+        $showExtra = config('homeful-contacts.show_gmi') || $request->get('showExtra');
+        $hidePassword = config('homeful-contacts.hide_password') || $request->get('hidePassword');
+
+        return Inertia::render(self::REGISTER_VIEW, [
+            'callback' => $callback,
+            'showExtra' => $showExtra,
+            'autoPassword' => $hidePassword ? Str::password() : '',
         ]);
     }
 
@@ -38,11 +46,18 @@ class RegisteredUserController extends Controller
         Auth::login($user);
 
         return session('callback')
-            ? Inertia::location($this->getCallback($reference))
+            ? Inertia::location($this->getCallbackWithQueryParamsFromSession($reference))
             : redirect(route('dashboard', absolute: false));
     }
 
-    protected function getCallback(Reference $reference): string
+    protected function setCallbackToSession(Request $request): self
+    {
+        session($request->only('callback'));
+
+        return $this;
+    }
+
+    protected function getCallbackWithQueryParamsFromSession(Reference $reference): string
     {
         $url = Url::fromString(session('callback'));
 

@@ -6,10 +6,12 @@
 https://contacts.homeful.ph/register
 #### w/ callback
 https://contacts.homeful.ph/register?callback=https://google.com
-#### show GMI field
+#### show GMI and Birthdate field
+https://contacts.homeful.ph/register?showExtra=true
+#### hide Password fields
 https://contacts.homeful.ph/register?showGMI=true
-#### w/ callback and show GMI
-https://contacts.homeful.ph/register?callback=https://google.com&showGMI=true
+#### w/ callback and show GMI and hidePassword
+https://contacts.homeful.ph/register?callback=https://google.com&showExtra=true&hidePassword=true
 #### via API
 `curl --location 'https://contacts.homeful.ph/register' \
 --header 'Accept: application/json' \
@@ -55,6 +57,9 @@ GET https://contacts.homeful.ph/api/references/{reference}
 
 ### Get Contact JSON
 GET https://contacts.homeful.ph/api/contacts/{mobile}
+
+### RedeemSellerVoucherCode
+Lester, please continue this
 
 ## Security Vulnerabilities
 

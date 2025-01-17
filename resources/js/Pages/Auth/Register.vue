@@ -11,6 +11,10 @@ const props = defineProps({
     showExtra: {
         type: Boolean,
         default: false
+    },
+    autoPassword: {
+        type: String,
+        default: ''
     }
 });
 
@@ -18,8 +22,8 @@ const form = useForm({
     name: '',
     email: '',
     mobile: '',
-    password: '',
-    password_confirmation: '',
+    password: props.autoPassword,
+    password_confirmation: props.autoPassword,
     date_of_birth: null,
     monthly_gross_income: 0,
 });
@@ -50,6 +54,7 @@ const submit = () => {
                     type="text"
                     class="mt-1 block w-full"
                     v-model="form.name"
+                    placeholder="[First Name] [Last Name]"
                     required
                     autofocus
                     autocomplete="name"
@@ -81,6 +86,7 @@ const submit = () => {
                     type="text"
                     class="mt-1 block w-full"
                     v-model="form.mobile"
+                    placeholder="(09##) ###-####"
                     required
                     autocomplete="mobile"
                 />
@@ -88,41 +94,43 @@ const submit = () => {
                 <InputError class="mt-2" :message="form.errors.mobile" />
             </div>
 
-            <div class="mt-4">
-                <InputLabel for="password" value="Password" />
+            <template v-if="null == autoPassword">
+                <div class="mt-4">
+                    <InputLabel for="password" value="Password" />
 
-                <TextInput
-                    id="password"
-                    type="password"
-                    class="mt-1 block w-full"
-                    v-model="form.password"
-                    required
-                    autocomplete="new-password"
-                />
+                    <TextInput
+                        id="password"
+                        type="password"
+                        class="mt-1 block w-full"
+                        v-model="form.password"
+                        required
+                        autocomplete="new-password"
+                    />
 
-                <InputError class="mt-2" :message="form.errors.password" />
-            </div>
+                    <InputError class="mt-2" :message="form.errors.password" />
+                </div>
 
-            <div class="mt-4">
-                <InputLabel
-                    for="password_confirmation"
-                    value="Confirm Password"
-                />
+                <div class="mt-4">
+                    <InputLabel
+                        for="password_confirmation"
+                        value="Confirm Password"
+                    />
 
-                <TextInput
-                    id="password_confirmation"
-                    type="password"
-                    class="mt-1 block w-full"
-                    v-model="form.password_confirmation"
-                    required
-                    autocomplete="new-password"
-                />
+                    <TextInput
+                        id="password_confirmation"
+                        type="password"
+                        class="mt-1 block w-full"
+                        v-model="form.password_confirmation"
+                        required
+                        autocomplete="new-password"
+                    />
 
-                <InputError
-                    class="mt-2"
-                    :message="form.errors.password_confirmation"
-                />
-            </div>
+                    <InputError
+                        class="mt-2"
+                        :message="form.errors.password_confirmation"
+                    />
+                </div>
+            </template>
 
             <template v-if="showExtra">
                 <div class="mt-4">
