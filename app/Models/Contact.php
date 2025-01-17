@@ -10,6 +10,11 @@ use Spatie\LaravelData\{DataCollection, WithData};
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use DateTimeInterface;
 
+/**
+ * Class Contact
+ *
+ * @method ContactMetaData getData()
+ */
 class Contact extends BaseContact
 {
     use WithData;

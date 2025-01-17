@@ -3048,16 +3048,16 @@
         },
         {
             "name": "jn-devops/contacts",
-            "version": "v1.7.0",
+            "version": "v1.7.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/jn-devops/contacts.git",
-                "reference": "71c73ee6f098cbeb4bec4020388fc561f172692e"
+                "reference": "d51660aafb521aabcbeafb8873025dbc88b52723"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/jn-devops/contacts/zipball/71c73ee6f098cbeb4bec4020388fc561f172692e",
-                "reference": "71c73ee6f098cbeb4bec4020388fc561f172692e",
+                "url": "https://api.github.com/repos/jn-devops/contacts/zipball/d51660aafb521aabcbeafb8873025dbc88b52723",
+                "reference": "d51660aafb521aabcbeafb8873025dbc88b52723",
                 "shasum": ""
             },
             "require": {
@@ -3121,7 +3121,7 @@
             ],
             "support": {
                 "issues": "https://github.com/jn-devops/contacts/issues",
-                "source": "https://github.com/jn-devops/contacts/tree/v1.7.0"
+                "source": "https://github.com/jn-devops/contacts/tree/v1.7.6"
             },
             "funding": [
                 {
@@ -3129,7 +3129,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-01-08T06:34:14+00:00"
+            "time": "2025-01-12T08:21:39+00:00"
         },
         {
             "name": "jn-devops/contracts",
@@ -13516,12 +13516,12 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {},
+    "stability-flags": [],
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
         "php": "^8.2"
     },
-    "platform-dev": {},
+    "platform-dev": [],
     "plugin-api-version": "2.6.0"
 }
