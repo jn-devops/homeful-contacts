@@ -16,7 +16,7 @@ class SendLoginMagicLinkNotification extends Notification
 
     public function via(object $notifiable): array
     {
-        return ['engage_spark'];
+        return ['mail', 'engage_spark'];
     }
 
     /**
@@ -25,9 +25,9 @@ class SendLoginMagicLinkNotification extends Notification
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)
-                    ->line('The introduction to the notification.')
-                    ->action('Notification Action', url('/'))
-                    ->line('Thank you for using our application!');
+                    ->line('Update your personal information.')
+                    ->action('Login', url($this->url))
+                    ->line('Thank you!');
     }
 
     public function toArray(object $notifiable): array
