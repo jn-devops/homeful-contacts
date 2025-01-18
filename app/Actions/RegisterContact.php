@@ -57,12 +57,12 @@ class RegisterContact
         $user->contact()->associate($contact);
         $user->save();
 
-        event(new ContactRegistered($user->contact));
-
         //create a reference for the contact
         //and temporary save it to $this->reference class property for further processing
         $this->reference = References::create();
         $this->reference->addEntities($contact);
+
+        event(new ContactRegistered($this->reference));
 
         //return the user, not the reference
         //it needs to be authorized in the registration controller

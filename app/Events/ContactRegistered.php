@@ -9,13 +9,13 @@ use Illuminate\Broadcasting\PresenceChannel;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Broadcasting\Channel;
-use App\Models\Contact;
+use App\Models\Reference;
 
 class ContactRegistered
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public function __construct(public Contact $contact){}
+    public function __construct(public Reference $reference){}
 
     public function broadcastOn(): array
     {

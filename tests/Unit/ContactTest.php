@@ -3,10 +3,16 @@
 use Homeful\Contacts\Enums\{AddressType, CivilStatus, Employment, EmploymentStatus, Nationality, Ownership, Sex};
 use Homeful\Contacts\Classes\{AddressMetadata, ContactMetaData, EmploymentMetadata};
 use Illuminate\Foundation\Testing\{RefreshDatabase, WithFaker};
+use App\Notifications\SendContactReferenceCodeNotification;
+use Illuminate\Support\Facades\Notification;
+use App\Models\{Contact, Reference, User};
 use Spatie\LaravelData\DataCollection;
-use App\Models\Contact;
 
 uses(RefreshDatabase::class, WithFaker::class);
+
+beforeEach(function () {
+   Notification::fake();
+});
 
 test('contact has attributes', function () {
     $contact = Contact::create([
@@ -96,3 +102,24 @@ test('contact can accept employment', function (Contact $contact) {
     expect($contact->employment)->toBeInstanceOf(DataCollection::class);
     expect($contact->employment->first())->toBeInstanceOf(EmploymentMetadata::class);
 })->with('contact');
+
+test('contact registration triggers notification re contact reference code', function () {
+    $response = $this->post('/register', [
+        'name' => 'Test User',
+        'email' => $email = 'test@example.com',
+        'mobile' => '09171234567',
+        'password' => 'password',
+        'password_confirmation' => 'password',
+        'date_of_birth' => '1999-03-17',
+        'monthly_gross_income' => 50000,
+    ]);
+    expect($response->status())->toBe(302);
+    $user = User::where('email', $email)->first();
+    $contact = $user->contact;
+    expect($contact)->toBeInstanceOf(Contact::class);
+    Notification::assertSentTo($contact, SendContactReferenceCodeNotification::class, function (SendContactReferenceCodeNotification $notification) use ($contact) {
+        $reference = Reference::where('code', $notification->getContactReferenceCode())->first();
+
+        return $reference->getContact()->is($contact);
+    });
+});
