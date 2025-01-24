@@ -1,6 +1,6 @@
 <script setup>
 import { useForm } from '@inertiajs/vue3';
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 import SignaturePad from '@/Components/Inputs/SignaturePad.vue';
 import CenterModal from '@/Components/Modals/CenterModal.vue';
 import SecondaryButton from '@/Components/Buttons/SecondaryButton.vue';
@@ -10,11 +10,20 @@ const props = defineProps({
     contact: Object,
 });
 
-const signature = ref(null);
+const form = useForm({
+    signature: null,
+})
 const isSignaturePadOpen = ref(false);
 
 const updateSignature = ([signatureVal]) => {
-    signature.value = signatureVal;
+    form.signature = signatureVal;
+    console.log('loaded');
+    form.patch(route('media.update'), {
+            onSuccess: () => {
+                console.log('successfully uploaded');
+                
+            },
+        });
     close();
 };
 
@@ -23,8 +32,8 @@ const close = () => {isSignaturePadOpen.value = !isSignaturePadOpen.value;}
 </script>
 <template>
     <div>
-        <div v-if="signature" @click="isSignaturePadOpen = !isSignaturePadOpen" class="cursor-pointer">
-            <img :src="signature" alt="">
+        <div v-if="form.signature" @click="isSignaturePadOpen = !isSignaturePadOpen" class="cursor-pointer">
+            <img :src="form.signature" alt="">
         </div>
         <div v-else>
             <SecondaryButton @click="isSignaturePadOpen = !isSignaturePadOpen" customClass="w-auto">
@@ -41,11 +50,13 @@ const close = () => {isSignaturePadOpen.value = !isSignaturePadOpen.value;}
         <!-- Signature Modal -->
         <CenterModal :isOpen="isSignaturePadOpen" @update:isOpen="isSignaturePadOpen = $event">
             <div>
-                <SignaturePad 
-                    :signatureVal="signature" 
-                    @update="updateSignature"  
-                    @close="close"  
-                />
+                <form @submit.prevent="updateSignature">
+                    <SignaturePad 
+                        :signatureVal="form.signature" 
+                        @update="updateSignature"  
+                        @close="close"  
+                    />
+                </form>
             </div>
         </CenterModal>
 
