@@ -3,13 +3,14 @@
 namespace App\Actions;
 
 use Homeful\Contacts\Enums\{CivilStatus, Employment, EmploymentStatus, Nationality, Sex};
-use Homeful\Contacts\Classes\{EmploymentMetadata, ReferenceMetadata};
 use Illuminate\Validation\{Rule, Rules, ValidationException};
+use Homeful\Contacts\Classes\ReferenceMetadata;
 use Homeful\References\Facades\References;
 use App\Models\{Contact, Reference, User};
 use Lorisleiva\Actions\Concerns\AsAction;
 use Lorisleiva\Actions\ActionRequest;
 use Illuminate\Support\Facades\Hash;
+use Homeful\Contacts\Classes\Dummy;
 use App\Events\ContactRegistered;
 use Illuminate\Support\Arr;
 use App\Data\UserData;
@@ -43,16 +44,19 @@ class RegisterContact
         $contact = app(Contact::class)->create($attributes);
 
         //if the gmi attribute is valid then add it to the contact model
+        //a default TIN is applied
         if ($gmi > 0.0) {
-            $employment = EmploymentMetadata::from([
-                'type' => Employment::default(),
-                'monthly_gross_income' => $gmi,
-                'employment_status' => EmploymentStatus::default()
-            ]);
-            $contact->employment = [$employment];
+            $contact->employment = [
+                [
+                    'type' => Employment::default(),
+                    'monthly_gross_income' => $gmi,
+                    'employment_status' => EmploymentStatus::default(),
+                    'id' => [
+                        'tin' => Dummy::TIN
+                    ]
+            ]];
             $contact->save();
         }
-
         //associate the contact with the user
         $user->contact()->associate($contact);
         $user->save();
@@ -107,5 +111,4 @@ class RegisterContact
     {
         return $this->reference;
     }
-
 }

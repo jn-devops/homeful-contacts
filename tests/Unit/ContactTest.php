@@ -60,7 +60,7 @@ dataset('contact', function () {
 test('contact can accept addresses', function (Contact $contact) {
     $contact->addresses = [
         [
-            'type' => AddressType::default(),
+            'type' => AddressType::default()->value,
             'ownership' => Ownership::random(),
             'address1' => $this->faker->address(),
             'locality' => $this->faker->city(),
@@ -77,7 +77,7 @@ test('contact can accept addresses', function (Contact $contact) {
 test('contact can accept minimum address attributes', function (Contact $contact) {
     $contact->addresses = [
         [
-            'type' => AddressType::default(),
+            'type' => AddressType::default()->value,
             'ownership' => Ownership::random(),
             'address1' => $this->faker->address(),
             'locality' => $this->faker->city(),
@@ -92,11 +92,14 @@ test('contact can accept minimum address attributes', function (Contact $contact
 })->with('contact');
 
 test('contact can accept employment', function (Contact $contact) {
-    $employment = EmploymentMetadata::from([
-        'type' => Employment::default(),
+    $employment = [
+        'type' => Employment::default()->value,
         'monthly_gross_income' => 100000,
-        'employment_status' => EmploymentStatus::default()
-    ]);
+        'employment_status' => EmploymentStatus::default()->value,
+        'id' => [
+            'tin' => fake()->word(),
+        ],
+    ];
     $contact->employment = [$employment];
     $contact->save();
     expect($contact->employment)->toBeInstanceOf(DataCollection::class);

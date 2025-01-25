@@ -1,6 +1,6 @@
 <?php
 
-use App\Classes\ContactMetaData;
+use Homeful\Contacts\Classes\ContactMetaData;
 use App\Models\Contact;
 
 return [

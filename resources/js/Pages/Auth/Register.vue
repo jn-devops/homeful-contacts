@@ -1,10 +1,11 @@
 <script setup>
-import GuestLayout from '@/Layouts/GuestLayout.vue';
+import PrimaryButton from '@/Components/PrimaryButton.vue';
+import { Head, Link, useForm } from '@inertiajs/vue3';
 import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
-import PrimaryButton from '@/Components/PrimaryButton.vue';
+import GuestLayout from '@/Layouts/GuestLayout.vue';
 import TextInput from '@/Components/TextInput.vue';
-import { Head, Link, router, useForm } from '@inertiajs/vue3';
+import { computed, ref } from "vue";
 
 const props = defineProps({
     callback: String,
@@ -38,6 +39,8 @@ const submit = () => {
         },
     });
 };
+
+const showPassword = computed(() => props.autoPassword === '');
 
 </script>
 
@@ -94,7 +97,7 @@ const submit = () => {
                 <InputError class="mt-2" :message="form.errors.mobile" />
             </div>
 
-            <template v-if="null == autoPassword">
+            <template v-if="showPassword">
                 <div class="mt-4">
                     <InputLabel for="password" value="Password" />
 
