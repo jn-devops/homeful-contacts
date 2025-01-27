@@ -3,10 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\EmploymentUpdateRequest;
-use Illuminate\Support\Facades\Redirect;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
+use App\Models\Contact;
 use Inertia\Response;
 use Inertia\Inertia;
 
@@ -28,6 +28,7 @@ class EmploymentController extends Controller
         })->toArray() ?? [];
 
         $data = $request->validated();
+
         // transform employer data
         $employer_name = Arr::pull($data, 'employer_name');
         if ($employer_name) {
@@ -76,9 +77,12 @@ class EmploymentController extends Controller
             $employment_records [] = $employment_record;
         }
 
-        $user->contact->update(['employment' => $employment_records]);
-        $user->contact->save();
-        $user->save();
+        $contact = $user->contact;
+        if ($contact instanceof Contact) {
+            $contact->refresh(); //very important to hydrate the contact model before assigning values
+            $contact->employment = $employment_records;
+            $contact->save();
+        }
 
         return redirect()->back();
     }

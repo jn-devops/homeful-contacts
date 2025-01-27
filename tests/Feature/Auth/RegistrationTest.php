@@ -20,7 +20,7 @@ test('new users can register', function () {
         'password' => 'password',
         'password_confirmation' => 'password',
         'date_of_birth' => '1999-03-17',
-        'gross_monthly_income' => 15000
+        'monthly_gross_income' => 100000
     ]);
 
     $this->assertAuthenticated();
