@@ -84,7 +84,7 @@ class RegisterContact
     public function rules(): array
     {
         return [
-            'name' => ['required', 'string', 'max:255', 'regex:/^(\w+) (.*)$/'],
+            'name' => ['required', 'string', 'max:255', 'regex:/^([\w.]+) (.*)$/'],
             'email' => 'required|string|lowercase|email|max:255|unique:'.User::class,
             'mobile' => 'required|string|max:11',
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
