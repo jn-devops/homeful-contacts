@@ -31,6 +31,10 @@ const props = defineProps({
     type: Number,
     default: null,
   },
+  readOnly: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 const model = defineModel({
@@ -63,6 +67,7 @@ function filterInput(event) {
                 v-model="model"
                 :maxlength="max"
                 ref="input"
+                :readonly="readOnly"
                 @input="filterInput"
                 class="col-start-1 row-start-1 block w-full rounded-md bg-white py-1.5 pl-3 pr-10 text-base focus:ring-0 outline outline-1 -outline-offset-1 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-[#CC035C] sm:pr-9 sm:text-sm/6"
                 :class="errorMessage ? 'text-red-900 outline-red-300 placeholder:text-red-300' : 'text-gray-900 outline-gray-300 placeholder:text-gray-400'" 

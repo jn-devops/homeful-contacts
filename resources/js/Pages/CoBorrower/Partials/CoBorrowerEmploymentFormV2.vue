@@ -216,7 +216,7 @@ watch(form, (newValue, oldValue) => {
                 <div class="col-span-full lg:col-span-3">
                     <SelectInput 
                         v-model="form.employer_industry"
-                        label="Industies"
+                        label="Industry"
                         :options="industryList"
                         :errorMessage="form.errors.employer_industry"
                     />

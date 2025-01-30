@@ -21,7 +21,7 @@ const form = useForm({
     civil_status: "Married",
     sex: props.spouse?.sex ?? 'Male' === usePage().props.auth.user.contact.sex ? 'Female' : 'Male',
     nationality: props.spouse?.nationality ?? usePage().props.auth.user.contact.nationality,
-    date_of_birth: props.spouse?.date_of_birth,
+    date_of_birth: props.spouse?.date_of_birth ?? '',
     email: props.spouse?.email,
     mobile: props.spouse?.mobile,
     other_mobile: props.spouse?.other_mobile,
@@ -159,6 +159,7 @@ watch(form, (newValue, oldValue) => {
                         :options="nationalityList"
                         :errorMessage="form.errors.nationality"
                     />
+
                 </div>
                 <div class="col-span-full lg:col-span-3">
                     <DatePicker 

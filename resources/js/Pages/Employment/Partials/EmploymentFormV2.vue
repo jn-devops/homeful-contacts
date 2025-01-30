@@ -62,14 +62,14 @@ const form = useForm({
     employer_nationality: employment_record()?.employer?.nationality,
     employer_industry: employment_record()?.employer?.industry,
 
-    employer_address_type: employment_record()?.employer?.address?.type ?? employment_record()?.employer?.name ? 'Work' : null,
-    employer_address_ownership: employment_record()?.employer?.address?.ownership,
+    employer_address_type: employment_record()?.employer?.address?.type ?? employment_record()?.employer?.name ? 'Work' : "Work",
+    employer_address_ownership: employment_record()?.employer?.address?.ownership ? employment_record().employer.address.ownership : 'Owned',
     employer_address_address1: employment_record()?.employer?.address?.address1,
     employer_address_locality: employment_record()?.employer?.address?.locality,
     employer_address_administrative_area: employment_record()?.employer?.address?.administrative_area,
     employer_address_postal_code: employment_record()?.employer?.address?.postal_code,
     employer_address_region: employment_record()?.employer?.address?.region,
-    employer_address_country: employment_record()?.employer?.address?.country ?? employment_record()?.employer?.name ? 'PH' : null,
+    employer_address_country: employment_record()?.employer?.address?.country ?? employment_record()?.employer?.name ? 'PH' : "PH",
 
     tin: employment_record()?.id?.tin,
     pagibig: employment_record()?.id?.pagibig,
@@ -201,7 +201,7 @@ watch(form, (newValue, oldValue) => {
                 <div class="col-span-full lg:col-span-3">
                     <SelectInput 
                         v-model="form.employer_industry"
-                        label="Industies"
+                        label="Industry"
                         :options="industryList"
                         :errorMessage="form.errors.employer_industry"
                     />
@@ -209,6 +209,7 @@ watch(form, (newValue, oldValue) => {
                 <div class="col-span-full lg:col-span-2">
                     <TextInput 
                         v-model="form.employer_address_type"
+                        readOnly
                         label="Address Type"
                         placeholder="Enter Employer Address Type"
                         :errorMessage="form.errors.employer_address_type"
