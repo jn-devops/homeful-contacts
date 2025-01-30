@@ -36,11 +36,15 @@ class RegisterContact
         //but will be used later in the employment
         $gmi = (float) Arr::pull($validated, 'monthly_gross_income');
 
+        if (!Arr::get($validated, 'name')) {
+            Arr::set($validated, 'name', $validated['first_name'] . ' ' . $validated['last_name']);
+        }
         //persist the user using the validated attributes sans the gmi attribute
         $user = app(User::class)->create($validated);
 
         //persist the contact model
         $attributes = array_merge((array) UserData::from($user), $validated);
+        Arr::pull($validated, 'name');
         $contact = app(Contact::class)->create($attributes);
 
         //if the gmi attribute is valid then add it to the contact model
@@ -63,7 +67,7 @@ class RegisterContact
 
         //create a reference for the contact
         //and temporary save it to $this->reference class property for further processing
-        $this->reference = References::create();
+        $this->reference = References::withOwner($user)->create();
         $this->reference->addEntities($contact);
 
         event(new ContactRegistered($this->reference));
@@ -84,16 +88,25 @@ class RegisterContact
     public function rules(): array
     {
         return [
-            'name' => ['required', 'string', 'max:255', 'regex:/^([\w.]+) (.*)$/'],
+            'first_name' => ['nullable', 'string', 'max:50'],
+            'middle_name' => ['nullable', 'string', 'max:50'],
+            'last_name' => ['nullable', 'string', 'max:50'],
+            'name' => [
+                'string',
+                'max:255',
+                'regex:/^([\w.]+) (.*)$/',
+                'required_if:first_name,null,last_name,null'
+            ],
             'email' => 'required|string|lowercase|email|max:255|unique:'.User::class,
             'mobile' => 'required|string|max:11',
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
-            'middle_name' => ['nullable', 'string'],
             'civil_status' => ['nullable', Rule::enum(CivilStatus::class)],
             'sex' => ['nullable', Rule::enum(Sex::class)],
             'nationality' => ['nullable', Rule::enum(Nationality::class)],
+            'mothers_maiden_name' => ['nullable', 'string', 'max:255'],
             'date_of_birth' => ['nullable', 'date'],
             'monthly_gross_income' => ['nullable', 'numeric', new Income],
+            'addresses' => ['nullable', 'array'],
         ];
     }
 

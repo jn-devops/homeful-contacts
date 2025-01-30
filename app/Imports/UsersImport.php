@@ -15,6 +15,10 @@ use Nette\Schema\ValidationException;
 use App\Actions\RegisterContact;
 use App\Models\User;
 use Throwable;
+use Spatie\LaravelData\DataCollection;
+use Homeful\Contacts\Classes\AddressMetadata;
+use Homeful\Contacts\Enums\{AddressType, EmploymentStatus, EmploymentType, Ownership};
+
 
 class UsersImport implements ToModel, WithHeadingRow, SkipsOnFailure, SkipsOnError
 {
@@ -28,19 +32,26 @@ class UsersImport implements ToModel, WithHeadingRow, SkipsOnFailure, SkipsOnErr
     {
         try {
             return $this->action->run([
-                'name' => $this->extractName($row),
+//                'name' => $this->extractName($row),
+                'first_name' => $this->extractFirstName($row),
+                'middle_name' => $this->extractMiddleName($row),
+                'last_name' => $this->extractLastName($row),
+                'name_suffix' => $this->extractNameSuffix($row),
                 'email' => $this->extractEmail($row),
                 'mobile' => $this->extractMobile($row),
                 'password' => 'password',
                 'password_confirmation' => 'password',
+                'civil_status' => $this->extractCivilStatus($row),
+                'sex' => $this->extractSex($row),
+                'nationality' => $this->extractNationality($row),
+                'mothers_maiden_name' => $this->extractMothersMaidenName($row),
                 'date_of_birth' => $this->extractDateOfBirth($row),
                 'monthly_gross_income' => $this->extractMonthlyGrossIncome($row),
+                'addresses' => $this->extractAddresses($row)
             ]);
         } catch (\Exception $exception) {
 
         }
-
-
     }
 
     protected function extractName(array $row): string
@@ -49,6 +60,34 @@ class UsersImport implements ToModel, WithHeadingRow, SkipsOnFailure, SkipsOnErr
         $name = __(':first_name :middle_name :last_name', $attribs);
 
         return Str::title($name);
+    }
+
+    protected function extractFirstName(array $row): string
+    {
+        $first_name = Arr::get($row, 'first_name');
+
+        return Str::title($first_name);
+    }
+
+    protected function extractMiddleName(array $row): string
+    {
+        $middle_name = Arr::get($row, 'middle_name');
+
+        return Str::title($middle_name);
+    }
+
+    protected function extractLastName(array $row): string
+    {
+        $last_name = Arr::get($row, 'last_name');
+
+        return Str::title($last_name);
+    }
+
+    protected function extractNameSuffix(array $row): string
+    {
+        $name_suffix = Arr::get($row, 'name_suffix');
+
+        return Str::title($name_suffix);
     }
 
     protected function extractEmail(array $row): string
@@ -70,6 +109,34 @@ class UsersImport implements ToModel, WithHeadingRow, SkipsOnFailure, SkipsOnErr
         return $mobile;
     }
 
+    protected function extractCivilStatus(array $row): string
+    {
+        $civil_status = Arr::get($row, 'civil_status');
+
+        return Str::title($civil_status);
+    }
+
+    protected function extractSex(array $row): string
+    {
+        $sex = Arr::get($row, 'sex');
+
+        return Str::title($sex);
+    }
+
+    protected function extractNationality(array $row): string
+    {
+        $nationality = Arr::get($row, 'nationality');
+
+        return Str::title($nationality);
+    }
+
+    protected function extractMothersMaidenName(array $row): string
+    {
+        $mothers_maiden_name = Arr::get($row, 'mothers_maiden_name');
+
+        return Str::title($mothers_maiden_name);
+    }
+
     protected function extractDateOfBirth(array $row): string
     {
         $date_of_birth = Arr::get($row, 'date_of_birth');
@@ -79,11 +146,25 @@ class UsersImport implements ToModel, WithHeadingRow, SkipsOnFailure, SkipsOnErr
 
     protected function extractMonthlyGrossIncome(array $row): float
     {
-
         $employment = json_decode(Arr::get($row, 'employment'), true)[0];
         $monthly_gross_income  = Arr::get($employment, 'monthly_gross_income');
 
         return (float) $monthly_gross_income;
+    }
+
+    protected function extractAddresses(array $row): array
+    {
+        $addresses = json_decode(Arr::get($row, 'addresses'), true);
+
+        foreach ($addresses as &$address) {
+
+            $address['type'] = AddressType::tryFromCode($address['type']);
+            $address['ownership'] = Ownership::tryFromCode($address['ownership']);
+        }
+        unset($item);
+        $data = new DataCollection(AddressMetadata::class, $addresses);
+
+        return $data->toArray();
     }
 
     public function onFailure(Failure ...$failures)

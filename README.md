@@ -65,11 +65,7 @@ Lester, please continue this
 #### Upload the file
 `scp contacts.csv forge@contacts.homeful.ph:/home/forge/contacts.homeful.ph/current/storage/app/private/`
 #### Import a file
-php artisan tinker
-use Maatwebsite\Excel\Facades\Excel;
-use App\Imports\UsersImport;
-Excel::import(app( UsersImport::class), storage_path('app/private/contacts.csv'));
-
+php artisan app:import-users
 ## Security Vulnerabilities
 
 If you discover a security vulnerability within Homeful Contacts, please send an e-mail to Anaïs Santos via [devops@joy-nostalg.com](mailto:devops@joy-nostalg.com). All security vulnerabilities will be promptly addressed.
