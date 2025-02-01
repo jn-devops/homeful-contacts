@@ -2,7 +2,6 @@
 
 namespace App\Console\Commands;
 
-use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Console\Command;
 use App\Imports\UsersImport;
 
@@ -18,6 +17,13 @@ class ImportUsers extends Command
             $this->fail($storage_path . ' is missing.');
         }
 
-        Excel::import($import = app( UsersImport::class), $storage_path);
+        $this->output->title('Starting import');
+        $import = app(UsersImport::class);
+        $import->withOutput($this->output)->import($storage_path);
+        $this->output->success('Import successful');
+
+        foreach ($import->failures() as $failure) {
+            logger($failure->row());
+        }
     }
 }

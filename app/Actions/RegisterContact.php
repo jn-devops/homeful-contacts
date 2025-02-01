@@ -4,12 +4,12 @@ namespace App\Actions;
 
 use Homeful\Contacts\Enums\{CivilStatus, Employment, EmploymentStatus, Nationality, Sex};
 use Illuminate\Validation\{Rule, Rules, ValidationException};
+use Illuminate\Support\Facades\{Hash, Validator};
 use Homeful\Contacts\Classes\ReferenceMetadata;
 use Homeful\References\Facades\References;
 use App\Models\{Contact, Reference, User};
 use Lorisleiva\Actions\Concerns\AsAction;
 use Lorisleiva\Actions\ActionRequest;
-use Illuminate\Support\Facades\Hash;
 use Homeful\Contacts\Classes\Dummy;
 use App\Events\ContactRegistered;
 use Illuminate\Support\Arr;
@@ -80,9 +80,11 @@ class RegisterContact
     /**
      * @throws ValidationException
      */
-    public function handle(array $attribs): User
+    public function handle(array $attribs): ?User
     {
-        return $this->register(validator($attribs, $this->rules())->validated());
+        $validator = Validator::make($attribs, $this->rules());
+
+        return $validator->passes() ? $this->register($validator->validated()) : null;
     }
 
     public function rules(): array
@@ -98,7 +100,7 @@ class RegisterContact
                 'required_if:first_name,null,last_name,null'
             ],
             'email' => 'required|string|lowercase|email|max:255|unique:'.User::class,
-            'mobile' => 'required|string|max:11',
+            'mobile' => 'required|string|max:11|unique:'.User::class,
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
             'civil_status' => ['nullable', Rule::enum(CivilStatus::class)],
             'sex' => ['nullable', Rule::enum(Sex::class)],
@@ -107,6 +109,9 @@ class RegisterContact
             'date_of_birth' => ['nullable', 'date'],
             'monthly_gross_income' => ['nullable', 'numeric', new Income],
             'addresses' => ['nullable', 'array'],
+            'employment' => ['nullable', 'array'],
+            'spouse' => ['nullable', 'array'],
+            'co_borrowers' => ['nullable', 'array'],
         ];
     }
 
