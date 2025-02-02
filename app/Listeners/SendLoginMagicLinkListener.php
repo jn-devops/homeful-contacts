@@ -14,6 +14,8 @@ class SendLoginMagicLinkListener
 {
     public function handle(Registered $event): void
     {
+        if (app()->runningInConsole()) return;
+
         $user = $event->user;
         if ($user instanceof User) {
             $action = new LoginAction($user);

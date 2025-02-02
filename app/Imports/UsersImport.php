@@ -2,8 +2,8 @@
 
 namespace App\Imports;
 
+use Homeful\Contacts\Classes\{AddressMetadata, AIFMetadata, CoBorrowerMetadata, EmployerMetadata, EmploymentMetadata, IdMetadata, SpouseMetadata};
 use Maatwebsite\Excel\Concerns\{SkipsOnError, SkipsOnFailure, ToModel, WithBatchInserts, WithHeadingRow, WithProgressBar, WithSkipDuplicates};
-use Homeful\Contacts\Classes\{AddressMetadata, CoBorrowerMetadata, EmployerMetadata, EmploymentMetadata, IdMetadata, SpouseMetadata};
 use Homeful\Contacts\Enums\{AddressType, CivilStatus, CoBorrowerType, Employment, EmploymentStatus, EmploymentType};
 use Homeful\Contacts\Enums\{Industry, Nationality, Ownership, Position, Relation, Sex, Suffix, Tenure};
 use Maatwebsite\Excel\Concerns\{Importable, SkipsErrors, SkipsFailures};
@@ -40,7 +40,8 @@ class UsersImport implements ToModel, WithHeadingRow, WithBatchInserts, SkipsOnE
             'addresses' => $this->extractAddresses($row),
             'spouse' => $this->extractSpouse($row),
             'employment' => $this->extractEmployment($row, 'buyer'),
-            'co_borrowers' => $this->extractCoBorrowers($row)
+            'co_borrowers' => $this->extractCoBorrowers($row),
+            'aif' => $this->extractAIF($row)
         ]);
 
         return $this->action->run($attribs);
@@ -69,11 +70,6 @@ class UsersImport implements ToModel, WithHeadingRow, WithBatchInserts, SkipsOnE
 
     protected function extractNameSuffix(array $row, string $key = 'name_suffix'): string
     {
-//        $name_suffix = (string) Arr::get($row, $key);
-//        if (strtoupper($name_suffix) == 'N/A') $name_suffix = '';
-//
-//        return Str::title($name_suffix);
-
         $name_suffix = (string) Arr::get($row, $key);
 
         return Suffix::tryFrom(Str::title($name_suffix))?->value ?? Suffix::tryFromCode($name_suffix)->value;
@@ -140,9 +136,8 @@ class UsersImport implements ToModel, WithHeadingRow, WithBatchInserts, SkipsOnE
         $addresses = json_decode(Arr::get($row, $key), true);
         foreach ($addresses as &$address) $this->transformAddress($address);
         unset($address);
-        $data = new DataCollection(AddressMetadata::class, $addresses);
 
-        return $data->toArray();
+        return (new DataCollection(AddressMetadata::class, $addresses))->toArray();
     }
 
     protected function extractEmployment(array $row, string $key): array
@@ -173,9 +168,8 @@ class UsersImport implements ToModel, WithHeadingRow, WithBatchInserts, SkipsOnE
         $spouse['nationality'] = $this->extractNationality($spouse);
         $spouse['email'] = $this->extractEmail($spouse);
         $spouse['mobile'] = $this->extractMobile($spouse);
-        $data = SpouseMetadata::from($spouse);
 
-        return $data->toArray();
+        return SpouseMetadata::from($spouse)->toArray();
     }
 
     protected function extractCoBorrowers(array $row, string $key = 'co_borrowers'): array
@@ -195,17 +189,34 @@ class UsersImport implements ToModel, WithHeadingRow, WithBatchInserts, SkipsOnE
         $co_borrower['employment'] = $this->extractEmployment($row, 'co_borrower');
         $co_borrower['relation']  = $this->extractRelation($co_borrower, 'relationship_to_buyer');
 
-        return (new DataCollection(CoBorrowerMetadata::class, [$co_borrower]))->toArray();;
+        return (new DataCollection(CoBorrowerMetadata::class, [$co_borrower]))->toArray();
     }
 
-    private function extractJson(array $array, string $key): array
+    protected function extractAIF(array $row, string $key = 'order.aif'): array
     {
-        $record = Arr::get($array, $key); if (is_null($record)) return [];
+        if (empty($aif = array_filter($this->extractJson($row, $key)))) return [];
 
-        return array_filter(is_array($record)
-            ? $record
-            : json_decode($record, true))
-            ;
+        $aif['first_name'] = $this->extractFirstName($aif);
+        $aif['middle_name'] = $this->extractMiddleName($aif);
+        $aif['last_name'] = $this->extractLastName($aif);
+        $aif['name_suffix'] = $this->extractNameSuffix($aif);
+        $aif['nationality'] = $this->extractNationality($aif);
+        $aif['civil_status'] = $this->extractCivilStatus($aif);
+        $aif['date_of_birth'] = $this->extractDateOfBirth($aif);
+        $aif['mothers_maiden_name'] = $this->extractMothersMaidenName($aif);
+        $aif['mobile'] = $this->extractMobile($aif);
+        $aif['email'] = $this->extractEmail($aif);
+        $aif['sex'] = $this->extractSex($aif);
+
+        return rescue(fn() => AIFMetadata::from($aif)->toArray(), []);
+    }
+
+    private function extractJson(array $array, string $keys): array
+    {
+        $record = Arr::get($array, dot_shift($keys)); if (!$record) return [];
+        $payload = is_array($record) ? $record : json_decode($record, true) ?? [];
+
+        return array_filter(empty($keys) ? $payload : Arr::get($payload, $keys, []));
     }
 
     private function toTitleFieldValues(array &$array, array $fields): void

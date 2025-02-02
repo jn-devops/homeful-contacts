@@ -10,19 +10,10 @@ use App\Models\Reference;
 
 class SendContactReferenceCodeListener
 {
-    /**
-     * Create the event listener.
-     */
-    public function __construct()
-    {
-        //
-    }
-
-    /**
-     * Handle the event.
-     */
     public function handle(ContactRegistered $event): void
     {
+        if (app()->runningInConsole()) return;
+
         $reference = $event->reference;
         if ($reference instanceof Reference) {
             $contact = $reference->getContact();

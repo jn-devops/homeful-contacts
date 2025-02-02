@@ -113,6 +113,7 @@ class RegisterContact
             'employment' => ['nullable', 'array'],
             'spouse' => ['nullable', 'array'],
             'co_borrowers' => ['nullable', 'array'],
+            'aif' => ['nullable', 'array'],
         ];
     }
 
