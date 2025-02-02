@@ -2,7 +2,7 @@
 
 namespace App\Actions;
 
-use Homeful\Contacts\Enums\{CivilStatus, Employment, EmploymentStatus, Nationality, Sex};
+use Homeful\Contacts\Enums\{CivilStatus, Employment, EmploymentStatus, Nationality, Sex, Suffix};
 use Illuminate\Validation\{Rule, Rules, ValidationException};
 use Illuminate\Support\Facades\{Hash, Validator};
 use Homeful\Contacts\Classes\ReferenceMetadata;
@@ -99,6 +99,7 @@ class RegisterContact
                 'regex:/^([\w.]+) (.*)$/',
                 'required_if:first_name,null,last_name,null'
             ],
+            'name_suffix' => ['nullable', Rule::enum(Suffix::class)],
             'email' => 'required|string|lowercase|email|max:255|unique:'.User::class,
             'mobile' => 'required|string|max:11|unique:'.User::class,
             'password' => ['required', 'confirmed', Rules\Password::defaults()],

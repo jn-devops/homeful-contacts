@@ -3,9 +3,9 @@
 namespace App\Imports;
 
 use Maatwebsite\Excel\Concerns\{SkipsOnError, SkipsOnFailure, ToModel, WithBatchInserts, WithHeadingRow, WithProgressBar, WithSkipDuplicates};
+use Homeful\Contacts\Classes\{AddressMetadata, CoBorrowerMetadata, EmployerMetadata, EmploymentMetadata, IdMetadata, SpouseMetadata};
 use Homeful\Contacts\Enums\{AddressType, CivilStatus, CoBorrowerType, Employment, EmploymentStatus, EmploymentType};
-use Homeful\Contacts\Classes\{AddressMetadata, CoBorrowerMetadata, EmploymentMetadata, SpouseMetadata};
-use Homeful\Contacts\Enums\{Industry, Nationality, Ownership, Position, Sex, Tenure};
+use Homeful\Contacts\Enums\{Industry, Nationality, Ownership, Position, Relation, Sex, Suffix, Tenure};
 use Maatwebsite\Excel\Concerns\{Importable, SkipsErrors, SkipsFailures};
 use Illuminate\Support\{Arr, Carbon, Str};
 use Spatie\LaravelData\DataCollection;
@@ -69,10 +69,14 @@ class UsersImport implements ToModel, WithHeadingRow, WithBatchInserts, SkipsOnE
 
     protected function extractNameSuffix(array $row, string $key = 'name_suffix'): string
     {
-        $name_suffix = (string) Arr::get($row, $key);
-        if (strtoupper($name_suffix) == 'N/A') $name_suffix = '';
+//        $name_suffix = (string) Arr::get($row, $key);
+//        if (strtoupper($name_suffix) == 'N/A') $name_suffix = '';
+//
+//        return Str::title($name_suffix);
 
-        return Str::title($name_suffix);
+        $name_suffix = (string) Arr::get($row, $key);
+
+        return Suffix::tryFrom(Str::title($name_suffix))?->value ?? Suffix::tryFromCode($name_suffix)->value;
     }
 
     protected function extractEmail(array $row, string $key = 'email'): string
@@ -145,6 +149,7 @@ class UsersImport implements ToModel, WithHeadingRow, WithBatchInserts, SkipsOnE
     {
         if (empty($employment = Arr::get($this->extractEmployments($row), $key))) return [];
 
+        $this->toTitleFieldValues($employment, ['rank']);
         $employment['type'] = Employment::default()->value;
         $employment['industry'] = $this->extractIndustry($employment);
         $employment['employment_type'] = $this->extractEmploymentType($employment);
@@ -153,6 +158,7 @@ class UsersImport implements ToModel, WithHeadingRow, WithBatchInserts, SkipsOnE
         $employment['employment_status'] = $this->extractEmploymentStatus($employment);
         $employment['monthly_gross_income'] = (float) $employment['monthly_gross_income'];
         $employment['employer'] = $this->extractEmployer($employment);
+        $employment['id'] = $this->extractId($employment);
 
         return (new DataCollection(EmploymentMetadata::class, [$employment]))->toArray();
     }
@@ -178,7 +184,8 @@ class UsersImport implements ToModel, WithHeadingRow, WithBatchInserts, SkipsOnE
 
         $co_borrower = $co_borrowers[0];
 
-        $this->toTitleFieldValues($co_borrower, ['name', 'first_name', 'middle_name', 'last_name', 'name_suffix', 'mothers_maiden_name', 'sex']);
+        $this->toTitleFieldValues($co_borrower, ['name', 'first_name', 'middle_name', 'last_name', 'mothers_maiden_name', 'sex']);
+        $co_borrower['name_suffix'] = $this->extractNameSuffix($co_borrower);
         $co_borrower['type'] = $this->extractCoBorrowerType($co_borrower);
         $co_borrower['email'] = $this->extractEmail($co_borrower);
         $co_borrower['mobile'] = $this->extractMobile($co_borrower);
@@ -186,6 +193,7 @@ class UsersImport implements ToModel, WithHeadingRow, WithBatchInserts, SkipsOnE
         $co_borrower['civil_status'] = $this->extractCivilStatus($co_borrower);
         $co_borrower['spouse']  = $this->extractSpouse($co_borrower);
         $co_borrower['employment'] = $this->extractEmployment($row, 'co_borrower');
+        $co_borrower['relation']  = $this->extractRelation($co_borrower, 'relationship_to_buyer');
 
         return (new DataCollection(CoBorrowerMetadata::class, [$co_borrower]))->toArray();;
     }
@@ -257,10 +265,18 @@ class UsersImport implements ToModel, WithHeadingRow, WithBatchInserts, SkipsOnE
         if (empty($employer = $this->extractJson($array, $key))) return [];
         $this->toTitleFieldValues($employer, ['name']);
         $employer['email'] = $this->extractEmail($employer);
+        $employer['nationality'] = $this->extractNationality($employer);
         $employer['industry'] = $this->extractIndustry($employer);
         $employer['address'] = $this->extractAddress($employer, 'address');
 
-        return $employer;
+        return EmployerMetadata::from($employer)->toArray();
+    }
+
+    private function extractId(array $array, string $key = 'id'): array
+    {
+        if (empty($id = $this->extractJson($array, $key))) return [];
+
+        return IdMetadata::from($id)->toArray();
     }
 
     private function extractAddress(array $array, string $key = 'address'): array
@@ -286,6 +302,13 @@ class UsersImport implements ToModel, WithHeadingRow, WithBatchInserts, SkipsOnE
         $co_borrower_type =  (string) Arr::get($row, $key);
 
         return CoBorrowerType::tryFrom(Str::title($co_borrower_type))?->value ?? CoBorrowerType::default()->value;
+    }
+
+    private function extractRelation(array $array, string $key): string
+    {
+        $relation = (string) Arr::get($array, $key);
+
+        return Relation::tryFrom(Str::title($relation))?->value ?? Relation::tryFromCode($relation)->value;
     }
 
     public function batchSize(): int
