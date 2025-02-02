@@ -30,7 +30,7 @@ class UsersImport implements ToModel, WithHeadingRow, WithBatchInserts, SkipsOnE
             'name_suffix' => $this->extractNameSuffix($row),
             'email' => $this->extractEmail($row),
             'mobile' => $this->extractMobile($row),
-            'password' => $password = Str::password(),
+            'password' => $password = $this->generatePassword(),
             'password_confirmation' => $password,
             'civil_status' => $this->extractCivilStatus($row),
             'sex' => $this->extractSex($row),
@@ -320,6 +320,13 @@ class UsersImport implements ToModel, WithHeadingRow, WithBatchInserts, SkipsOnE
         $relation = (string) Arr::get($array, $key);
 
         return Relation::tryFrom(Str::title($relation))?->value ?? Relation::tryFromCode($relation)->value;
+    }
+
+    private function generatePassword(): string
+    {
+        $password = config('homeful-contacts.default_password');
+
+        return is_null($password) ? Str::password() : $password;
     }
 
     public function batchSize(): int
