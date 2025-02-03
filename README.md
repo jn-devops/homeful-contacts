@@ -66,6 +66,9 @@ Lester, please continue this
 `scp contacts.csv forge@contacts.homeful.ph:/home/forge/contacts.homeful.ph/current/storage/app/private/`
 #### Import a file
 php artisan app:import-users
+#### Run address migrations
+`php artisan migrate:fresh --database=address-sqlite --path=database/migrations/address`
+
 ## Security Vulnerabilities
 
 If you discover a security vulnerability within Homeful Contacts, please send an e-mail to Anaïs Santos via [devops@joy-nostalg.com](mailto:devops@joy-nostalg.com). All security vulnerabilities will be promptly addressed.

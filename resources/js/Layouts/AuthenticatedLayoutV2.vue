@@ -3,7 +3,7 @@ import BreadCrumbs from '@/Components/BreadCrumbs.vue';
 
 const breadcrumbPages = [
     { name: 'Personal', href: route('personal.edit'), current: route().current('personal.edit') },
-    { name: 'Address', href: route('address.edit'), current: route().current('address.edit') },
+    { name: 'address', href: route('address.edit'), current: route().current('address.edit') },
     { name: 'Employment', href: route('employment.edit'), current: route().current('employment.edit') },
     { name: 'Spouse', href: route('spouse.edit'), current: route().current('spouse.edit') },
     { name: 'AIF', href: route('aif.edit'), current: route().current('aif.edit') },

@@ -74,9 +74,9 @@ watch(form, (newValue, oldValue) => {
             leave-active-class="transition ease-in-out"
             leave-to-class="opacity-0"
         >
-            <SuccessToast 
+            <SuccessToast
                 v-if="form.recentlySuccessful"
-                :message="'Successfully Saved ' + props.address_type + ' Address'"
+                :message="'Successfully Saved ' + props.address_type + ' address'"
             />
         </Transition>
         <Transition
@@ -85,7 +85,7 @@ watch(form, (newValue, oldValue) => {
             leave-active-class="transition ease-in-out"
             leave-to-class="opacity-0"
         >
-            <WarningToast 
+            <WarningToast
                 v-if="hasValidationError"
                 @close-toast="closeToastFunction"
                 message="There are validation errors. Kindly double check the form."
@@ -100,7 +100,7 @@ watch(form, (newValue, oldValue) => {
 
             <div class="grid grid-cols-12 gap-4">
                 <div class="col-span-full lg:col-span-2">
-                    <SelectInput 
+                    <SelectInput
                         v-model="form.ownership"
                         label="Ownership"
                         :options="ownershipList"
@@ -109,7 +109,7 @@ watch(form, (newValue, oldValue) => {
                     />
                 </div>
                 <div class="col-span-full lg:col-span-5">
-                    <TextInput 
+                    <TextInput
                         v-model="form.address1"
                         label="Address"
                         placeholder="Enter Address"
@@ -118,7 +118,7 @@ watch(form, (newValue, oldValue) => {
                     />
                 </div>
                 <div class="col-span-full lg:col-span-5">
-                    <TextInput 
+                    <TextInput
                         v-model="form.locality"
                         label="City"
                         placeholder="Enter City"
@@ -127,7 +127,7 @@ watch(form, (newValue, oldValue) => {
                     />
                 </div>
                 <div class="col-span-full lg:col-span-4">
-                    <TextInput 
+                    <TextInput
                         v-model="form.administrative_area"
                         label="Province"
                         placeholder="Enter Province"
@@ -136,7 +136,7 @@ watch(form, (newValue, oldValue) => {
                     />
                 </div>
                 <div class="col-span-full lg:col-span-4">
-                    <TextInput 
+                    <TextInput
                         v-model="form.region"
                         label="Region"
                         placeholder="Enter Region"
@@ -145,7 +145,7 @@ watch(form, (newValue, oldValue) => {
                     />
                 </div>
                 <div class="col-span-full lg:col-span-2">
-                    <TextInput 
+                    <TextInput
                         v-model="form.postal_code"
                         label="Zip Code"
                         placeholder="Enter Zip Code"
@@ -154,7 +154,7 @@ watch(form, (newValue, oldValue) => {
                     />
                 </div>
                 <div class="col-span-full lg:col-span-2">
-                    <TextInput 
+                    <TextInput
                         v-model="form.country"
                         label="Country"
                         placeholder="Enter Country"

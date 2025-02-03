@@ -2,8 +2,8 @@
 
 namespace Database\Seeders;
 
-use App\Models\Country;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\Address\Country;
 use Illuminate\Database\Seeder;
 
 class CountrySeeder extends Seeder
