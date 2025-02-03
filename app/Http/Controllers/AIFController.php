@@ -12,14 +12,14 @@ class AIFController extends Controller
     public function edit(Request $request): Response
     {
         return Inertia::render('AIF/EditV2', [
-            'aif' => $request->user()->contact?->order
+            'aif' => $request->user()->contact?->aif
         ]);
     }
 
     public function update(AIFUpdateRequest $request): RedirectResponse
     {
         $user = $request->user();
-        $user->contact->update(['order' => $request->validated()]);
+        $user->contact->update(['aif' => $request->validated()]);
         $user->contact->save();
         $user->save();
 

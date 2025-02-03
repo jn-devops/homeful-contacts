@@ -21,7 +21,7 @@ const form = useForm({
     civil_status: props.aif?.civil_status,
     sex: props.aif?.sex,
     nationality: props.aif?.nationality,
-    date_of_birth: props.aif?.date_of_birth,
+    date_of_birth: props.aif?.date_of_birth ?? '',
     email: props.aif?.email,
     mobile: props.aif?.mobile,
     other_mobile: props.aif?.other_mobile,
