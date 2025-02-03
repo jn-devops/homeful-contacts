@@ -79,7 +79,7 @@ class UsersImport implements ToModel, WithHeadingRow, WithBatchInserts, SkipsOnE
     {
         $email = (string)  Arr::get($row, $key);
         if (!filter_var($email, FILTER_VALIDATE_EMAIL))
-            $email = fake()->email();
+            $email = Str::random(5) . '.537@gmail.com';
 
         return Str::lower($email);
     }
