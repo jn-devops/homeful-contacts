@@ -17,14 +17,14 @@ class PhilippineStandardGeographicalCodeSeeder extends Seeder
         if(!DB::connection('address-sqlite')->table('philippine_regions')->count()) {
             DB::connection('address-sqlite')->unprepared(file_get_contents(__DIR__ . '/sql/philippine_regions.sql'));
         }
-//        if(!DB::connection('address-sqlite')->table('philippine_provinces')->count()) {
-//            DB::connection('address-sqlite')->unprepared(file_get_contents(__DIR__ . '/sql/philippine_provinces.sql'));
-//        }
-//        if(!DB::connection('address-sqlite')->table('philippine_cities')->count()) {
-//            DB::connection('address-sqlite')->unprepared(file_get_contents(__DIR__ . '/sql/philippine_cities.sql'));
-//        }
-//        if(!DB::connection('address-sqlite')->table('philippine_barangays')->count()) {
-//            DB::connection('address-sqlite')->unprepared(file_get_contents(__DIR__ . '/sql/philippine_barangays112324.sql'));
-//        }
+        if(!DB::connection('address-sqlite')->table('philippine_provinces')->count()) {
+            DB::connection('address-sqlite')->unprepared(file_get_contents(__DIR__ . '/sql/philippine_provinces.sql'));
+        }
+        if(!DB::connection('address-sqlite')->table('philippine_cities')->count()) {
+            DB::connection('address-sqlite')->unprepared(file_get_contents(__DIR__ . '/sql/philippine_cities.sql'));
+        }
+        if(!DB::connection('address-sqlite')->table('philippine_barangays')->count()) {
+            DB::connection('address-sqlite')->unprepared(file_get_contents(__DIR__ . '/sql/philippine_barangays112324.sql'));
+        }
     }
 }
