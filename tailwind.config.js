@@ -16,7 +16,7 @@ export default {
     theme: {
         extend: {
             fontFamily: {
-                sans: ['Figtree', ...defaultTheme.fontFamily.sans],
+                // sans: ['Figtree', ...defaultTheme.fontFamily.sans],
             },
             colors: {
                 "vtd-primary": colors.sky, // Light mode Datepicker color

@@ -5,7 +5,7 @@ import { onMounted, ref } from 'vue';
 const props = defineProps({
   label: {
     type: String,
-    default: 'Default Label',
+    default: '',
   },
   required: {
     type: Boolean,
@@ -35,6 +35,10 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  noBorderRadius: {
+    type: Boolean,
+    default: false
+  }
 });
 
 const model = defineModel({
@@ -62,15 +66,19 @@ function filterInput(event) {
 <template>
     <div>
         <label class="block text-sm/6 font-medium" :class="errorMessage ? 'text-red-600' : 'text-gray-900'">{{label}} <span v-if="required" class="text-red-600">*</span></label>
-        <div class="mt-2 grid grid-cols-1">
+        <div class="grid grid-cols-1">
             <input 
                 v-model="model"
                 :maxlength="max"
                 ref="input"
                 :readonly="readOnly"
                 @input="filterInput"
-                class="col-start-1 row-start-1 block w-full rounded-md bg-white py-1.5 pl-3 pr-10 text-base focus:ring-0 outline outline-1 -outline-offset-1 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-[#CC035C] sm:pr-9 sm:text-sm/6"
-                :class="errorMessage ? 'text-red-900 outline-red-300 placeholder:text-red-300' : 'text-gray-900 outline-gray-300 placeholder:text-gray-400'" 
+                class="col-start-1 row-start-1 block w-full bg-white py-1.5 pl-3 pr-10 text-base focus:ring-0 outline outline-1 -outline-offset-1 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-[#CC035C] sm:pr-9 sm:text-sm/6"
+                :class="{
+                  'text-red-900 outline-red-300 placeholder:text-red-300': errorMessage,
+                  'text-gray-900 outline-gray-300 placeholder:text-gray-400': !errorMessage,
+                  'rounded-md' : !noBorderRadius,
+                }"
                 :placeholder="placeholder" 
             />
             <ExclamationCircleIcon v-if="errorMessage" class="pointer-events-none col-start-1 row-start-1 mr-3 size-5 self-center justify-self-end text-red-500 sm:size-4" aria-hidden="true" />
