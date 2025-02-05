@@ -3,13 +3,23 @@
 namespace App\Models\Address;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\Address\Classes\NeedsDefault;
+use App\Models\Address\Traits\HasDefault;
 use Illuminate\Database\Eloquent\Model;
 
-class PhilippineProvince extends Model
+class PhilippineProvince extends Model implements NeedsDefault
 {
     use HasFactory;
+    use HasDefault;
+
+    const DEFAULT_CODE = '1339';
 
     protected $connection = 'address-sqlite';
+
+    public function getRouteKeyName(): string
+    {
+        return 'province_code';
+    }
 
     protected $fillable = [
         'psgc_code',
