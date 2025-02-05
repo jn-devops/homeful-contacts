@@ -10,6 +10,7 @@ use Maatwebsite\Excel\Concerns\{Importable, SkipsErrors, SkipsFailures};
 use Illuminate\Support\{Arr, Carbon, Str};
 use Spatie\LaravelData\DataCollection;
 use App\Actions\RegisterContact;
+use App\Models\Address\{Country, PhilippineBarangay, PhilippineCity, PhilippineProvince, PhilippineRegion};
 
 class UsersImport implements ToModel, WithHeadingRow, WithBatchInserts, SkipsOnError, SkipsOnFailure, WithSkipDuplicates, WithProgressBar
 {
@@ -306,6 +307,14 @@ class UsersImport implements ToModel, WithHeadingRow, WithBatchInserts, SkipsOnE
         $ownership = Arr::get($address, 'ownership');
         $address['ownership'] = Ownership::tryFrom(Str::title($ownership))?->value ?? Ownership::tryFromCode($ownership)->value;
         $address['postal_code'] = Arr::get($address, 'postal_code', '0000');
+        $address['address'] =titleCase(Arr::get($address, 'address1', ''), $this->exclusions());
+        $address['address1'] =titleCase(Arr::get($address, 'address1', ''), $this->exclusions());
+        $address['country'] =titleCase(Country::where('code', Arr::get($address, 'country'))->first()?->description ?? $address['country'], $this->exclusions());
+        $address['region'] = titleCase(PhilippineRegion::where('region_code', Arr::get($address, 'region'))->first()?->region_description ??  $address['region'], $this->exclusions());
+        $address['administrative_area'] = Str::title(PhilippineProvince::where('province_code', Arr::get($address, 'administrative_area'))->first()?->province_description ?? $address['administrative_area'], $this->exclusions());
+        $address['locality'] = titleCase(PhilippineCity::where('city_municipality_code', Arr::get($address, 'locality'))->first()?->city_municipality_description ?? $address['locality'], $this->exclusions());
+        $address['sublocality'] = titleCase(PhilippineBarangay::where('barangay_code', Arr::get($address, 'sublocality'))->first()?->barangay_description ?? $address['sublocality'], $this->exclusions());
+        $address['full_address'] = titleCase(Arr::get($address, 'full_address', ''));
     }
 
     private function extractCoBorrowerType(array $row, string $key = 'type'): string
@@ -329,6 +338,10 @@ class UsersImport implements ToModel, WithHeadingRow, WithBatchInserts, SkipsOnE
         return is_null($password) ? Str::password() : $password;
     }
 
+    private function exclusions(): array
+    {
+        return ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII', 'XIII', 'XIV', 'XV', 'NCR', 'NHA', 'SSS', 'GSIS'];
+    }
     public function batchSize(): int
     {
         return 100;

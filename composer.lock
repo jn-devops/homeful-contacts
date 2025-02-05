@@ -3172,16 +3172,16 @@
         },
         {
             "name": "jn-devops/common",
-            "version": "v1.3.7",
+            "version": "v1.4.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/jn-devops/common.git",
-                "reference": "9c9b38d5015dc715c463b6b93e0faa87c3522c0e"
+                "reference": "df5fb4afaeafe667a7e104c0dfa7ffb01941454f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/jn-devops/common/zipball/9c9b38d5015dc715c463b6b93e0faa87c3522c0e",
-                "reference": "9c9b38d5015dc715c463b6b93e0faa87c3522c0e",
+                "url": "https://api.github.com/repos/jn-devops/common/zipball/df5fb4afaeafe667a7e104c0dfa7ffb01941454f",
+                "reference": "df5fb4afaeafe667a7e104c0dfa7ffb01941454f",
                 "shasum": ""
             },
             "require": {
@@ -3245,7 +3245,7 @@
             ],
             "support": {
                 "issues": "https://github.com/jn-devops/common/issues",
-                "source": "https://github.com/jn-devops/common/tree/v1.3.7"
+                "source": "https://github.com/jn-devops/common/tree/v1.4.1"
             },
             "funding": [
                 {
@@ -3253,7 +3253,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-02-02T12:23:59+00:00"
+            "time": "2025-02-05T05:25:24+00:00"
         },
         {
             "name": "jn-devops/contacts",

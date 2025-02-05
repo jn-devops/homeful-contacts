@@ -12,7 +12,7 @@ class PhilippineBarangay extends Model implements NeedsDefault
     use HasFactory;
     use HasDefault;
 
-    const DEFAULT_CODE = '133901060';
+    const DEFAULT_CODE = '133901061';
 
     protected $connection = 'address-sqlite';
 
