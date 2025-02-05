@@ -59,6 +59,9 @@ class HandleInertiaRequests extends Middleware
                 'employment_statuses' => EmploymentStatus::toArray(),
                 'industries' => Industry::toArray(),
             ],
+            'data' => [
+                'appURL' => env('APP_URL', 'http://homeful-contacts.test/'),
+            ],
             'csrf_token' => csrf_token(),
         ];
     }

@@ -6,7 +6,7 @@ const props = defineProps({
         default: "Default Text"
     },
     modelValue: {
-        type: String,
+        type: [String, Number],
         default: ""
     },
     placeholder: {
@@ -20,6 +20,14 @@ const props = defineProps({
     email: {
         type: Boolean,
         default:false
+    },
+    required: {
+        type: Boolean,
+        default:false
+    },
+    type:{
+        type: String,
+        default:"text"
     }
 })
 
@@ -38,7 +46,8 @@ const updateInput = (newVal) => {
                 id="input"
                 :value="modelValue"
                 @input="updateInput"
-                :type="email ? 'email' : 'text'"
+                :required="required"
+                :type="type"
                 class="p-3 text-black w-full h-full focus:ring-0 border-none"
                 :placeholder="placeholder"
             >
