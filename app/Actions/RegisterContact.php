@@ -114,6 +114,7 @@ class RegisterContact
             'spouse' => ['nullable', 'array'],
             'co_borrowers' => ['nullable', 'array'],
             'aif' => ['nullable', 'array'],
+            'order' => ['nullable', 'array'],
         ];
     }
 

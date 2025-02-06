@@ -65,9 +65,12 @@ Lester, please continue this
 #### Upload the file
 `scp contacts.csv forge@contacts.homeful.ph:/home/forge/contacts.homeful.ph/current/storage/app/private/`
 #### Import a file
-php artisan app:import-users
+`php artisan app:import-users`
 #### Run address migrations
 `php artisan migrate:fresh --database=address-sqlite --path=database/migrations/address`
+#### Run address seeds
+`php artisan db:seed --class=CountrySeeder`
+`php artisan db:seed --class=PhilippineStandardGeographicalCodeSeeder`
 
 ## Security Vulnerabilities
 

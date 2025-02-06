@@ -5,12 +5,13 @@ namespace App\Imports;
 use Homeful\Contacts\Classes\{AddressMetadata, AIFMetadata, CoBorrowerMetadata, EmployerMetadata, EmploymentMetadata, IdMetadata, SpouseMetadata};
 use Maatwebsite\Excel\Concerns\{SkipsOnError, SkipsOnFailure, ToModel, WithBatchInserts, WithHeadingRow, WithProgressBar, WithSkipDuplicates};
 use Homeful\Contacts\Enums\{AddressType, CivilStatus, CoBorrowerType, Employment, EmploymentStatus, EmploymentType};
+use App\Models\Address\{Country, PhilippineBarangay, PhilippineCity, PhilippineProvince, PhilippineRegion};
 use Homeful\Contacts\Enums\{Industry, Nationality, Ownership, Position, Relation, Sex, Suffix, Tenure};
 use Maatwebsite\Excel\Concerns\{Importable, SkipsErrors, SkipsFailures};
 use Illuminate\Support\{Arr, Carbon, Str};
 use Spatie\LaravelData\DataCollection;
+use Homeful\Contacts\Data\OrderData;
 use App\Actions\RegisterContact;
-use App\Models\Address\{Country, PhilippineBarangay, PhilippineCity, PhilippineProvince, PhilippineRegion};
 
 class UsersImport implements ToModel, WithHeadingRow, WithBatchInserts, SkipsOnError, SkipsOnFailure, WithSkipDuplicates, WithProgressBar
 {
@@ -42,7 +43,8 @@ class UsersImport implements ToModel, WithHeadingRow, WithBatchInserts, SkipsOnE
             'spouse' => $this->extractSpouse($row),
             'employment' => $this->extractEmployment($row, 'buyer'),
             'co_borrowers' => $this->extractCoBorrowers($row),
-            'aif' => $this->extractAIF($row)
+            'aif' => $this->extractAIF($row),
+            'order' => $this->extractOrder($row)
         ]);
 
         return $this->action->run($attribs);
@@ -210,6 +212,13 @@ class UsersImport implements ToModel, WithHeadingRow, WithBatchInserts, SkipsOnE
         $aif['sex'] = $this->extractSex($aif);
 
         return rescue(fn() => AIFMetadata::from($aif)->toArray(), []);
+    }
+
+    protected function extractOrder(array $row, string $key = 'order'): array
+    {
+        if (empty($order = array_filter($this->extractJson($row, $key)))) return [];
+
+        return OrderData::from($order)->toArray();
     }
 
     private function extractJson(array $array, string $keys): array
