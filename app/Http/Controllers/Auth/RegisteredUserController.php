@@ -26,7 +26,6 @@ class RegisteredUserController extends Controller
         $hidePassword = config('homeful-contacts.hide_password') || $request->get('hidePassword');
         $autoPassword = $hidePassword ? Str::password() : '';
 
-
         return Inertia::render(self::REGISTER_VIEW, [
             'callback' => $callback,
             'showExtra' => $showExtra,
@@ -42,16 +41,14 @@ class RegisteredUserController extends Controller
      */
     public function store(Request $request): \Illuminate\Foundation\Application|\Illuminate\Routing\Redirector|\Symfony\Component\HttpFoundation\Response|RedirectResponse
     {
-        $action = new RegisterContact;
-        $user = $action->handle($request->all());
-        $reference = $action->getReference();
+        $user = app(RegisterContact::class)->run($request->all());
 
         event(new Registered($user));
 
         Auth::login($user);
 
         return session('callback')
-            ? Inertia::location($this->getCallbackWithQueryParamsFromSession($reference))
+            ? Inertia::location($this->getCallbackWithQueryParamsFromSession(context('reference')))
             : redirect(route('dashboard', absolute: false));
     }
 

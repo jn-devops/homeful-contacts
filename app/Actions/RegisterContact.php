@@ -4,17 +4,18 @@ namespace App\Actions;
 
 use Homeful\Contacts\Enums\{CivilStatus, Employment, EmploymentStatus, Nationality, Sex, Suffix};
 use Illuminate\Validation\{Rule, Rules, ValidationException};
-use Illuminate\Support\Facades\{Hash, Validator};
 use Homeful\Contacts\Classes\ReferenceMetadata;
+use Propaganistas\LaravelPhone\Rules\Phone;
 use Homeful\References\Facades\References;
 use App\Models\{Contact, Reference, User};
 use Lorisleiva\Actions\Concerns\AsAction;
+use App\Rules\{FullNameRequired, Income};
 use Lorisleiva\Actions\ActionRequest;
+use Illuminate\Support\Facades\Hash;
 use Homeful\Contacts\Classes\Dummy;
 use App\Events\ContactRegistered;
 use Illuminate\Support\Arr;
 use App\Data\UserData;
-use App\Rules\Income;
 
 class RegisterContact
 {
@@ -67,10 +68,14 @@ class RegisterContact
 
         //create a reference for the contact
         //and temporary save it to $this->reference class property for further processing
-        $this->reference = References::withOwner($user)->create();
-        $this->reference->addEntities($contact);
+        $reference = References::withOwner($user)->create();
+        $reference->addEntities($contact);
 
-        event(new ContactRegistered($this->reference));
+        event(new ContactRegistered($reference));
+
+        //set the reference context
+        //just like a session
+        context(['reference' => $reference]);
 
         //return the user, not the reference
         //it needs to be authorized in the registration controller
@@ -82,9 +87,9 @@ class RegisterContact
      */
     public function handle(array $attribs): ?User
     {
-        $validator = Validator::make($attribs, $this->rules());
+        $validated = validator($attribs, $this->rules())->validated();
 
-        return $validator->passes() ? $this->register($validator->validated()) : null;
+        return $this->register($validated);
     }
 
     public function rules(): array
@@ -93,15 +98,10 @@ class RegisterContact
             'first_name' => ['nullable', 'string', 'max:50'],
             'middle_name' => ['nullable', 'string', 'max:50'],
             'last_name' => ['nullable', 'string', 'max:50'],
-            'name' => [
-                'string',
-                'max:255',
-                'regex:/^([\w.]+) (.*)$/',
-                'required_if:first_name,null,last_name,null'
-            ],
+            'name' => ['string', 'max:255', new FullNameRequired],
             'name_suffix' => ['nullable', Rule::enum(Suffix::class)],
             'email' => 'required|string|lowercase|email|max:255|unique:'.User::class,
-            'mobile' => 'required|string|max:11|unique:'.User::class,
+            'mobile' => ['required', (new Phone)->type('mobile')->country('PH'), 'unique:'.User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
             'civil_status' => ['nullable', Rule::enum(CivilStatus::class)],
             'sex' => ['nullable', Rule::enum(Sex::class)],
@@ -128,8 +128,8 @@ class RegisterContact
         return ReferenceMetadata::from($this->reference);
     }
 
-    public function getReference(): Reference
+    public function getReference(): ?Reference
     {
-        return $this->reference;
+        return context('reference');
     }
 }
