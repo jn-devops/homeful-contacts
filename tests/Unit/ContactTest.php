@@ -8,7 +8,9 @@ use Illuminate\Support\Facades\Notification;
 use App\Models\{Contact, Reference, User};
 use Spatie\LaravelData\DataCollection;
 
-uses(RefreshDatabase::class, WithFaker::class);
+uses(
+//    RefreshDatabase::class,
+    WithFaker::class);
 
 beforeEach(function () {
    Notification::fake();

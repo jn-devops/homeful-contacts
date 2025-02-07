@@ -64,6 +64,7 @@ Lester, please continue this
 ### Restore a backup
 #### Upload the file
 `scp contacts.csv forge@contacts.homeful.ph:/home/forge/contacts.homeful.ph/current/storage/app/private/`
+`scp address.sqlite forge@contacts.homeful.ph:/home/forge/contacts.homeful.ph/current/database/migrations/address/`
 #### Import a file
 `php artisan app:import-users`
 #### Run address migrations

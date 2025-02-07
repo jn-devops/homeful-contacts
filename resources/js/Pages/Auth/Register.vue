@@ -17,13 +17,25 @@ const props = defineProps({
     autoPassword: {
         type: String,
         default: ''
-    }
+    },
+    name: {
+        type: String,
+        default: ''
+    },
+    email: {
+        type: String,
+        default: ''
+    },
+    mobile: {
+        type: String,
+        default: ''
+    },
 });
 
 const form = useForm({
-    name: '',
-    email: '',
-    mobile: '',
+    name: props.name,
+    email: props.email,
+    mobile: props.mobile,
     password: props.autoPassword,
     password_confirmation: props.autoPassword,
     date_of_birth: '',
@@ -67,7 +79,7 @@ const showPassword = computed(() => props.autoPassword === '');
             </div>
             <form @submit.prevent="submit">
                 <div class="mt-10">
-                    <GradientStyleInput 
+                    <GradientStyleInput
                         label="Name"
                         placeholder="Enter Name"
                         required
@@ -85,7 +97,7 @@ const showPassword = computed(() => props.autoPassword === '');
                     />
                 </div>
                 <div class="mt-5">
-                    <GradientStyleInput 
+                    <GradientStyleInput
                         label="Email Address"
                         placeholder="Enter Email"
                         required
@@ -96,7 +108,7 @@ const showPassword = computed(() => props.autoPassword === '');
                 </div>
                 <div v-if="showPassword">
                     <div class="mt-5">
-                        <GradientStyleInput 
+                        <GradientStyleInput
                             label="Password"
                             type="password"
                             placeholder="Enter Password"
@@ -105,7 +117,7 @@ const showPassword = computed(() => props.autoPassword === '');
                         />
                     </div>
                     <div class="mt-5">
-                        <GradientStyleInput 
+                        <GradientStyleInput
                             label="Confirm Password"
                             type="password"
                             placeholder="Confirm Password"
@@ -124,7 +136,7 @@ const showPassword = computed(() => props.autoPassword === '');
                         />
                     </div>
                     <div class="mt-5">
-                        <GradientStyleInput 
+                        <GradientStyleInput
                             label="Gross Monthly Income"
                             type="number"
                             placeholder="Enter Gross Monthly Income"

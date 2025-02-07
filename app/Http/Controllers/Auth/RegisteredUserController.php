@@ -26,10 +26,14 @@ class RegisteredUserController extends Controller
         $hidePassword = config('homeful-contacts.hide_password') || $request->get('hidePassword');
         $autoPassword = $hidePassword ? Str::password() : '';
 
+
         return Inertia::render(self::REGISTER_VIEW, [
             'callback' => $callback,
             'showExtra' => $showExtra,
             'autoPassword' => $autoPassword,
+            'name' => $request->get('name',''),
+            'email' => $request->get('email',''),
+            'mobile' => $request->get('mobile',''),
         ]);
     }
 

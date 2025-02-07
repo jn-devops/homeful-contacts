@@ -40,3 +40,21 @@ test('register contact action works', function () {
         expect($contact->employment->first()->monthly_gross_income)->toBe($monthly_gross_income);
     });
 });
+
+test('register contact end point works', function () {
+    $response = $this->post('/register', [
+        'name' => 'Test User',
+        'email' => $email = 'test@example.com',
+        'mobile' => '09171234567',
+        'password' => 'password',
+        'password_confirmation' => 'password',
+        'date_of_birth' => $date_of_birth = '1999-03-17',
+        'monthly_gross_income' => $monthly_gross_income = 100000.0
+    ]);
+    expect($response->status())->toBe(302);
+    $user = User::where('email', $email)->first();
+    $contact = $user->contact;
+
+    expect($contact->date_of_birth->format('Y-m-d'))->toBe($date_of_birth);
+    expect($contact->employment->first()->monthly_gross_income)->toBe($monthly_gross_income);
+});
