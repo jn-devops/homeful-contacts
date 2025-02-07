@@ -53,6 +53,8 @@ const submit = () => {
     });
 };
 
+const disclaimerChecked = ref(false);
+
 const showPassword = computed(() => props.autoPassword === '');
 
 </script>
@@ -148,14 +150,14 @@ const showPassword = computed(() => props.autoPassword === '');
                 </div>
                 <div class="mt-3 px-2">
                     <div class="flex items-center mb-4 gap-2">
-                        <input id="default-checkbox" type="checkbox" value="" class="w-5 h-5 text-[#F7C947] rounded-sm focus:ring-[#E94572]">
+                        <input type="checkbox" v-model="disclaimerChecked" id="default-checkbox" class="w-5 h-5 text-[#F7C947] rounded-sm focus:ring-[#E94572]">
                         <label for="default-checkbox" class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">
                             I've read and agree with the <b class="underline cursor-pointer">Terms and Conditions</b> and the <b class="underline cursor-pointer">Privacy Policy</b>.
                         </label>
                     </div>
                 </div>
                 <div class="mt-14">
-                    <PlainBlackButton type="submit">
+                    <PlainBlackButton type="submit" :disabled="!disclaimerChecked">
                         Register
                     </PlainBlackButton>
                 </div>
@@ -169,7 +171,7 @@ const showPassword = computed(() => props.autoPassword === '');
                 <div class="mt-8">
                     <hr class="border-1 border-gray-300" />
                 </div>
-                <div class="flex flex-col items-center">
+                <div class="flex flex-col items-center mb-10">
                     <div class="mt-4 text-gray-500">or continue with</div>
                     <div class="flex items-center gap-4 mt-3">
                         <!-- Google -->

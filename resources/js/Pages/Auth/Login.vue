@@ -34,11 +34,11 @@ const submit = () => {
                 <div class="relative w-full">
                     <div class="w-full h-[400px]">
                         <img 
-                            :src="usePage().props.data.appURL + 'images/ModelUnitWalkthrough.gif'" alt="IMG"
+                            :src="usePage().props.data.appURL + '/images/ModelUnitWalkthrough.gif'" alt="IMG"
                             class="w-full h-full object-cover"
                         >
                     </div>
-                    <div class="z-20 absolute top-0 left-0 w-full h-[70px] bg-gradient-to-t from-transparent to-black">
+                    <div class="z-20 absolute top-0 left-0 w-full h-[100px] bg-gradient-to-t from-transparent to-black">
                     </div>
                 </div>
                 <div class="p-10 w-full">
