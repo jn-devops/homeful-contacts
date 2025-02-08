@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use TheIconic\NameParser\Parser;
@@ -103,5 +104,12 @@ class User extends Authenticatable
         $name = $parser->parse($this->name);
 
         return $name->getSuffix();
+    }
+
+    protected function Email(): Attribute
+    {
+        return Attribute::make(
+            set: fn($value) => strtolower($value)
+        );
     }
 }
