@@ -30,9 +30,12 @@ test('register contact action works', function () {
     expect($user->email)->toBe($email);
     expect($user->mobile)->toBe($mobile);
     expect($user->contact)->toBeInstanceOf(Contact::class);
+    $id = $user->contact->id;
+    expect($id)->toBeUuid();
     expect($user->contact->email)->toBe($email);
     expect($user->contact->mobile)->toBe($mobile);
-    tap($user->contact->getData(), function (ContactMetaData $contact) use ($name, $email, $mobile, $date_of_birth, $monthly_gross_income) {
+    tap($user->contact->getData(), function (ContactMetaData $contact) use ($id, $name, $email, $mobile, $date_of_birth, $monthly_gross_income) {
+        expect($contact->id)->toBe($id);
         expect($contact->name)->toBe($name);
         expect($contact->email)->toBe($email);
         expect($contact->mobile)->toBe($mobile);
