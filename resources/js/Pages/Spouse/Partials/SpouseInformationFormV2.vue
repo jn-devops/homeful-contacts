@@ -7,6 +7,7 @@ import SuccessToast from '@/Components/Notification/SuccessToast.vue';
 import WarningToast from '@/Components/Notification/WarningToast.vue';
 import { useForm, usePage } from '@inertiajs/vue3';
 import { ref, watch } from 'vue';
+import PlainBlackButton from '@/Components/Buttons/PlainBlackButton.vue';
 
 const props = defineProps({
     spouse: Object,
@@ -91,7 +92,7 @@ watch(form, (newValue, oldValue) => {
             @submit.prevent="updateSpouseInformation"
             class="mt-6 space-y-6"
         >
-            <h3 class="font-bold text-[#CC035C] mt-4 uppercase">Spouse Personal Information</h3>
+            <h3 class="font-bold text-[#006FFD] mt-4 uppercase">Spouse Personal Information</h3>
 
             <div class="grid grid-cols-12 gap-4">
                 <div class="col-span-full lg:col-span-3">
@@ -211,18 +212,14 @@ watch(form, (newValue, oldValue) => {
                     />
                 </div>
             </div>
-            <div class="w-full text-center pb-10">
-                <PrimaryButton :disabled="form.processing" type="submit" customClass="w-auto">
-                    <div class="flex flex-row items-center gap-2">
-                        <svg class="w-6 h-6 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
-                            <path fill-rule="evenodd" d="M5 3a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V7.414A2 2 0 0 0 20.414 6L18 3.586A2 2 0 0 0 16.586 3H5Zm3 11a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v6H8v-6Zm1-7V5h6v2a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1Z" clip-rule="evenodd"/>
-                            <path fill-rule="evenodd" d="M14 17h-4v-2h4v2Z" clip-rule="evenodd"/>
-                        </svg>
+            <div class="w-full lg:flex lg:flex-row lg:items-center lg:justify-center text-center pb-10">
+                <div class="w-full lg:w-64">
+                    <PlainBlackButton :disabled="form.processing" type="submit" customClass="w-auto">
                         <p class="text-white font-bold text-center">
-                            Save Personal Information
+                            Save {{ employment_type }} Data
                         </p>
-                    </div>
-                </PrimaryButton>
+                    </PlainBlackButton>
+                </div>
             </div>
         </form>
     </section>

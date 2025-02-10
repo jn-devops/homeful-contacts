@@ -57,20 +57,20 @@
 <template>
     <Combobox as="div" v-model="selectedOption" @update:modelValue="query = ''">
         <ComboboxLabel class="block text-sm/6 font-medium text-gray-900">{{ label }} <span v-if="required" class="text-red-600">*</span></ComboboxLabel>
-        <div class="relative mt-2">
-            <ComboboxInput class="block w-full rounded-md bg-white py-1.5 pl-3 pr-12 text-base text-gray-900 focus:ring-0 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-[#CC035C] sm:text-sm/6" @change="query = $event.target.value" @blur="query = ''" :display-value="(option) => option?.name" placeholder="Select from the options" autocomplete="off" />
+        <div class="relative">
+            <ComboboxInput class="block w-full bg-white py-1.5 pl-3 pr-12 text-base text-gray-900 border-none ring-0 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-1 focus:-outline-offset-1 focus:outline-[#006FFD] sm:text-sm/6" @change="query = $event.target.value" @blur="query = ''" :display-value="(option) => option?.name" placeholder="Select from the options" autocomplete="off" />
             <ComboboxButton class="absolute inset-y-0 right-0 flex items-center rounded-r-md px-2 focus:outline-none">
                 <ChevronUpDownIcon class="size-5 text-gray-400" aria-hidden="true" />
             </ComboboxButton>
 
-            <ComboboxOptions v-if="filteredOptions.length > 0" class="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm">
+            <ComboboxOptions v-if="filteredOptions.length > 0" class="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-gray-400 focus:outline-none sm:text-sm">
                 <ComboboxOption v-for="person in filteredOptions" :key="person.id" :value="person" as="template" v-slot="{ active, selected }">
-                    <li :class="['relative cursor-default select-none py-2 pl-3 pr-9', active ? 'bg-[#CC035C] text-white outline-none' : 'text-gray-900']">
+                    <li :class="['relative cursor-default select-none py-2 pl-3 pr-9', active ? 'bg-[#006FFD] text-white outline-none' : 'text-gray-900']">
                         <span :class="['block truncate', selected && 'font-semibold']">
                         {{ person.name }}
                         </span>
 
-                        <span v-if="selected" :class="['absolute inset-y-0 right-0 flex items-center pr-4', active ? 'text-white' : 'text-[#CC035C]']">
+                        <span v-if="selected" :class="['absolute inset-y-0 right-0 flex items-center pr-4', active ? 'text-white' : 'text-[#006FFD]']">
                             <CheckIcon class="size-5" aria-hidden="true" />
                         </span>
                     </li>

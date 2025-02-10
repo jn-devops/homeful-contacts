@@ -39,12 +39,12 @@ const dateFormat  =  {
 </script>
 <template>
     <div>
-        <label class="block text-sm/6 font-medium mb-2" :class="errorMessage ? 'text-red-600' : 'text-gray-900'">{{label}} <span v-if="required" class="text-red-600">*</span></label>
+        <label class="block text-sm/6 font-medium" :class="errorMessage ? 'text-red-600' : 'text-gray-900'">{{label}} <span v-if="required" class="text-red-600">*</span></label>
         <VueDatepicker 
             v-model="model"
             as-single
             :formatter="dateFormat"
-            class="h-9 focus:ring-0 focus:outline-[#CC035C] focus:outline-2"
+            class="h-9 focus:ring-0 focus:outline-[#006FFD] focus:outline-2 rounded-none focus:border-none"
         />
         <p v-if="errorMessage" class="mt-2 text-sm text-red-600" id="email-error">{{ errorMessage }}</p>
         <p v-if="helperMessage" class="mt-2 text-sm text-gray-500" id="email-description">{{ helperMessage }}</p>

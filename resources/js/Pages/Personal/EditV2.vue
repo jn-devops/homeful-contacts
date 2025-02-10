@@ -14,7 +14,7 @@ const props = defineProps({
 
     <AuthenticatedLayout>
         <div class="mx-auto max-w-7xl px-6 lg:px-8">
-            <h3 class="font-bold text-[#CC035C] mt-4">PERSONAL DETAILS:</h3>
+            <h3 class="font-bold text-[#006FFD] mt-4">PERSONAL DETAILS:</h3>
 
             <PersonalInformationForm
                 :contact = "contact"

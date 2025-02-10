@@ -66,7 +66,7 @@ defineExpose({ focus: () => input.value.focus() });
         <label class="block text-sm/6 font-medium" :class="errorMessage ? 'text-red-600' : 'text-gray-900'">{{label}} <span v-if="required" class="text-red-600">*</span></label>
         <div class="grid grid-cols-1">
             <div 
-              class="flex flex-row items-center py-0.5 bg-white focus-within:ring-0 outline outline-1 outline-gray-300 -outline-offset-1 focus-within:outline focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-[#CC035C]"
+              class="flex flex-row items-center py-0.5 bg-white focus-within:ring-0 outline outline-1 outline-gray-300 -outline-offset-1 focus-within:outline focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-[#006FFD]"
               :class="{
                 'rounded-md' : !noBorderRadius,
                 'text-red-900 outline-red-300 placeholder:text-red-300': errorMessage,
