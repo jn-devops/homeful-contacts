@@ -24,7 +24,7 @@ class RegisteredUserController extends Controller
         $callback = $request->get('callback', config('homeful-contacts.callback'));
         $showExtra = config('homeful-contacts.show_gmi') || $request->get('showExtra');
         $hidePassword = config('homeful-contacts.hide_password') || $request->get('hidePassword');
-        $autoPassword = $hidePassword ? Str::password() : '';
+        $autoPassword = $hidePassword ? config('homeful-contacts.default_password') : '';
 
         return Inertia::render(self::REGISTER_VIEW, [
             'callback' => $callback,
