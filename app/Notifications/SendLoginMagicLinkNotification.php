@@ -5,10 +5,13 @@ namespace App\Notifications;
 use LBHurtado\EngageSpark\Notifications\BaseNotification as Notification;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use App\Classes\IsDomainNotification;
+use App\Traits\HasDomainNotification;
 use Illuminate\Bus\Queueable;
 
-class SendLoginMagicLinkNotification extends Notification implements ShouldQueue
+class SendLoginMagicLinkNotification extends Notification implements ShouldQueue, IsDomainNotification
 {
+    use HasDomainNotification;
     use Queueable;
 
     public function toMail(object $notifiable): MailMessage
@@ -27,5 +30,10 @@ class SendLoginMagicLinkNotification extends Notification implements ShouldQueue
     public function getUrl(): string
     {
         return $this->message;
+    }
+
+    public function via($notifiable)
+    {
+        return $this->getNotificationChannelsVia($notifiable);
     }
 }

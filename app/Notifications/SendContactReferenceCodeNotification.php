@@ -5,10 +5,13 @@ namespace App\Notifications;
 use LBHurtado\EngageSpark\Notifications\BaseNotification as Notification;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use App\Classes\IsDomainNotification;
+use App\Traits\HasDomainNotification;
 use Illuminate\Bus\Queueable;
 
-class SendContactReferenceCodeNotification extends Notification implements ShouldQueue
+class SendContactReferenceCodeNotification extends Notification implements ShouldQueue, IsDomainNotification
 {
+    use HasDomainNotification;
     use Queueable;
 
     public function toMail(object $notifiable): MailMessage
@@ -38,9 +41,13 @@ class SendContactReferenceCodeNotification extends Notification implements Shoul
                     Homeful Shop', ['contact_reference_code' => $this->getContactReferenceCode()]);
     }
 
-
     public function getContactReferenceCode(): string
     {
         return $this->message;
+    }
+
+    public function via($notifiable)
+    {
+        return $this->getNotificationChannelsVia($notifiable);
     }
 }
