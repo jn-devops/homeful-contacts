@@ -3,11 +3,12 @@
 namespace App\Notifications;
 
 use LBHurtado\EngageSpark\Notifications\BaseNotification as Notification;
+use Homeful\Common\Interfaces\IsDomainNotification;
 use Illuminate\Notifications\Messages\MailMessage;
+use Homeful\Common\Traits\HasDomainNotification;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use App\Classes\IsDomainNotification;
-use App\Traits\HasDomainNotification;
 use Illuminate\Bus\Queueable;
+
 
 class SendContactReferenceCodeNotification extends Notification implements ShouldQueue, IsDomainNotification
 {
@@ -34,11 +35,15 @@ class SendContactReferenceCodeNotification extends Notification implements Shoul
     {
         return __('Dear :name, welcome to Homeful Shop! We are pleased to have you with us and look forward to providing you with exceptional service.
                     Log in here: [Homeful Log-In]
-                    Temporary Password: password
+                    Temporary Password: :password
                     Client Code: :contact_reference_code.
                     Please check your email for more details.
                     Best Regards,
-                    Homeful Shop', ['contact_reference_code' => $this->getContactReferenceCode()]);
+                    Homeful Shop', [
+                        'name' => $notifiable->name, // Anaïs - you missed this part :-)
+                        'password' => context('password'),
+                        'contact_reference_code' => $this->getContactReferenceCode()
+        ]);
     }
 
     public function getContactReferenceCode(): string

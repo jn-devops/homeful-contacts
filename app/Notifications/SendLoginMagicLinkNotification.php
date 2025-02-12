@@ -3,10 +3,10 @@
 namespace App\Notifications;
 
 use LBHurtado\EngageSpark\Notifications\BaseNotification as Notification;
+use Homeful\Common\Interfaces\IsDomainNotification;
 use Illuminate\Notifications\Messages\MailMessage;
+use Homeful\Common\Traits\HasDomainNotification;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use App\Classes\IsDomainNotification;
-use App\Traits\HasDomainNotification;
 use Illuminate\Bus\Queueable;
 
 class SendLoginMagicLinkNotification extends Notification implements ShouldQueue, IsDomainNotification

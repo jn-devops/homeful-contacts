@@ -27,6 +27,8 @@ class RegisterContact
 
     protected function register(array $validated): User
     {
+        context(Arr::only($validated, 'password'));
+
         //hash the validated password, a Laravel best practice
         //as per documentation the hashed password stored in the database will be compared with the password value
         // passed to the Auth::attempt method via the array
