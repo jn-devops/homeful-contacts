@@ -14,6 +14,10 @@ const props = defineProps({
         type: String,
         default: "Enter something..."
     },
+    required: {
+        type: Boolean,
+        default:false
+    },
     error: {
         type: String,
         default: null
@@ -63,7 +67,7 @@ onMounted(() => {
 </script>
 <template>
     <div>
-        <label for="input" class="font-bold text-sm">{{ label }}</label>
+        <label for="input" class="font-bold text-sm">{{ label }} <span v-if="required" class="text-red-600">*</span></label>
         <DefaultGradientBorder>
             <input 
                 id="input"
