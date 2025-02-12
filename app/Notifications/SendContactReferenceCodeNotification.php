@@ -25,7 +25,7 @@ class SendContactReferenceCodeNotification extends Notification implements Shoul
             ->line('password')
             ->line('Client Code:')
             ->line($this->getContactReferenceCode())
-            ->line('Log-In Link: Homeful Log-In')
+            ->action('Login', url($this->getUrl()))
             ->line('Cheers,')
             ->line('Homeful Shop');
     }
@@ -33,12 +33,15 @@ class SendContactReferenceCodeNotification extends Notification implements Shoul
     public function getContent($notifiable)
     {
         return __('Dear :name, welcome to Homeful Shop! We are pleased to have you with us and look forward to providing you with exceptional service.
-                    Log in here: [Homeful Log-In]
-                    Temporary Password: password
-                    Client Code: :contact_reference_code.
-                    Please check your email for more details.
-                    Best Regards,
-                    Homeful Shop', ['contact_reference_code' => $this->getContactReferenceCode()]);
+
+        Log in here: :url
+        Temporary Password: password
+        Client Code: :contact_reference_code.
+
+        Please check your email for more details.
+
+        Best Regards,
+        Homeful Shop', ['contact_reference_code' => $this->getContactReferenceCode()],['url' => $this->getUrl()]);
     }
 
     public function getContactReferenceCode(): string
