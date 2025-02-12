@@ -14,14 +14,30 @@ class SendContactReferenceCodeNotification extends Notification implements Shoul
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)
-                    ->line("Your Homeful Id:")
-                    ->line($this->getContactReferenceCode());
+            ->line('Dear ' . $notifiable->name . ',')
+            ->line('We\'re super excited to welcome you to Homeful Shop.')
+            ->line('Not only do we have amazing properties and amenities, but our service is all about the little things that make a big difference. We think that even the smallest gestures can really show how much we care.')
+            ->line('For us, true luxury is all about feeling like you belong, and every visit is a chance for us to help you experience that. Can\'t wait to have you with us!')
+            ->line('Please find your temporary password:')
+            ->line('password')
+            ->line('Client Code:')
+            ->line($this->getContactReferenceCode())
+            ->line('Log-In Link: Homeful Log-In')
+            ->line('Cheers,')
+            ->line('Homeful Shop');
     }
 
     public function getContent($notifiable)
     {
-        return __('Your Homeful Id is :contact_reference_code.', ['contact_reference_code' => $this->getContactReferenceCode()]);
+        return __('Dear :name, welcome to Homeful Shop! We are pleased to have you with us and look forward to providing you with exceptional service.
+                    Log in here: [Homeful Log-In]
+                    Temporary Password: password
+                    Client Code: :contact_reference_code.
+                    Please check your email for more details.
+                    Best Regards,
+                    Homeful Shop', ['contact_reference_code' => $this->getContactReferenceCode()]);
     }
+
 
     public function getContactReferenceCode(): string
     {
