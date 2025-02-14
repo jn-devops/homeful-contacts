@@ -24,6 +24,7 @@ const props = defineProps({
 
             <SpouseEmploymentForm
                 :spouse = "spouse"
+                employment_type = "Primary"
             />
 
         </div>
