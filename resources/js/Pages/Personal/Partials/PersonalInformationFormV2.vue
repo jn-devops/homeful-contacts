@@ -22,7 +22,7 @@ const form = useForm({
     civil_status: props.contact?.civil_status,
     sex: props.contact?.sex,
     nationality: props.contact?.nationality,
-    date_of_birth: props.contact?.date_of_birth,
+    date_of_birth: props.contact?.date_of_birth ?? '',
     email: props.contact?.email ?? usePage().props.auth.user.email,
     mobile: props.contact?.mobile ?? usePage().props.auth.user.mobile,
     other_mobile: props.contact?.other_mobile,

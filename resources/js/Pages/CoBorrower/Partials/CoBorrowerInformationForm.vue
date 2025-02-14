@@ -47,7 +47,7 @@ const form = useForm({
     civil_status: co_borrower()?.civil_status,
     sex: co_borrower()?.sex,
     nationality: co_borrower()?.nationality ?? usePage().props.auth.user.contact.nationality,
-    date_of_birth: co_borrower()?.date_of_birth,
+    date_of_birth: co_borrower()?.date_of_birth ?? '',
     email: co_borrower()?.email,
     mobile: co_borrower()?.mobile,
     other_mobile: co_borrower()?.other_mobile,
