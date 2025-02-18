@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\CoBorrowerEmploymentUpdateRequest;
+use Homeful\Contacts\Models\Customer;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -74,15 +75,16 @@ class CoBorrowerEmploymentController extends Controller
 
         $type = $data['type'];
         $records[$type]['employment'] = [$data];
-//dd($records);
+        
         $co_borrower_records = [];
         foreach($records as $type => $co_borrower_record){
             $co_borrower_records [] = $co_borrower_record;
         }
-//dd($co_borrower_records);
-        $user->contact->update(['co_borrowers' => $co_borrower_records]);
-        $user->contact->save();
-        $user->save();
+        
+        $customer = Customer::find($user->contact->id);
+        $customer->update(['co_borrowers' => $co_borrower_records]);
+        $customer->save();
+        // $user->save();
 
         return redirect()->back();
     }

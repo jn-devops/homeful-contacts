@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\AddressUpdateRequest;
+use Homeful\Contacts\Models\Customer;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -35,9 +36,10 @@ class AddressController extends Controller
             $address_records [] = $address_record;
         }
 
-        $user->contact->update(['addresses' => $address_records]);
-        $user->contact->save();
-        $user->save();
+        $customer = Customer::find($user->contact->id);
+        $customer->update(['addresses' => $address_records]);
+        $customer->save();
+        // $user->save();
 
         return redirect()->back();
     }

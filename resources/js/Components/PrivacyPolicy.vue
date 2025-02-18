@@ -27,7 +27,7 @@ onMounted(() => {
             leave-from-class="translate-y-0"
             leave-to-class="translate-y-full"
         >
-            <div v-if="show" class="bg-white w-full max-w-[450px] h-[700px] rounded-t-xl shadow-lg p-4">
+            <div v-if="show" class="bg-white w-full max-w-[450px] h-[600px] rounded-t-xl shadow-lg p-4">
                 <div class="flex flex-row-reverse">
                     <button @click="close">
                         <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
@@ -51,10 +51,10 @@ onMounted(() => {
                                     <span class="">Information We Collect</span>
                                     <p class="font-normal ps-4">We may collect the following types of information:</p>
                                     <ul class="font-normal list-disc ps-8">
-                                        <li>Personal Information: Name, email address, phone number, and other contact details when you register, inquire, or sign up for our services.</li>
-                                        <li>Property Preferences: Details about your desired property type, location, and budget.</li>
-                                        <li>Payment and Financial Data: If applicable, we may collect payment-related details for transactions.</li>
-                                        <li>Technical Data: IP address, browser type, device information, and browsing behavior on our platform.</li>
+                                        <li><span class="font-bold">Personal Information:</span> Name, email address, phone number, and other contact details when you register, inquire, or sign up for our services.</li>
+                                        <li><span class="font-bold">Property Preferences:</span> Details about your desired property type, location, and budget.</li>
+                                        <li><span class="font-bold">Payment and Financial Data:</span> If applicable, we may collect payment-related details for transactions.</li>
+                                        <li><span class="font-bold">Technical Data:</span> IP address, browser type, device information, and browsing behavior on our platform.</li>
                                     </ul>
                                 </li>
                                 <li class="mb-2">
@@ -73,10 +73,22 @@ onMounted(() => {
                                     <span class="">Sharing of Information</span>
                                     <p class="font-normal ps-4">We may share your information with:</p>
                                     <ul class="font-normal list-disc ps-8">
-                                        <li>Real Estate Developers and Partners: To facilitate property transactions.</li>
-                                        <li>Service Providers: Third-party vendors assisting in website operation, analytics, and marketing.</li>
-                                        <li>Legal Authorities: When required to comply with legal obligations or protect our rights.</li>
+                                        <li><span class="font-bold">Real Estate Developers and Partners:</span> To facilitate property transactions.</li>
+                                        <li><span class="font-bold">Service Providers:</span> Third-party vendors assisting in website operation, analytics, and marketing.</li>
+                                        <li><span class="font-bold">Legal Authorities:</span> When required to comply with legal obligations or protect our rights.</li>
                                     </ul>
+                                </li>
+                                <li class="mb-2">
+                                    <span class="">Data Security</span>
+                                    <p class="font-normal ps-4">We implement appropriate security measures to protect your data from unauthorized access, alteration, or disclosure. However, no online platform is entirely risk-free.</p>
+                                </li>
+                                <li class="mb-2">
+                                    <span class="">Your Rights</span>
+                                    <p class="font-normal ps-4">You may request access, correction, or deletion of your personal information by contacting us at [Insert Contact Information]. You may also opt out of marketing communications at any time.</p>
+                                </li>
+                                <li class="mb-2">
+                                    <span class="">Changes to This Policy</span>
+                                    <p class="font-normal ps-4">We reserve the right to update this Privacy Policy. Any changes will be posted on this page with an updated effective date.</p>
                                 </li>
                             </ol>
                         </div>
