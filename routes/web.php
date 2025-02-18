@@ -50,6 +50,10 @@ Route::prefix('review')->middleware('auth')->group(function () {
     Route::delete('/media', [MediaController::class, 'destroy'])->name('media.destroy');
 });
 
+Route::get('/signature', function () {
+    return Inertia::render('Signature');
+});
+
 Route::mediaLibrary();
 
 require __DIR__.'/auth.php';
