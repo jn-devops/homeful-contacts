@@ -56,4 +56,9 @@ Homeful Shop', [
     {
         return $this->getNotificationChannelsVia($notifiable);
     }
+
+    public function getUrl()
+    {
+        return 'https://google.com';
+    }
 }
