@@ -25,6 +25,7 @@ const form = useForm({
     date_of_birth: props.spouse?.date_of_birth ?? '',
     email: props.spouse?.email,
     mobile: props.spouse?.mobile,
+    help_number: props.spouse?.help_number,
     other_mobile: props.spouse?.other_mobile,
     landline: props.spouse?.landline,
 })
@@ -193,14 +194,6 @@ watch(form, (newValue, oldValue) => {
                         label="Other Mobile"
                         placeholder="Enter Other Mobile"
                         :errorMessage="form.errors.other_mobile"
-                    />
-                </div>
-                <div class="col-span-full lg:col-span-3">
-                    <TextInput 
-                        v-model="form.help_number"
-                        label="Help Number"
-                        placeholder="Enter Help Number"
-                        :errorMessage="form.errors.help_number"
                     />
                 </div>
                 <div class="col-span-full lg:col-span-3">

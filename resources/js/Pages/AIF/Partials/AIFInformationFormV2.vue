@@ -193,14 +193,6 @@ watch(form, (newValue, oldValue) => {
                 </div>
                 <div class="col-span-full lg:col-span-3">
                     <TextInput 
-                        v-model="form.help_number"
-                        label="Help Number"
-                        placeholder="Enter Help Number"
-                        :errorMessage="form.errors.help_number"
-                    />
-                </div>
-                <div class="col-span-full lg:col-span-3">
-                    <TextInput 
                         v-model="form.landline"
                         label="Landline "
                         placeholder="Enter Landline "

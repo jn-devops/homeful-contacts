@@ -2,13 +2,13 @@
 import BreadCrumbs from '@/Components/BreadCrumbs.vue';
 
 const breadcrumbPages = [
-    { name: 'Personal', href: route('personal.edit'), current: route().current('personal.edit') },
-    { name: 'Address', href: route('address.edit'), current: route().current('address.edit') },
-    { name: 'Employment', href: route('employment.edit'), current: route().current('employment.edit') },
-    { name: 'Spouse', href: route('spouse.edit'), current: route().current('spouse.edit') },
-    { name: 'AIF', href: route('aif.edit'), current: route().current('aif.edit') },
-    { name: 'Co-Borrower', href: route('co_borrower.edit'), current: route().current('co_borrower.edit') },
-    { name: 'Attachment', href: route('media.edit'), current: route().current('media.edit') },
+    { name: 'Personal', href: route('personal.edit'), current: route().current('personal.edit'), route_name: 'personal.edit' },
+    { name: 'Address', href: route('address.edit'), current: route().current('address.edit'), route_name: 'address.edit' },
+    { name: 'Employment', href: route('employment.edit'), current: route().current('employment.edit'), route_name: 'employment.edit' },
+    { name: 'Spouse', href: route('spouse.edit'), current: route().current('spouse.edit'), route_name: 'spouse.edit' },
+    { name: 'AIF', href: route('aif.edit'), current: route().current('aif.edit'), route_name: 'aif.edit' },
+    { name: 'Co-Borrower', href: route('co_borrower.edit'), current: route().current('co_borrower.edit'), route_name: 'co_borrower.edit' },
+    { name: 'Attachment', href: route('media.edit'), current: route().current('media.edit'), route_name: 'media.edit' },
 ]
 
 </script>
