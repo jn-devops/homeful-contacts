@@ -84,7 +84,7 @@ onMounted(() => {
                                 </li>
                                 <li class="mb-2">
                                     <span class="">Your Rights</span>
-                                    <p class="font-normal ps-4">You may request access, correction, or deletion of your personal information by contacting us at [Insert Contact Information]. You may also opt out of marketing communications at any time.</p>
+                                    <p class="font-normal ps-4">You may request access, correction, or deletion of your personal information by contacting us at Raemulan Lands Inc. You may also opt out of marketing communications at any time.</p>
                                 </li>
                                 <li class="mb-2">
                                     <span class="">Changes to This Policy</span>

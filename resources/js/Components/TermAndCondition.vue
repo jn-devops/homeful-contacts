@@ -80,11 +80,11 @@ onMounted(() => {
                                 </li>
                                 <li class="mb-2">
                                     <span class="">Governing Law</span>
-                                    <p class="font-normal ps-4">These Terms of Use shall be governed by the laws of [Insert Jurisdiction].</p>
+                                    <p class="font-normal ps-4">These Terms of Use shall be governed by the laws of Joy-Nostalg.</p>
                                 </li>
                                 <li class="mb-2">
                                     <span class="">Contact Us</span>
-                                    <p class="font-normal ps-4">For any questions, contact us at [Insert Contact Information].</p>
+                                    <p class="font-normal ps-4">For any questions, contact us at Raemulan Lands Inc.</p>
                                 </li>
                             </ol>
                             By using our platform, you acknowledge and agree to these terms.
