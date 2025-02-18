@@ -15,6 +15,7 @@ const props = defineProps({
 
     <AuthenticatedLayout>
         <div class="mx-auto max-w-7xl px-6 lg:px-8">
+            <h1 class="mt-10 text-xl font-bold text-[#006FFD]">Co-Borrower 1:</h1>
             <CoBorrowerInformationForm
                 :contact = "contact"
                 co_borrower_type = "Primary"
@@ -25,7 +26,8 @@ const props = defineProps({
                 co_borrower_type = "Primary"
                 employment_type = "Primary"
             />
-
+            <hr class="border-1 border-gray-300" />
+            <h1 class="mt-10 text-xl font-bold text-[#006FFD]">Co-Borrower 2:</h1>
             <CoBorrowerInformationForm
                 :contact = "contact"
                 co_borrower_type = "Secondary"
