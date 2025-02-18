@@ -17,34 +17,14 @@ class SendLoginMagicLinkNotification extends Notification implements ShouldQueue
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)
-            ->line('Dear ' . $notifiable->name . ',')
-//            ->line('We\'re super excited to welcome you to Homeful Shop.')
-//            ->line('Not only do we have amazing properties and amenities, but our service is all about the little things that make a big difference. We think that even the smallest gestures can really show how much we care.')
-//            ->line('For us, true luxury is all about feeling like you belong, and every visit is a chance for us to help you experience that. Can\'t wait to have you with us!')
-//            ->line('Please find your temporary password:')
-//            ->line('password')
-//            ->line('Client Code:')
-//            ->line($this->getContactReferenceCode())
-//            ->action('Login', url($this->getUrl()))
-//            ->line('Cheers,')
-//            ->line('Homeful Shop')
-            ;
+            ->line('Update your personal information.')
+            ->action('Login', url($this->getUrl()))
+            ->line('Thank you!');
     }
 
     public function getContent($notifiable)
-
     {
-        return 'The quick brown fox';
-//        return __('Dear :name, welcome to Homeful Shop! We are pleased to have you with us and look forward to providing you with exceptional service.
-//
-//        Log in here: :url
-//        Temporary Password: password
-//        Client Code: :contact_reference_code.
-//
-//        Please check your email for more details.
-//
-//        Best Regards,
-//        Homeful Shop', ['contact_reference_code' => $this->getContactReferenceCode()],['url' => $this->getUrl()]);
+        return __('You may login: :url', ['url' => $this->getUrl()]);
     }
 
     public function getUrl(): string
@@ -55,10 +35,5 @@ class SendLoginMagicLinkNotification extends Notification implements ShouldQueue
     public function via($notifiable)
     {
         return $this->getNotificationChannelsVia($notifiable);
-    }
-
-    public function getContactReferenceCode()
-    {
-        return 'XXX-ABC-123';
     }
 }
