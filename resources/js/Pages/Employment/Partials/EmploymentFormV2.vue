@@ -298,10 +298,10 @@ watch(form, (newValue, oldValue) => {
                 </div>
                 <div class="col-span-full lg:col-span-3">
                     <TextInput 
-                        v-model="formgsis"
+                        v-model="form.gsis"
                         label="GSIS"
                         placeholder="Enter GSIS Number"
-                        :errorMessage="form.errorsgsis"
+                        :errorMessage="form.errors.gsis"
                     />
                 </div>
             </div>

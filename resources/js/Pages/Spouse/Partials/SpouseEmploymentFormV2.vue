@@ -299,7 +299,7 @@ watch(form, (newValue, oldValue) => {
                         v-model="formgsis"
                         label="GSIS"
                         placeholder="Enter GSIS Number"
-                        :errorMessage="form.errorsgsis"
+                        :errorMessage="form.errors.gsis"
                     />
                 </div>
             </div>
