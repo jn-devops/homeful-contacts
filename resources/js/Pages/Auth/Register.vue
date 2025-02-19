@@ -52,7 +52,7 @@ const form = useForm({
     password: props.autoPassword,
     password_confirmation: props.autoPassword,
     date_of_birth: '',
-    monthly_gross_income: 0,
+    monthly_gross_income: null,
 });
 
 const submit = () => {
