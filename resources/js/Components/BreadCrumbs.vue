@@ -10,7 +10,6 @@ import { onMounted, ref } from 'vue';
 
     onMounted(() => {
         for (let index = 0; index < props.pages.length; index++) {
-            console.log(props.pages[index].route_name)
             if(route().current(props.pages[index].route_name)){
                 const currentDiv = divRefs.value[props.pages[index].name];
                 if (currentDiv) {

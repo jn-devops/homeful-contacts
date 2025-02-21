@@ -16,15 +16,18 @@ import FilePondPluginImagePreview from 'filepond-plugin-image-preview/dist/filep
 import 'filepond/dist/filepond.min.css';
 import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.css';
 import InputError from "@/Components/InputError.vue";
+import SuccessToast from '@/Components/Notification/SuccessToast.vue';
 
 const props = defineProps({
     csrf_token: String,
     contact: Object,
     name: String,
-    label: String
+    label: String,
+    previewUrl: String,
 });
 
 const filepondAvatarInput = ref(null); // Reference the input to clear the files later
+const sucessMessage = ref('')
 
 const form = useForm({
     name: props.name,
@@ -34,8 +37,7 @@ const form = useForm({
 const uploadMedia = () => {
     form.patch(route('media.update'), {
             onSuccess: () => {
-                // filepondAvatarInput.value.removeFiles();
-                // filepondAvatarInput.value = null;
+                sucessMessage.value = "Successfully uploaded the file"
             },
         });
 };
@@ -44,6 +46,9 @@ const removeMedia = () => {
     form.delete(route('media.destroy'), {
         errorBag: 'removeMedia',
         preserveScroll: true,
+        onSuccess: () => {
+            sucessMessage.value = "Successfully deleted the file"
+        },
     });
 };
 
@@ -65,6 +70,7 @@ const handleFilePondInit = () => {
 // Set the server id from response
 const handleFilePondAvatarProcess = (error, file) => {
     form.file = file.serverId;
+    console.log('onprocess');
 };
 // Remove the server id on file remove
 const handleFilePondAvatarRemoveFile = (error, file) => {
@@ -73,12 +79,24 @@ const handleFilePondAvatarRemoveFile = (error, file) => {
 
 const label = computed(() => props.label ?? props.name);
 const filename = computed(() => props.contact[props.name]?.file_name);
-const url = computed(() => props.contact[props.name]?.preview_url);
+// const url = computed(() => props.contact[props.name]?.preview_url);
+const url = props.previewUrl;
 
 </script>
 
 <template>
     <section>
+        <Transition
+            enter-active-class="transition ease-in-out"
+            enter-from-class="opacity-0"
+            leave-active-class="transition ease-in-out"
+            leave-to-class="opacity-0"
+        >
+            <SuccessToast 
+                v-if="form.recentlySuccessful"
+                :message="sucessMessage"
+            />
+        </Transition>
         <form
             @submit.prevent="uploadMedia"
             class="space-y-6"
@@ -87,7 +105,9 @@ const url = computed(() => props.contact[props.name]?.preview_url);
                 <InputLabel for="file" :value=label />
             </div>
             <template v-if="url">
-                <img :src="url"/>
+                <div class="w-full h-[300px]">
+                    <img class="h-full w-full object-cover rounded-lg shadow-xl" :src="url"/>
+                </div>
                 <DangerButton :disabled="form.processing" @click.prevent="removeMedia">
                     <div class="flex flex-row items-center gap-1">
                         <svg class="w-4 h-4 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
