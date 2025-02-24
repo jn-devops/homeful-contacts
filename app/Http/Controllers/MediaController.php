@@ -16,6 +16,7 @@ class MediaController extends Controller
     public function edit(Request $request): Response
     {
         $contact = $request->user()->contact;
+        // dd($this->getMediaMatrix($contact));
         return Inertia::render('Media/EditV2', [
             'contact' => $contact,
             'matrices' => $this->getMediaMatrix($contact),
@@ -55,9 +56,53 @@ class MediaController extends Controller
             'idImage' => "ID Image",
             'selfieImage' => "Selfie Image",
             'payslipImage' => "Payslip Image",
+            'voluntarySurrenderFormDocument' => "Voluntary Surrender Form Document",
+            'usufructAgreementDocument' => "Usufruct Agreement Document",
+            'contractToSellDocument' => "Contract to Sell Document",
+            'deedOfRestrictionsDocument' => "Deed of Restrictions Document",
+            'disclosureDocument' => "Disclosure Document",
+            'borrowerConformityDocument' => "Borrower Conformity Document",
+            'statementOfAccountDocument' => "Statement of Account Document",
+            'invoiceDocument' => "Invoice Document",
+            'receiptDocument' => "Receipt Document",
+            'deedOfSaleDocument' => "Deed of Sale Document",
+            'governmentId1Image' => "Government ID 1 Image",
+            'governmentId2Image' => "Government ID 2 Image",
+            'certificateOfEmploymentDocument' => "Certificate of Employment Document",
+            'oneMonthLatestPayslipDocument' => "One-Month Latest Payslip Document",
+            'esavDocument' => "eSAV Document",
+            'birthCertificateDocument' => "Birth Certificate Document",
+            'photoImage' => "Photo Image",
+            'proofOfBillingAddressDocument' => "Proof of Billing Address Document",
+            'letterOfConsentEmployerDocument' => "Letter of Consent (Employer) Document",
+            'threeMonthsCertifiedPayslipsDocument' => "Three-Months Certified Payslips Document",
+            'employmentContractDocument' => "Employment Contract Document",
+            'ofwEmploymentCertificateDocument' => "OFW Employment Certificate Document",
+            'passportWithVisaDocument' => "Passport with Visa Document",
+            'workingPermitDocument' => "Working Permit Document",
+            'notarizedSpaDocument' => "Notarized SPA Document",
+            'authorizedRepInfoSheetDocument' => "Authorized Representative Info Sheet Document",
+            'validIdAifImage' => "Valid ID (AIF) Image",
+            'workingPermitCardDocument' => "Working Permit Card Document",
+            'itrBir1701Document' => "ITR (BIR Form 1701) Document",
+            'auditedFinancialStatementDocument' => "Audited Financial Statement Document",
+            'officialReceiptTaxPaymentDocument' => "Official Receipt (Tax Payment) Document",
+            'businessMayorsPermitDocument' => "Business Mayor’s Permit Document",
+            'dtiBusinessRegistrationDocument' => "DTI Business Registration Document",
+            'sketchOfBusinessLocationDocument' => "Sketch of Business Location Document",
+            'letterOfConsentCreditBackgroundInvestigationDocument' => "Letter of Consent (Credit Background Investigation) Document",
+            'marriageCertificateDocument' => "Marriage Certificate Document",
+            'governmentIdOfSpouseImage' => "Government ID of Spouse Image",
+            'courtDecisionAnnulmentDocument' => "Court Decision (Annulment) Document",
+            'marriageContractDocument' => "Marriage Contract Document",
+            'courtDecisionSeparationDocument' => "Court Decision (Separation) Document",
+            'deathCertificateDocument' => "Death Certificate Document",
         ];
         foreach($list_images as $key_matrix => $val_matrix){
-            $matrices[$key_matrix]['url'] = $contact->$key_matrix->preview_url ?? '';
+            $matrixItem = $contact->$key_matrix ?? null;
+    
+            $matrices[$key_matrix]['type'] = optional($matrixItem)->mime_type ?? 'unknown';
+            $matrices[$key_matrix]['url'] = optional($matrixItem)->getUrl() ?? null;
             $matrices[$key_matrix]['code'] = $key_matrix;
             $matrices[$key_matrix]['name'] = $val_matrix;
         }

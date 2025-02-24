@@ -27,6 +27,7 @@ const props = defineProps({
                         :name = "item?.code"
                         :label = "item?.name"
                         :preview-url="item?.url"
+                        :file-type="item?.type"
                     />
                 </div>
                 <!-- <div class="col-span-full lg:col-span-6 xl:col-span-4">
