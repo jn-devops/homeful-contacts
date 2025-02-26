@@ -153,6 +153,7 @@ watch(form, (newValue, oldValue) => {
                     <TextInput 
                         v-model="form.employer_name"
                         label="Employer Name"
+                        required
                         placeholder="Enter Employer Name"
                         :errorMessage="form.errors.employer_name"
                     />
@@ -161,6 +162,7 @@ watch(form, (newValue, oldValue) => {
                     <TextInput 
                         v-model="form.current_position"
                         label="Employment Position"
+                        required
                         placeholder="Enter Employment Position"
                         :errorMessage="form.errors.current_position"
                     />
@@ -169,6 +171,7 @@ watch(form, (newValue, oldValue) => {
                     <SelectInput 
                         v-model="form.employment_type"
                         label="Employment Type"
+                        required
                         :options="employmentTypeList"
                         :errorMessage="form.errors.employment_type"
                     />
@@ -177,6 +180,7 @@ watch(form, (newValue, oldValue) => {
                     <TextInput 
                         v-model="form.employer_email"
                         label="Email"
+                        required
                         placeholder="Enter Employer Email"
                         :errorMessage="form.errors.employer_email"
                     />
@@ -185,6 +189,7 @@ watch(form, (newValue, oldValue) => {
                     <TextInput 
                         v-model="form.employer_contact_no"
                         label="Contact No."
+                        required
                         type="number"
                         max="11"
                         placeholder="09*********"
@@ -203,6 +208,7 @@ watch(form, (newValue, oldValue) => {
                     <SelectInput 
                         v-model="form.employer_industry"
                         label="Industry"
+                        required
                         :options="industryList"
                         :errorMessage="form.errors.employer_industry"
                     />
@@ -212,6 +218,7 @@ watch(form, (newValue, oldValue) => {
                         v-model="form.employer_address_type"
                         readOnly
                         label="Address Type"
+                        required
                         placeholder="Enter Employer Address Type"
                         :errorMessage="form.errors.employer_address_type"
                     />
@@ -220,6 +227,7 @@ watch(form, (newValue, oldValue) => {
                     <TextInput 
                         v-model="form.employer_address_ownership"
                         label="Address Ownership"
+                        required
                         placeholder="Enter Employer Address Ownership"
                         :errorMessage="form.errors.employer_address_ownership"
                     />
@@ -236,6 +244,7 @@ watch(form, (newValue, oldValue) => {
                     <TextInput 
                         v-model="form.employer_address_locality"
                         label="City"
+                        required
                         placeholder="Enter Employer City"
                         :errorMessage="form.errors.employer_address_locality"
                     />
@@ -244,6 +253,7 @@ watch(form, (newValue, oldValue) => {
                     <TextInput 
                         v-model="form.employer_address_administrative_area"
                         label="Province"
+                        required
                         placeholder="Enter Employer Province"
                         :errorMessage="form.errors.employer_address_administrative_area"
                     />
@@ -252,6 +262,7 @@ watch(form, (newValue, oldValue) => {
                     <TextInput 
                         v-model="form.employer_address_postal_code"
                         label="ZIP Code"
+                        required
                         placeholder="Enter Employer ZIP Code"
                         :errorMessage="form.errors.employer_address_postal_code"
                     />
@@ -260,6 +271,7 @@ watch(form, (newValue, oldValue) => {
                     <TextInput 
                         v-model="form.employer_address_region"
                         label="Region"
+                        required
                         placeholder="Enter Employer Region"
                         :errorMessage="form.errors.employer_address_region"
                     />
@@ -268,6 +280,7 @@ watch(form, (newValue, oldValue) => {
                     <TextInput 
                         v-model="form.employer_address_country"
                         label="Country"
+                        required
                         placeholder="Enter Employer Country"
                         :errorMessage="form.errors.employer_address_country"
                     />
