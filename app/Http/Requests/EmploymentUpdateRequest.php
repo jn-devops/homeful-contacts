@@ -22,7 +22,7 @@ class EmploymentUpdateRequest extends FormRequest
 
             'employer_name' =>  ['required', 'string', 'max:100'],
             'employment_type' =>  ['required_with:employer_name', Rule::enum(EmploymentType::class)],
-            'current_position' =>  ['required_with:employer_name', 'string', 'max:100'],
+            'current_position' =>  ['nullable', 'required_with:employer_name', 'string', 'max:100'],
 
             'employer_email' =>  ['required_with:employer_name', 'email'],
             'employer_contact_no' =>  ['required_with:employer_name', 'string', 'min:10'],

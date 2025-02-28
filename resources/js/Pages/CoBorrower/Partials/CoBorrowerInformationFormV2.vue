@@ -208,7 +208,7 @@ watch(form, (newValue, oldValue) => {
                     <TextInput 
                         v-model="form.mobile"
                         label="Mobile Number"
-                        max="11"
+                        :max="11"
                         type="number"
                         placeholder="09********"
                         :errorMessage="form.errors.mobile"

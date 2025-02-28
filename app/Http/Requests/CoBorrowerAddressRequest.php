@@ -2,12 +2,11 @@
 
 namespace App\Http\Requests;
 
-use Homeful\Contacts\Enums\{AddressType, Ownership};
+use Homeful\Contacts\Enums\{AddressType, CoBorrowerType, Employment, EmploymentStatus, EmploymentType, Industry, Nationality, Ownership};
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-
-class AddressUpdateRequest extends FormRequest
+class CoBorrowerAddressRequest extends FormRequest
 {
     /**
      * Get the validation rules that apply to the request.
@@ -17,6 +16,7 @@ class AddressUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'co_borrower_type' => ['required', Rule::enum(CoBorrowerType::class)],
             'type' => ['required', Rule::enum(AddressType::class)],
             'ownership' => ['required', Rule::enum(Ownership::class)],
             'address1' => ['required', 'string', 'max:100'],
@@ -37,6 +37,7 @@ class AddressUpdateRequest extends FormRequest
     public function messages(): array
     {
         return [
+            'co_borrower_type.required' => 'The coborrower type is required.',
             'type.required' => 'The address type is required.',
             'ownership.required' => 'The ownership status is required.',
             'address1.required' => 'The address field cannot be empty.',
@@ -55,5 +56,4 @@ class AddressUpdateRequest extends FormRequest
             'country.max' => 'The country must not exceed 100 characters.',
         ];
     }
-
 }

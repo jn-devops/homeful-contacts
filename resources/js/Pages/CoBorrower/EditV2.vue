@@ -1,6 +1,8 @@
 <script setup>
 import CoBorrowerInformationForm from "@/Pages/CoBorrower/Partials/CoBorrowerInformationFormV2.vue";
 import CoBorrowerEmploymentForm from "@/Pages/CoBorrower/Partials/CoBorrowerEmploymentFormV2.vue";
+import CoBorrowerAddress from "@/Pages/CoBorrower/Partials/CoBorrowerAddress.vue";
+import CoBorrowerSpouse from "@/Pages/CoBorrower/Partials/CoBorrowerSpouse.vue";
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayoutV2.vue';
 import SectionBorder from "@/Components/SectionBorder.vue";
 import { Head } from '@inertiajs/vue3';
@@ -21,6 +23,17 @@ const props = defineProps({
                 co_borrower_type = "Primary"
             />
 
+            <CoBorrowerSpouse
+                :contact = "contact"
+                co_borrower_type = "Primary"
+            />
+
+            <CoBorrowerAddress
+                :contact = "contact"
+                co_borrower_type = "Primary"
+                address_type = "Primary"
+            />
+            
             <CoBorrowerEmploymentForm
                 :contact = "contact"
                 co_borrower_type = "Primary"

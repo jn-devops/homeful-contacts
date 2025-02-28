@@ -1,23 +1,39 @@
 <script setup>
-import PrimaryButton from '@/Components/Buttons/PrimaryButton.vue';
 import TextInput from '@/Components/Inputs/TextInput.vue';
-import DatePicker from '@/Components/Inputs/DatePicker.vue';
-import SelectInput from '@/Components/Inputs/SelectComboboxes.vue';
 import SuccessToast from '@/Components/Notification/SuccessToast.vue';
-import {useForm, usePage, } from '@inertiajs/vue3';
-import { ref, watch } from 'vue';
 import WarningToast from '@/Components/Notification/WarningToast.vue';
+import SelectInput from '@/Components/Inputs/SelectComboboxes.vue';
+import { useForm, usePage } from '@inertiajs/vue3';
 import PlainBlackButton from '@/Components/Buttons/PlainBlackButton.vue';
-
+import { ref, watch } from 'vue';
 
 const props = defineProps({
     contact: Object,
-    address_type: String
+    address_type: String,
+    co_borrower_type: String,
 });
 
+const co_borrowers = () => {
+    if (null != props.contact?.co_borrowers) {
+        return Object.groupBy(props.contact?.co_borrowers, co_borrower => co_borrower.type)
+    }
+
+    return null;
+};
+
+const co_borrower = () => {
+    if (co_borrowers())
+        if (props.co_borrower_type in co_borrowers()) {
+            return co_borrowers()[props.co_borrower_type][0]
+        }
+
+    return null;
+};
+
+
 const addresses = () => {
-    if (null != props.contact?.addresses) {
-        return Object.groupBy(props.contact?.addresses, address => address.type)
+    if (null != co_borrower()?.addresses) {
+        return Object.groupBy(co_borrower()?.addresses, address => address.type)
     }
 
     return null;
@@ -33,6 +49,7 @@ const address = () => {
 };
 
 const form = useForm({
+    co_borrower_type: props.co_borrower_type,
     type: props.address_type,
     ownership: address()?.ownership,
     address1: address()?.address1,
@@ -44,23 +61,23 @@ const form = useForm({
     country: address()?.country ?? 'PH'
 })
 
-const updateAddress = () => {
-    form.patch(route('address.update'), {
-        errorBag: 'updateAddress',
+const updateCoBorrower = () => {
+    form.patch(route('co_borrower-address.update'), {
+        errorBag: 'updateCoBorrower',
         preserveScroll: true,
     });
 };
-
-const ownershipList = usePage().props.enums.ownerships.map(item => ({
-    id: item,
-    name: item
-}));
 
 const hasValidationError = ref(false);
 
 function closeToastFunction(){
     hasValidationError.value = false;
 }
+
+const ownershipList = usePage().props.enums.ownerships.map(item => ({
+    id: item,
+    name: item
+}));
 
 watch(form, (newValue, oldValue) => {
     hasValidationError.value = (form.hasErrors) ? true : false;
@@ -76,9 +93,9 @@ watch(form, (newValue, oldValue) => {
             leave-active-class="transition ease-in-out"
             leave-to-class="opacity-0"
         >
-            <SuccessToast
+            <SuccessToast 
                 v-if="form.recentlySuccessful"
-                :message="'Successfully Saved ' + props.address_type + ' address'"
+                message="Successfully Saved Personal Data"
             />
         </Transition>
         <Transition
@@ -87,20 +104,18 @@ watch(form, (newValue, oldValue) => {
             leave-active-class="transition ease-in-out"
             leave-to-class="opacity-0"
         >
-            <WarningToast
+            <WarningToast 
                 v-if="hasValidationError"
                 @close-toast="closeToastFunction"
                 message="There are validation errors. Kindly double check the form."
             />
         </Transition>
-
         <form
-            @submit.prevent="updateAddress"
+            @submit.prevent="updateCoBorrower"
             class="mt-6 space-y-6"
         >
-            <h3 class="font-bold text-[#006FFD] mt-4 uppercase">{{ props.address_type }} Address:</h3>
-
-            <div class="grid grid-cols-12 gap-4">
+        <h3 class="font-bold text-[#006FFD] mt-4">CO-BORROWER ADDRESS:</h3>
+        <div class="grid grid-cols-12 gap-4">
                 <div class="col-span-full lg:col-span-2">
                     <SelectInput
                         v-model="form.ownership"
@@ -178,12 +193,11 @@ watch(form, (newValue, oldValue) => {
                 <div class="w-full lg:w-64">
                     <PlainBlackButton :disabled="form.processing" type="submit" customClass="w-auto">
                         <p class="text-white font-bold text-center">
-                            Save {{ props.address_type }} Address
+                            Save Address
                         </p>
                     </PlainBlackButton>
                 </div>
             </div>
-            
         </form>
     </section>
 </template>

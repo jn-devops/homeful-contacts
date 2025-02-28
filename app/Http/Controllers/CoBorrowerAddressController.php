@@ -2,25 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CoBorrowerAddressRequest;
 use App\Http\Requests\CoBorrowerUpdateRequest;
-use Homeful\Contacts\Models\Customer;
 use Illuminate\Support\Facades\Redirect;
+use Homeful\Contacts\Models\Customer;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use Inertia\Response;
 use Inertia\Inertia;
 
-class CoBorrowerController extends Controller
+class CoBorrowerAddressController extends Controller
 {
-    public function edit(Request $request): Response
-    {
-        // dd($request->user()->contact);
-        return Inertia::render('CoBorrower/EditV2', [
-            'contact' => $request->user()->contact
-        ]);
-    }
-
-    public function update(CoBorrowerUpdateRequest $request): RedirectResponse
+    public function update(CoBorrowerAddressRequest $request): RedirectResponse
     {
         $user = $request->user();
 
@@ -29,14 +23,16 @@ class CoBorrowerController extends Controller
         })->toArray() ?? [];
 
         $data = $request->validated();
-        $type = $data['type'];
-        $records[$type] = $data;
 
+        $type = $data['co_borrower_type'];
+        unset($data['co_borrower_type']);
+        $records[$type]['addresses'] = [$data];
+        
         $co_borrower_records = [];
-        foreach($records as $type => $address_record){
-            $co_borrower_records [] = $address_record;
+        foreach($records as $type => $co_borrower_record){
+            $co_borrower_records [] = $co_borrower_record;
         }
-
+        
         $customer = Customer::find($user->contact->id);
         $customer->update(['co_borrowers' => $co_borrower_records]);
         $customer->save();

@@ -191,7 +191,7 @@ watch(form, (newValue, oldValue) => {
                         label="Contact No."
                         required
                         type="number"
-                        max="11"
+                        :max="11"
                         placeholder="09*********"
                         :errorMessage="form.errors.employer_contact_no"
                     />

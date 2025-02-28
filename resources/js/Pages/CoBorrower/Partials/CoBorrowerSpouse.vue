@@ -1,34 +1,67 @@
 <script setup>
-import PrimaryButton from '@/Components/Buttons/PrimaryButton.vue';
 import TextInput from '@/Components/Inputs/TextInput.vue';
-import DatePicker from '@/Components/Inputs/DatePicker.vue';
-import SelectInput from '@/Components/Inputs/SelectComboboxes.vue';
 import SuccessToast from '@/Components/Notification/SuccessToast.vue';
 import WarningToast from '@/Components/Notification/WarningToast.vue';
+import SelectInput from '@/Components/Inputs/SelectComboboxes.vue';
+import DatePicker from '@/Components/Inputs/DatePicker.vue';
 import { useForm, usePage } from '@inertiajs/vue3';
-import { ref, watch } from 'vue';
 import PlainBlackButton from '@/Components/Buttons/PlainBlackButton.vue';
+import { ref, watch } from 'vue';
 
 const props = defineProps({
-    spouse: Object,
+    contact: Object,
+    co_borrower_type: String,
 });
 
+const co_borrowers = () => {
+    if (null != props.contact?.co_borrowers) {
+        return Object.groupBy(props.contact?.co_borrowers, co_borrower => co_borrower.type)
+    }
+
+    return null;
+};
+
+const co_borrower = () => {
+    if (co_borrowers())
+        if (props.co_borrower_type in co_borrowers()) {
+            return co_borrowers()[props.co_borrower_type][0]
+        }
+
+    return null;
+};
+
+const spouse = co_borrower()?.spouse
+
 const form = useForm({
-    first_name: props.spouse?.first_name,
-    middle_name: props.spouse?.middle_name,
-    last_name: props.spouse?.last_name,
-    name_suffix: props.spouse?.name_suffix,
-    mothers_maiden_name: props.spouse?.mothers_maiden_name,
+    co_borrower_type: props.co_borrower_type,
+    first_name: spouse?.first_name,
+    middle_name: spouse?.middle_name,
+    last_name: spouse?.last_name,
+    name_suffix: spouse?.name_suffix,
+    mothers_maiden_name: spouse?.mothers_maiden_name,
     civil_status: "Married",
-    sex: props.spouse?.sex ?? 'Male' === usePage().props.auth.user.contact.sex ? 'Female' : 'Male',
-    nationality: props.spouse?.nationality ?? usePage().props.auth.user.contact.nationality,
-    date_of_birth: props.spouse?.date_of_birth ?? '',
-    email: props.spouse?.email,
-    mobile: props.spouse?.mobile,
-    help_number: props.spouse?.help_number,
-    other_mobile: props.spouse?.other_mobile,
-    landline: props.spouse?.landline,
+    sex: spouse?.sex ?? 'Male' === co_borrower()?.sex ? 'Female' : 'Male',
+    nationality: spouse?.nationality ?? co_borrower()?.nationality,
+    date_of_birth: spouse?.date_of_birth ?? '',
+    email: spouse?.email,
+    mobile: spouse?.mobile,
+    help_number: spouse?.help_number,
+    other_mobile: spouse?.other_mobile,
+    landline: spouse?.landline,
 })
+
+const updateCoBorrower = () => {
+    form.patch(route('co_borrower-spouse.update'), {
+        errorBag: 'updateCoBorrower',
+        preserveScroll: true,
+    });
+};
+
+const hasValidationError = ref(false);
+
+function closeToastFunction(){
+    hasValidationError.value = false;
+}
 
 const civilStatusList = usePage().props.enums.civil_statuses.map(item => ({
     id: item,
@@ -43,19 +76,6 @@ const nationalityList = usePage().props.enums.nationalities.map(item => ({
     id: item,
     name: item
 }));
-
-const updateSpouseInformation = () => {
-    form.patch(route('spouse.update'), {
-        errorBag: 'updateSpouseInformation',
-        preserveScroll: true,
-    });
-};
-
-const hasValidationError = ref(false);
-
-function closeToastFunction(){
-    hasValidationError.value = false;
-}
 
 watch(form, (newValue, oldValue) => {
     hasValidationError.value = (form.hasErrors) ? true : false;
@@ -73,8 +93,7 @@ watch(form, (newValue, oldValue) => {
         >
             <SuccessToast 
                 v-if="form.recentlySuccessful"
-                message="Successfully Saved Spouse Personal Data"
-
+                message="Successfully Saved Personal Data"
             />
         </Transition>
         <Transition
@@ -90,11 +109,11 @@ watch(form, (newValue, oldValue) => {
             />
         </Transition>
         <form
-            @submit.prevent="updateSpouseInformation"
+            @submit.prevent="updateCoBorrower"
             class="mt-6 space-y-6"
+            v-if="co_borrower()?.civil_status == 'Married'"
         >
-            <h3 class="font-bold text-[#006FFD] mt-4 uppercase">Spouse Personal Information</h3>
-
+            <h3 class="font-bold text-[#006FFD] mt-4">CO-BORROWER SPOUSE:</h3>
             <div class="grid grid-cols-12 gap-4">
                 <div class="col-span-full lg:col-span-3">
                     <TextInput 
@@ -209,7 +228,7 @@ watch(form, (newValue, oldValue) => {
                 <div class="w-full lg:w-64">
                     <PlainBlackButton :disabled="form.processing" type="submit" customClass="w-auto">
                         <p class="text-white font-bold text-center">
-                            Save {{ employment_type }} Data
+                            Save Spouse
                         </p>
                     </PlainBlackButton>
                 </div>

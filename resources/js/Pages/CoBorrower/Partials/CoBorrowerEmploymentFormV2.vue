@@ -201,7 +201,7 @@ watch(form, (newValue, oldValue) => {
                         v-model="form.employer_contact_no"
                         label="Contact No."
                         type="number"
-                        max="11"
+                        :max="11"
                         placeholder="09*********"
                         :errorMessage="form.errors.employer_contact_no"
                     />
