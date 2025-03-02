@@ -29,6 +29,7 @@ class AIFUpdateRequest extends FormRequest
             'mobile' => ['nullable', 'string', 'max:11'],
             'other_mobile' => 'nullable|string|max:20',
             'landline' => 'nullable|string|max:20',
+            'tin' => 'nullable|string|max:20',
         ];
     }
 }
