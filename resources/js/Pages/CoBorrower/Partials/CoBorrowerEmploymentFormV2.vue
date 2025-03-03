@@ -142,6 +142,7 @@ watch(form, (newValue, oldValue) => {
         <form
             @submit.prevent="updateCoBorrowerEmployment"
             class="mt-6 space-y-6"
+            v-if="co_borrower() != null"
         >
             <h3 class="font-bold text-[#006FFD] mt-4">CO-BORROWER EMPLOYMENT DETAILS:</h3>
             <div class="grid grid-cols-12 gap-4">

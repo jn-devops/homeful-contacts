@@ -46,6 +46,22 @@ const props = defineProps({
                 co_borrower_type = "Secondary"
                 employment_type = "Primary"
             />
+            <CoBorrowerSpouse
+                :contact = "contact"
+                co_borrower_type = "Secondary"
+            />
+
+            <CoBorrowerAddress
+                :contact = "contact"
+                co_borrower_type = "Secondary"
+                address_type = "Primary"
+            />
+            
+            <CoBorrowerEmploymentForm
+                :contact = "contact"
+                co_borrower_type = "Secondary"
+                employment_type = "Primary"
+            />
 
         </div>
     </AuthenticatedLayout>
