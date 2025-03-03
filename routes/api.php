@@ -19,6 +19,6 @@ Route::post('register', RegisterContact::class)->name('register-contact');
 // For Internal Testing Purposes
 Route::post('get-contact-media/{id}', function($id){
     $customer = Customer::find($id);
-    return response()->json($customer);
+    return response()->json($customer->getMedia());
 });
 
