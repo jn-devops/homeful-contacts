@@ -20,7 +20,7 @@ const props = defineProps({
     <AuthenticatedLayout>
         <div class="mx-auto max-w-7xl px-6 lg:px-8">
             <h3 class="font-bold text-[#006FFD] mt-4 uppercase">Document Information</h3>
-            <div class="grid grid-cols-12 gap-4">
+            <div class="grid grid-cols-12 gap-4 pb-10">
                 <div v-for="(item, index) in matrices" :key="index" class="col-span-full lg:col-span-6 xl:col-span-4">
                     <UploadForm
                         :contact = "contact"

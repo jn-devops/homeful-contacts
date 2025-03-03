@@ -27,6 +27,7 @@ const form = useForm({
     mobile: props.aif?.mobile,
     other_mobile: props.aif?.other_mobile,
     landline: props.aif?.landline,
+    tin: props.aif?.tin,
 })
 
 const civilStatusList = usePage().props.enums.civil_statuses.map(item => ({
@@ -177,7 +178,7 @@ watch(form, (newValue, oldValue) => {
                     <TextInput 
                         v-model="form.mobile"
                         label="Mobile Number"
-                        max="11"
+                        :max="11"
                         type="number"
                         placeholder="09********"
                         :errorMessage="form.errors.mobile"
@@ -197,6 +198,14 @@ watch(form, (newValue, oldValue) => {
                         label="Landline "
                         placeholder="Enter Landline "
                         :errorMessage="form.errors.landline"
+                    />
+                </div>
+                <div class="col-span-full lg:col-span-3">
+                    <TextInput 
+                        v-model="form.tin"
+                        label="Taxpayer Identification Number"
+                        placeholder="Enter TIN"
+                        :errorMessage="form.errors.tin"
                     />
                 </div>
             </div>
