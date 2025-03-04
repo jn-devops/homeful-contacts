@@ -29,10 +29,9 @@ class MediaController extends Controller
         // $collection_name = Arr::get($this->getMediaMatrix(), $name);
         $fileInfo = Filepond::field($request->get('file'));
         $user = $request->user();
-        $path = $fileInfo->getFile()->store('uploads', 'public');
-        $url = Storage::url($path);
-
-        $user->contact->$name = asset($url);
+        $path = $fileInfo->getFile()->store('uploads', 'digitalocean');
+        $url = Storage::disk('digitalocean')->url($path);
+        $user->contact->$name = $url;
         $user->contact->save();
         $fileInfo->delete();
 
