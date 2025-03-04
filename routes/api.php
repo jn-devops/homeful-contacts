@@ -13,7 +13,7 @@ Route::get('/user', function (Request $request) {
 Route::resource('contacts', ContactController::class)->only(['show']);
 Route::resource('references', ReferenceController::class)->only(['show']);
 
-// Route::get('update-contact-data/{id}', [ContactController::class, 'updateContactUsingId']);
+Route::get('update-contact-data/{email}', [ContactController::class, 'updateContactUsingId']);
 Route::post('register', RegisterContact::class)->name('register-contact');
 
 // For Internal Testing Purposes
