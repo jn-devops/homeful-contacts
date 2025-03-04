@@ -15,7 +15,7 @@ class MediaController extends Controller
 {
     public function edit(Request $request): Response
     {
-        $contact = $request->user()->contact;
+        $contact = $request->user()->customer;
         // dd($this->getMediaMatrix($contact));
         return Inertia::render('Media/EditV2', [
             'contact' => $contact,
