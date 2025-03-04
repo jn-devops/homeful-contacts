@@ -31,6 +31,8 @@ class MediaController extends Controller
         $user = $request->user();
         $path = $fileInfo->getFile()->store('uploads', 'digitalocean');
         $url = Storage::disk('digitalocean')->url($path);
+        $customer = Customer::find($user->contact->id);
+        $customer->$name = $url;
         $user->contact->$name = $url;
         $user->contact->save();
         $fileInfo->delete();
