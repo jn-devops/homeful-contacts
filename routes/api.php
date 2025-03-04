@@ -13,10 +13,11 @@ Route::get('/user', function (Request $request) {
 Route::resource('contacts', ContactController::class)->only(['show']);
 Route::resource('references', ReferenceController::class)->only(['show']);
 
-Route::get('update-contact-data/{email}', [ContactController::class, 'updateContactUsingId']);
 Route::post('register', RegisterContact::class)->name('register-contact');
 
 // For Internal Testing Purposes
+Route::post('update-contact-data', [ContactController::class, 'updateContactUsingId']);
+Route::delete('delete-contact-data/{email}', [ContactController::class, 'destroy']);
 Route::post('get-contact-media/{id}', function($id){
     $customer = Customer::find($id);
     dd($customer->getMedia(), $customer->birthCertificateDocument);

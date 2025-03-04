@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\RegisterContact;
 use Illuminate\Http\Request;
 use App\Models\Contact;
+use App\Models\User;
 use Homeful\Contacts\Models\Contact as ModelsContact;
 use Homeful\Contacts\Models\Customer;
 
@@ -60,21 +62,56 @@ class ContactController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Contact $contact)
+    public function destroy($email)
     {
-        //
+        try {
+            $user = User::where('email', $email)->first();
+            if ($user) {
+                if ($user->contact) {
+                    $user->contact->delete();
+                }
+                $user->delete();
+            
+                return response()->json([
+                    'success' => true,
+                    'message' => 'User deleted successfully'
+                ]);
+            } else {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Data not found'
+                ], 404);
+            }
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], 500)
+            ->header('Content-Type', 'text/plain');
+        }
     }
 
     /**
      * For Internal Testing Purposes. Will delete soon
      * TODO: Delete this before deployment
      */
-    public function updateContactUsingId($email, Request $request)
+    public function updateContactUsingId(Request $request)
     {
         try {
-            $customer = Customer::where('email', $email)->first();
+            $data = $request->data;
+            $data_to_send = [
+                "name" => $data['first_name'].' '.$data['last_name'],
+                "email" => $data['email'],
+                "mobile" => $data['mobile'],
+                "password" => 'password',
+                "password_confirmation" => 'password',
+                "date_of_birth" => $data['date_of_birth'],
+                "monthly_gross_income" => $data['employment'][0]['monthly_gross_income'],
+            ];
+            $user_data = app(RegisterContact::class)->run($data_to_send);
+            $customer = Customer::find($user_data->contact->id);
+            
             if ($customer) {
-                $data = $request->data;
                 $customer->first_name = $data['first_name'];
                 $customer->last_name = $data['last_name'];
                 $customer->email = $data['email'];
@@ -85,13 +122,23 @@ class ContactController extends Controller
                 $customer->nationality = $data['nationality'];
                 $customer->date_of_birth = $data['date_of_birth'];
                 $customer->save();
-        
-                $this->addressUpdate($customer, $data['addresses']);
-                $this->employmentUpdate($customer, $data['employment']);
+                
+                if(isset($data['addresses'])){
+                    $this->addressUpdate($customer, $data['addresses']);
+                }
+                if(isset($data['employment'])){
+                    $this->employmentUpdate($customer, $data['employment']);
+                }
+                if(isset($data['spouse'])){
+                    $this->spouseUpdate($customer, $data['spouse']);
+                }
+                if(isset($data['co_borrowers'])){
+                    $this->coborrowerUpdate($customer, $data['co_borrowers']);
+                }
                 return response()->json([
                     'success' => true, 
                     'message' => 'Successfully Saved the Data', 
-                    'data' => ['email' => $email, 'data' => $request->data]
+                    'data' => $request->data
                 ], 200);
             }else{
                 return response()->json([
@@ -135,6 +182,16 @@ class ContactController extends Controller
     public function employmentUpdate(Customer $contact, Array $data){
         $customer = Customer::find($contact->id);
         $customer->update(['employment' => $data]);
+        $customer->save();
+    }
+    public function spouseUpdate(Customer $contact, Array $data){
+        $customer = Customer::find($contact->id);
+        $customer->update(['spouse' => $data]);
+        $customer->save();
+    }
+    public function coborrowerUpdate(Customer $contact, Array $data){
+        $customer = Customer::find($contact->id);
+        $customer->update(['co_borrowers' => $data]);
         $customer->save();
     }
 }
