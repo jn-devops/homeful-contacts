@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\User;
 use App\Notifications\SendContactReferenceCodeNotification;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Support\Facades\Config;
@@ -23,6 +24,7 @@ it('resolves the correct notification channels via the trait', function () {
     $notifiable = new class {
         public $name = 'John Doe';
     };
+    $notifiable = User::factory()->create();
     $channels = $notification->via($notifiable);
     expect($channels)->toBe(['database', 'mail', 'engage_spark']);
 });
@@ -33,7 +35,7 @@ it('builds the correct mail message content', function () {
     $notifiable = new class {
         public $name = 'John Doe';
     };
-
+    $notifiable = User::factory()->create();
     // Get the MailMessage
     $mailMessage = $notification->toMail($notifiable);
     $content = $mailMessage->render();

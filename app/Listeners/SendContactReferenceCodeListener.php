@@ -2,6 +2,7 @@
 
 namespace App\Listeners;
 
+use App\Models\User;
 use App\Notifications\SendContactReferenceCodeNotification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
@@ -17,7 +18,9 @@ class SendContactReferenceCodeListener
         $reference = $event->reference;
         if ($reference instanceof Reference) {
             $contact = $reference->getContact();
-            $contact->notify(new SendContactReferenceCodeNotification($reference->code));
+            $user = User::where('email', $contact->email)->firstOrFail();
+            $user->notify(new SendContactReferenceCodeNotification($reference->code));
+//            $contact->notify(new SendContactReferenceCodeNotification($reference->code));
         }
     }
 }

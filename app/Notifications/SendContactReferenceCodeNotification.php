@@ -8,6 +8,9 @@ use Illuminate\Notifications\Messages\MailMessage;
 use Homeful\Common\Traits\HasDomainNotification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Bus\Queueable;
+use MagicLink\Actions\LoginAction;
+use MagicLink\MagicLink;
+use App\Models\User;
 
 
 class SendContactReferenceCodeNotification extends Notification implements ShouldQueue, IsDomainNotification
@@ -26,7 +29,7 @@ class SendContactReferenceCodeNotification extends Notification implements Shoul
             ->line('password')
             ->line('Client Code:')
             ->line($this->getContactReferenceCode())
-            ->action('Login', url($this->getUrl()))
+            ->action('Login', url($this->getUrl($notifiable)))
             ->line('Cheers,')
             ->line('Homeful Shop');
     }
@@ -57,8 +60,19 @@ Homeful Shop', [
         return $this->getNotificationChannelsVia($notifiable);
     }
 
-    public function getUrl()
+    public function getUrl($notifiable): string
     {
-        return 'https://google.com';
+        $user = $notifiable;
+        if ($user instanceof User) {
+            $action = new LoginAction($user);
+            $action->response(redirect('/dashboard'));
+            return MagicLink::create($action)->url;
+        }
+
+        return "https://google.com";
     }
+
+
+
+
 }
