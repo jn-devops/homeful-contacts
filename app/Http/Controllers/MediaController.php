@@ -33,8 +33,8 @@ class MediaController extends Controller
         $url = Storage::disk('digitalocean')->url($path);
         $customer = Customer::find($user->contact->id);
         $customer->$name = $url;
-        $user->contact->$name = $url;
-        $user->contact->save();
+        // $user->contact->$name = $url;
+        // $user->contact->save();
         $fileInfo->delete();
 
         return redirect()->back()->with('name', $name);
