@@ -15,8 +15,7 @@ class MediaController extends Controller
 {
     public function edit(Request $request): Response
     {
-        $contact = $request->user()->customer;
-        // dd($this->getMediaMatrix($contact));
+        $contact = $request->user()->contact;
         return Inertia::render('Media/EditV2', [
             'contact' => $contact,
             'matrices' => $this->getMediaMatrix($contact),
@@ -101,9 +100,9 @@ class MediaController extends Controller
         ];
         foreach($list_images as $key_matrix => $val_matrix){
             $matrixItem = $contact->$key_matrix ?? null;
-    
+            $customer = Customer::find($contact->id)->$key_matrix;
             $matrices[$key_matrix]['type'] = optional($matrixItem)->mime_type ?? 'unknown';
-            $matrices[$key_matrix]['url'] = optional($matrixItem)->getUrl() ?? null;
+            $matrices[$key_matrix]['url'] = optional($customer)->getUrl() ?? null;
             $matrices[$key_matrix]['code'] = $key_matrix;
             $matrices[$key_matrix]['name'] = $val_matrix;
         }
