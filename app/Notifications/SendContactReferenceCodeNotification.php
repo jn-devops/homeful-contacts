@@ -44,7 +44,7 @@ Please check your email for more details.
 Best Regards,
 Homeful Shop', [
             'name' => $notifiable->name, // Anaïs - you missed this part :-)
-            'url' => $this->getUrl(),
+            'url' => $this->getUrl($notifiable),
             'password' => context('password'),
             'contact_reference_code' => $this->getContactReferenceCode()
         ]);
