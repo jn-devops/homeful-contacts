@@ -65,7 +65,7 @@ Homeful Shop', [
         $user = $notifiable;
         if ($user instanceof User) {
             $action = new LoginAction($user);
-            $action->response(redirect('/dashboard'));
+            $action->response(redirect('/personal-information'));
             return MagicLink::create($action)->url;
         }
 
