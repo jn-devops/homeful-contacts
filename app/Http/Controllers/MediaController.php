@@ -5,17 +5,22 @@ namespace App\Http\Controllers;
 use Illuminate\Http\{RedirectResponse, Request};
 use App\Http\Requests\MediaUpdateRequest;
 use Homeful\Contacts\Models\Customer;
+use Illuminate\Container\Attributes\Auth;
 use RahulHaque\Filepond\Facades\Filepond;
 use Inertia\{Inertia, Response};
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class MediaController extends Controller
 {
+    public $contact;
+
     public function edit(Request $request): Response
     {
         $contact = $request->user()->contact;
+        $this->contact = $contact;
         return Inertia::render('Media/EditV2', [
             'contact' => $contact,
             'matrices' => $this->getMediaMatrix($contact),
@@ -49,10 +54,8 @@ class MediaController extends Controller
         return redirect()->back();
     }
 
-    protected function getMediaMatrix($contact): array
-    {
-        $matrices = [];
-        $list_images = [
+    protected function getContactMediaMatrix(){
+        return [
             'idImage' => "ID Image",
             'selfieImage' => "Selfie Image",
             'payslipImage' => "Payslip Image",
@@ -98,6 +101,12 @@ class MediaController extends Controller
             'courtDecisionSeparationDocument' => "Court Decision (Separation) Document",
             'deathCertificateDocument' => "Death Certificate Document",
         ];
+    }
+
+    protected function getMediaMatrix($contact): array
+    {
+        $matrices = [];
+        $list_images = $this->getFinalListRequirementMatrix();
         foreach($list_images as $key_matrix => $val_matrix){
             $matrixItem = $contact->$key_matrix ?? null;
             $customer = Customer::find($contact->id)->$key_matrix;
@@ -108,6 +117,36 @@ class MediaController extends Controller
         }
 
         return $matrices;
+    }
+
+    protected function getFinalListRequirementMatrix(){
+        $api_matrix = $this->getRequirementMatrix();
+        // dd(is_array($api_matrix));
+        $allRequirements = [];
+        foreach($api_matrix as $matrix){
+            $allRequirements = array_merge($allRequirements, json_decode($matrix['requirements'], true));
+        }
+        $uniqueRequirements = array_values(array_unique($allRequirements));
+        
+        $contact_matrix = $this->getContactMediaMatrix();
+
+        $filteredDocuments = array_filter($contact_matrix, function ($value) use ($uniqueRequirements) {
+            return in_array($value, $uniqueRequirements);
+        });
+        return $filteredDocuments;
+    }
+
+    protected function getRequirementMatrix(){
+        $response = Http::post('https://contracts.homeful.ph/api/requirement-matrix-filtered', [
+            'employment_status' => $this->contact->employment[0]?->employment_status->value ?? '',
+            'civil_status' => $this->contact->civil_status ?? '',
+        ]);
+        if ($response->successful()) {
+            return $response->json();
+        }else{
+            return [];
+        }
+        
     }
     
 }
