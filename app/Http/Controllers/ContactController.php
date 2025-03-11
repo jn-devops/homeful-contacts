@@ -62,10 +62,38 @@ class ContactController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy($email)
+    public function destroy_email($email)
     {
         try {
             $user = User::where('email', $email)->first();
+            if ($user) {
+                if ($user->contact) {
+                    $user->contact->delete();
+                }
+                $user->delete();
+            
+                return response()->json([
+                    'success' => true,
+                    'message' => 'User deleted successfully'
+                ]);
+            } else {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Data not found'
+                ], 404);
+            }
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], 500)
+            ->header('Content-Type', 'text/plain');
+        }
+    }
+    public function destroy_mobile($mobile)
+    {
+        try {
+            $user = User::where('mobile', $mobile)->first();
             if ($user) {
                 if ($user->contact) {
                     $user->contact->delete();
