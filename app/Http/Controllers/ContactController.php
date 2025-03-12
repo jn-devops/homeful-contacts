@@ -124,6 +124,26 @@ class ContactController extends Controller
      * For Internal Testing Purposes. Will delete soon
      * TODO: Delete this before deployment
      */
+
+     public function getContactById(Request $request){
+        $request->validate([
+            'id' => 'required'
+        ]);
+
+        $contact = Contact::find($request->id);
+        if($contact){
+            return $contact;
+        }else{
+            return response()->json([
+                'success' => false,
+                'message' => 'Data not found',
+                'data' => []
+            ]);
+
+        }
+
+     }
+
     public function updateContactUsingId(Request $request)
     {
         try {
