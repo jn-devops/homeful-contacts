@@ -164,6 +164,9 @@ class ContactController extends Controller
                 if(isset($data['co_borrowers'])){
                     $this->coborrowerUpdate($customer, $data['co_borrowers']);
                 }
+                if(isset($data['aif'])){
+                    $this->aifUpdate($customer, $data['aif']);
+                }
                 return response()->json([
                     'success' => true, 
                     'message' => 'Successfully Saved the Data', 
@@ -221,6 +224,11 @@ class ContactController extends Controller
     public function coborrowerUpdate(Customer $contact, Array $data){
         $customer = Customer::find($contact->id);
         $customer->update(['co_borrowers' => $data]);
+        $customer->save();
+    }
+    public function aifUpdate(Customer $contact, Array $data){
+        $customer = Customer::find($contact->id);
+        $customer->update(['aif' => $data]);
         $customer->save();
     }
 }
