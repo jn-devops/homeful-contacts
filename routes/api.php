@@ -17,7 +17,7 @@ Route::post('register', RegisterContact::class)->name('register-contact');
 
 // For Internal Testing Purposes
 Route::post('update-contact-data', [ContactController::class, 'updateContactUsingId']);
-Route::post('get-contact-by-id', [ContactController::class, 'getContactById']);
+Route::get('get-contact-by-id', [ContactController::class, 'getContactById']);
 Route::delete('delete-contact-data/email/{email}', [ContactController::class, 'destroy_email']);
 Route::delete('delete-contact-data/mobile/{mobile}', [ContactController::class, 'destroy_mobile']);
 Route::post('get-contact-media/{id}', function($id){
