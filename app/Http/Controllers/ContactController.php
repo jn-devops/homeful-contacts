@@ -8,6 +8,7 @@ use App\Models\Contact;
 use App\Models\User;
 use Homeful\Contacts\Models\Contact as ModelsContact;
 use Homeful\Contacts\Models\Customer;
+use Homeful\Contracts\Models\Contact as ContractsModelsContact;
 
 class ContactController extends Controller
 {
@@ -166,7 +167,7 @@ class ContactController extends Controller
                 return response()->json([
                     'success' => true, 
                     'message' => 'Successfully Saved the Data', 
-                    'data' => $request->data
+                    'data' => ContractsModelsContact::find($customer->id),
                 ], 200);
             }else{
                 return response()->json([
