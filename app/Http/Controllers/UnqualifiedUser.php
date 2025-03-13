@@ -37,7 +37,6 @@ class UnqualifiedUser extends Controller
             'mobile' => 'required|string',
             'message' => 'nullable|string',
         ]);
-        dd($request->get('name'));
         NotifySupportReUnqualifiedUser::run([
             'name' => $request->get('name'),
             'mobile' => $request->get('mobile'),
