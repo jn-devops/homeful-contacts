@@ -25,8 +25,8 @@ class NotifySupportReUnqualifiedUser
     {
         return [
             'name' => ['required', 'string'],
-            'email' => ['required', 'string'],
             'mobile' => ['required', 'string'],
+            'message' => ['nullable', 'string'],
         ];
     }
 

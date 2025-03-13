@@ -33,14 +33,13 @@ class UnqualifiedUserNotification extends Notification implements ShouldQueue
     public function toMail(object $notifiable): MailMessage
     {
         $name = Arr::get($this->attribs, 'name', 'John Doe');
-        $email = Arr::get($this->attribs, 'email', 'john.doe@gmail.com');
         $mobile = Arr::get($this->attribs, 'mobile', '09171234567');
+        $message = Arr::get($this->attribs, 'message', 'The quick brown fox...');
 
         return (new MailMessage)
             ->line('Name: ' . $name)
-            ->line('Email: ' . $email)
             ->line('Mobile: ' . $mobile)
-            ->action('Notification Action', url('/'))
+            ->line('Message: ' . $message)
             ->line('Thank you for using our application!');
     }
 
