@@ -37,6 +37,7 @@ class UnqualifiedUserNotification extends Notification implements ShouldQueue
         $message = Arr::get($this->attribs, 'message', 'The quick brown fox...');
 
         return (new MailMessage)
+            ->line('A concern has been submitted. Please review the details below:')
             ->line('Name: ' . $name)
             ->line('Mobile: ' . $mobile)
             ->line('Message: ' . $message)
