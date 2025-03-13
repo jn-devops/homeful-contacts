@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\NotifySupportReUnqualifiedUser;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -36,8 +37,12 @@ class UnqualifiedUser extends Controller
             'mobile' => 'required|string',
             'message' => 'nullable|string',
         ]);
-
-        // TODO|Xian TODO|Gecka: Send email to env('STOREFRONT_ADMIN_EMAIL', 'jndevops@joy-nostalg.com') 
+        dd($request->get('name'));
+        NotifySupportReUnqualifiedUser::run([
+            'name' => $request->get('name'),
+            'mobile' => $request->get('mobile'),
+            'message' => $request->get('message'),
+        ]);
 
         return redirect()->back()->with('flash', [
             'success' => true,
