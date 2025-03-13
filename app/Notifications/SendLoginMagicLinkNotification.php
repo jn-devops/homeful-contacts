@@ -36,4 +36,5 @@ class SendLoginMagicLinkNotification extends Notification implements ShouldQueue
     {
         return $this->getNotificationChannelsVia($notifiable);
     }
+
 }

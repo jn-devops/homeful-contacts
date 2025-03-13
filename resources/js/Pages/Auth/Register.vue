@@ -7,7 +7,7 @@ import PlainBlackButton from '@/Components/Buttons/PlainBlackButton.vue';
 import SecondaryPlainBlack from '@/Components/Buttons/SecondaryPlainBlack.vue';
 import { computed, ref } from "vue";
 import GradientStyleDateInput from '@/Components/Inputs/GradientStyleDateInput.vue';
-import PrivacyPolicy from '@/Components/PrivacyPolicy.vue';
+import Agreements from '@/Components/Agreements.vue';
 import TermAndCondition from '@/Components/TermAndCondition.vue';
 
 const props = defineProps({
@@ -35,14 +35,14 @@ const props = defineProps({
 });
 
 const showTC = ref(false)
-const showPP = ref(false)
+const showAgreementPage = ref(false)
 
 const toggleTC = () => {
     showTC.value = !showTC.value
 }
 
 const togglePP = () => {
-    showPP.value = !showPP.value
+    showAgreementPage.value = !showAgreementPage.value
 }
 
 const form = useForm({
@@ -68,7 +68,12 @@ const submit = () => {
 
 const disclaimerChecked = ref(false);
 
-const showPassword = computed(() => props.autoPassword === '');
+const showPassword = computed(() => props.autoPassword === '')
+
+const viewAgreements = () => {
+    disclaimerChecked.value = false
+    togglePP()
+}
 
 </script>
 
@@ -162,10 +167,17 @@ const showPassword = computed(() => props.autoPassword === '');
                     </div>
                 </div>
                 <div class="mt-3 px-2">
-                    <div class="flex items-center mb-4 gap-2">
-                        <input type="checkbox" v-model="disclaimerChecked" id="default-checkbox" class="w-5 h-5 text-[#F7C947] rounded-sm focus:ring-[#E94572]">
+                    <div class="flex items-center mb-4 gap-2" @click="viewAgreements">
+                        <!-- <input type="checkbox"  @click="viewAgreements" v-model="disclaimerChecked" id="default-checkbox" class="w-5 h-5 text-[#F7C947] rounded-sm focus:ring-[#E94572]"> -->
+                         <div v-if="disclaimerChecked" class="w-6 h-5 bg-[#F7C947] rounded border-2 border-black">
+                            <svg class="w-full h-full text-gray-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 11.917 9.724 16.5 19 7.5"/>
+                            </svg>
+                         </div>
+                         <div v-else class="w-[25px] h-[20px] rounded border-2 border-black">
+                         </div>
                         <label class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">
-                            I've read and agree with the <b class="underline cursor-pointer" @click="toggleTC">Terms of Use</b> and the <b @click="togglePP" class="underline cursor-pointer">Privacy Policy</b>.
+                            I've read and agree with the <b class="underline cursor-pointer">Terms of Use</b> and the <b class="underline cursor-pointer">Privacy Policy</b>.
                         </label>
                     </div>
                 </div>
@@ -223,13 +235,10 @@ const showPassword = computed(() => props.autoPassword === '');
 
                 </div>
             </form>
-            <PrivacyPolicy 
-                v-if="showPP" 
+            <Agreements 
+                v-if="showAgreementPage" 
                 @close="togglePP"
-            />
-            <TermAndCondition 
-                v-if="showTC" 
-                @close="toggleTC"
+                v-model:disclaimerChecked="disclaimerChecked"
             />
         </div>
     </GuestLayoutV2>

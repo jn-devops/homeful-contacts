@@ -2,11 +2,11 @@
 
 namespace App\Http\Requests;
 
-use Homeful\Contacts\Enums\{CivilStatus, Nationality, Sex};
+use Homeful\Contacts\Enums\{AddressType, CivilStatus, CoBorrowerType, Employment, EmploymentStatus, EmploymentType, Industry, Nationality, Ownership, Sex};
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class AIFUpdateRequest extends FormRequest
+class CoBorrowerSpouseRequest extends FormRequest
 {
     /**
      * Get the validation rules that apply to the request.
@@ -16,6 +16,7 @@ class AIFUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'co_borrower_type' => ['required', 'string', 'max:50'],
             'first_name' => ['required', 'string', 'max:50'],
             'middle_name' => ['nullable', 'string', 'max:50'],
             'last_name' => ['required', 'string', 'max:50'],
@@ -29,7 +30,6 @@ class AIFUpdateRequest extends FormRequest
             'mobile' => ['nullable', 'string', 'max:11'],
             'other_mobile' => 'nullable|string|max:20',
             'landline' => 'nullable|string|max:20',
-            'tin' => 'nullable|string|max:20',
         ];
     }
 }

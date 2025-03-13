@@ -8,6 +8,9 @@ use Illuminate\Notifications\Messages\MailMessage;
 use Homeful\Common\Traits\HasDomainNotification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Bus\Queueable;
+use MagicLink\Actions\LoginAction;
+use MagicLink\MagicLink;
+use App\Models\User;
 
 
 class SendContactReferenceCodeNotification extends Notification implements ShouldQueue, IsDomainNotification
@@ -22,11 +25,12 @@ class SendContactReferenceCodeNotification extends Notification implements Shoul
             ->line('We\'re super excited to welcome you to Homeful Shop.')
             ->line('Not only do we have amazing properties and amenities, but our service is all about the little things that make a big difference. We think that even the smallest gestures can really show how much we care.')
             ->line('For us, true luxury is all about feeling like you belong, and every visit is a chance for us to help you experience that. Can\'t wait to have you with us!')
-            ->line('Please find your temporary password:')
-            ->line('password')
+            ->line('Please find your temporary credentials:')
+            ->line('Email: ' . $notifiable->email)
+            ->line('Password: ' .'password')
             ->line('Client Code:')
             ->line($this->getContactReferenceCode())
-            ->action('Login', url($this->getUrl()))
+            ->action('Login', url($this->getUrl($notifiable)))
             ->line('Cheers,')
             ->line('Homeful Shop');
     }
@@ -41,7 +45,7 @@ Please check your email for more details.
 Best Regards,
 Homeful Shop', [
             'name' => $notifiable->name, // Anaïs - you missed this part :-)
-            'url' => $this->getUrl(),
+            'url' => $this->getUrl($notifiable),
             'password' => context('password'),
             'contact_reference_code' => $this->getContactReferenceCode()
         ]);
@@ -57,8 +61,19 @@ Homeful Shop', [
         return $this->getNotificationChannelsVia($notifiable);
     }
 
-    public function getUrl()
+    public function getUrl($notifiable): string
     {
-        return 'https://google.com';
+        $user = $notifiable;
+        if ($user instanceof User) {
+            $action = new LoginAction($user);
+            $action->response(redirect('/review/personal'));
+            return MagicLink::create($action)->url;
+        }
+
+        return "https://google.com";
     }
+
+
+
+
 }

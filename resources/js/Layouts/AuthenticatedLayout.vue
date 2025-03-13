@@ -123,7 +123,7 @@ const showingNavigationDropdown = ref(false);
                                     :href="route('media.edit')"
                                     :active="route().current('media.edit')"
                                 >
-                                    Files
+                                    Attachment
                                 </NavLink>
                             </div>
                         </div>
@@ -231,6 +231,48 @@ const showingNavigationDropdown = ref(false);
                             :active="route().current('dashboard')"
                         >
                             Dashboard
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink 
+                            :href="route('personal.edit')"
+                            :active="route().current('personal.edit')"
+                        >
+                            Personal Data
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink 
+                            :href="route('address.edit')"
+                            :active="route().current('address.edit')"
+                        >
+                            Address Data
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink 
+                            :href="route('employment.edit')"
+                            :active="route().current('employment.edit')"
+                        >
+                            Employment Data
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink 
+                            :href="route('spouse.edit')"
+                            :active="route().current('spouse.edit')"
+                        >
+                            Spouse Data
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink 
+                            :href="route('aif.edit')"
+                            :active="route().current('aif.edit')"
+                        >
+                            AIF
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink 
+                            :href="route('co_borrower.edit')"
+                            :active="route().current('co_borrower.edit')"
+                        >
+                            Co-Borrower
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink 
+                            :href="route('media.edit')"
+                            :active="route().current('media.edit')"
+                        >
+                            Attachment
                         </ResponsiveNavLink>
                     </div>
 
