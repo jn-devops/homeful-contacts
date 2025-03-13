@@ -1,6 +1,6 @@
 <script setup>
 import { ExclamationCircleIcon } from '@heroicons/vue/20/solid';
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, toRef, watch } from 'vue';
 
 const props = defineProps({
   label: {
@@ -62,6 +62,17 @@ function filterInput(event) {
   }
 }
 
+const errorMessage = toRef(props, 'errorMessage');
+
+watch(errorMessage, (newValue) => {
+  if (newValue && input.value) {
+    input.value.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    setTimeout(() => {
+      input.value.focus();
+    }, 300);
+  }
+});
+
 </script>
 <template>
     <div>
@@ -73,10 +84,10 @@ function filterInput(event) {
                 ref="input"
                 :readonly="readOnly"
                 @input="filterInput"
-                class="col-start-1 row-start-1 block w-full bg-white py-1.5 pl-3 pr-10 text-base border-none focus:ring-0 outline outline-1 -outline-offset-1 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-[#006FFD] sm:pr-9 sm:text-sm/6"
+                class="col-start-1 row-start-1 block w-full bg-white py-1.5 pl-3 pr-10 text-base border-none focus:ring-0 outline outline-1 -outline-offset-1 focus:outline focus:outline-2 focus:-outline-offset-2 sm:pr-9 sm:text-sm/6"
                 :class="{
-                  'text-red-900 outline-red-300 placeholder:text-red-300': errorMessage,
-                  'text-gray-900 outline-gray-300 placeholder:text-gray-400': !errorMessage,
+                  'text-red-900 outline-red-300 placeholder:text-red-300 focus:outline-red-600': errorMessage,
+                  'text-gray-900 outline-gray-300 placeholder:text-gray-400 focus:outline-[#006FFD]': !errorMessage,
                   'rounded-md' : !noBorderRadius,
                 }"
                 :placeholder="placeholder" 
