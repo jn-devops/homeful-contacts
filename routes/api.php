@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\{ContactController, ReferenceController};
+use App\Http\Controllers\{ContactController, LazarusAPICOntroller, ReferenceController};
 use Illuminate\Support\Facades\Route;
 use App\Actions\RegisterContact;
 use Homeful\Contacts\Models\Customer;
@@ -23,5 +23,16 @@ Route::delete('delete-contact-data/mobile/{mobile}', [ContactController::class, 
 Route::post('get-contact-media/{id}', function($id){
     $customer = Customer::find($id);
     dd($customer->getMedia(), $customer->birthCertificateDocument);
+});
+
+
+Route::middleware(['auth:sanctum'])->group(function () {
+    Route::post('/auth/login', [LazarusAPICOntroller::class, 'login']);
+    // Route::get('/contact/{id}', [LazarusAPICOntroller::class, 'getContactByID']);
+    // Route::post('/set-contact', [LazarusAPICOntroller::class, 'setContact']);
+    // Route::post('/set-lazarus-contact/{id}', [LazarusAPICOntroller::class, 'setLazarusContact']);
+    Route::get('/get-attachment-requirement/{id}', [LazarusAPICOntroller::class, 'getAttachmentRequirementByID']);
+    Route::post('/set-attachment-requirement', [LazarusAPICOntroller::class, 'setAttachmentRequirementByID']);
+    
 });
 

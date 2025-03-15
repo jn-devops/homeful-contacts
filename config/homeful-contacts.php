@@ -21,5 +21,7 @@ return [
     ],
     'support' => [
         'email' => env('SUPPORT_EMAIL', 'devops@joy-nostalg.com')
-    ]
+    ],
+    'lazarus_api_token' => env('LAZARUS_API_TOKEN'),
+    'lazarus_url' => env('LAZARUS_URL', 'http://homeful-lazarus.test'),
 ];
