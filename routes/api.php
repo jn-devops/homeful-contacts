@@ -24,15 +24,3 @@ Route::post('get-contact-media/{id}', function($id){
     $customer = Customer::find($id);
     dd($customer->getMedia(), $customer->birthCertificateDocument);
 });
-
-
-Route::post('/auth/login', [LazarusAPICOntroller::class, 'login']);
-Route::middleware(['auth:sanctum'])->group(function () {
-    // Route::get('/contact/{id}', [LazarusAPICOntroller::class, 'getContactByID']);
-    // Route::post('/set-contact', [LazarusAPICOntroller::class, 'setContact']);
-    // Route::post('/set-lazarus-contact/{id}', [LazarusAPICOntroller::class, 'setLazarusContact']);
-    Route::get('/get-attachment-requirement/{id}', [LazarusAPICOntroller::class, 'getAttachmentRequirementByID']);
-    Route::post('/set-attachment-requirement', [LazarusAPICOntroller::class, 'setAttachmentRequirementByID']);
-    
-});
-
