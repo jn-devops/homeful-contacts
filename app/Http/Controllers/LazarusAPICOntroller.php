@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\ValidationException;
 
-class LazarusAPICOntroller extends Controller
+class LazarusAPIController extends Controller
 {
     public function login(Request $request){
         try {
@@ -95,7 +95,7 @@ class LazarusAPICOntroller extends Controller
             if($response->successful()){
                 return response()->json([
                     'success' => true,
-                    'message' => 'No Contact Found',
+                    'message' => 'Successfully Created Lazarus Data',
                     'data' => $response->json()['data'],
                 ], 200);
             }else{

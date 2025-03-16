@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\{ContactController, LazarusAPICOntroller, ReferenceController};
+use App\Http\Controllers\{ContactController, LazarusAPIController, ReferenceController};
 use Illuminate\Support\Facades\Route;
 use App\Actions\RegisterContact;
 use Homeful\Contacts\Models\Customer;
@@ -25,12 +25,12 @@ Route::post('get-contact-media/{id}', function($id){
     dd($customer->getMedia(), $customer->birthCertificateDocument);
 });
 
-Route::post('/auth/login', [LazarusAPICOntroller::class, 'login']);
+Route::post('/auth/login', [LazarusAPIController::class, 'login']);
 Route::middleware(['auth:sanctum'])->group(function () {
-    Route::get('/contact/{id}', [LazarusAPICOntroller::class, 'getContactByID']);
-    // Route::post('/set-contact', [LazarusAPICOntroller::class, 'setContact']);
-    Route::post('/set-lazarus-contact/{id}', [LazarusAPICOntroller::class, 'setLazarusContact']);
-    Route::get('/get-attachment-requirement/{id}', [LazarusAPICOntroller::class, 'getAttachmentRequirementByID']);
-    Route::post('/set-attachment-requirement', [LazarusAPICOntroller::class, 'setAttachmentRequirementByID']);
+    Route::get('/contact/{id}', [LazarusAPIController::class, 'getContactByID']);
+    // Route::post('/set-contact', [LazarusAPIController::class, 'setContact']);
+    Route::post('/set-lazarus-contact/{id}', [LazarusAPIController::class, 'setLazarusContact']);
+    Route::get('/get-attachment-requirement/{id}', [LazarusAPIController::class, 'getAttachmentRequirementByID']);
+    Route::post('/set-attachment-requirement', [LazarusAPIController::class, 'setAttachmentRequirementByID']);
     
 });
