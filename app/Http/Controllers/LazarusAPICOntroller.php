@@ -89,7 +89,6 @@ class LazarusAPICOntroller extends Controller
             $data = Customer::find($id);
 
             $params = $this->convertContactToLazarus($data);
-            dd($params);
 
             $response = Http::withToken(config('homeful-contacts.lazarus_api_token'))
                             ->post(config('homeful-contacts.lazarus_url').'/api/admin/contacts', $params);
@@ -102,7 +101,7 @@ class LazarusAPICOntroller extends Controller
             }else{
                 return response()->json([
                     'success' => false,
-                    'message' => $response->json(),
+                    'message' => $response->json()['message'] ?? 'Something went wrong',
                     'data' => [],
                 ], 500);
             }
