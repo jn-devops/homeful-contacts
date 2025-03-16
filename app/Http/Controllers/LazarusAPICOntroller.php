@@ -88,14 +88,24 @@ class LazarusAPICOntroller extends Controller
         try {
             $data = Customer::find($id);
 
-            $this->convertContactToLazarus($data);
-    
-            return response()->json([
-                'success' => true,
-                'message' => 'No Contact Found',
-                'data' => $validated,
-            ], 200);
-    
+            $params = $this->convertContactToLazarus($data);
+            dd($params);
+
+            $response = Http::withToken(config('homeful-contacts.lazarus_api_token'))
+                            ->post(config('homeful-contacts.lazarus_url').'/api/admin/contacts', $params);
+            if($response->successful()){
+                return response()->json([
+                    'success' => true,
+                    'message' => 'No Contact Found',
+                    'data' => $response->json()['data'],
+                ], 200);
+            }else{
+                return response()->json([
+                    'success' => false,
+                    'message' => $response->json(),
+                    'data' => [],
+                ], 500);
+            }
         } catch (ValidationException $e) {
             return response()->json([
                 'success' => false,
@@ -124,26 +134,33 @@ class LazarusAPICOntroller extends Controller
         ]);
     }
 
-    private function getMaintenanceDataDescription($link, $code, $description){
+    private function getMaintenanceDataDescription($link, $code, $column_name){
         $response = collect(Http::withToken(config('homeful-contacts.lazarus_api_token'))
                             ->get($link)->json()['data'] ?? []);
-        $description = optional($response->where('code', $code)->first())[$description] ?? '';
-        return $description;
+        $returned_desc = optional($response->where('code', $code)->first())[$column_name] ?? '';
+        return $returned_desc;
+
+    }
+
+    private function getMaintenanceDataCode($link, $description_column_name, $description, $column_name){
+        $response = collect(Http::withToken(config('homeful-contacts.lazarus_api_token'))
+                            ->get($link)->json()['data'] ?? []);
+        $returned_desc = optional($response->where($description_column_name, $description)->first())[$column_name] ?? null;
+        return $returned_desc;
 
     }
 
     private function convertContactToLazarus($data){
-        // dd(collect($data->addresses ?? [])->where('type', 'Primary')->first());
-        // dd($data);
         $param = [
+            "homeful_contact_id" => $data->id,
             "reference_code" => $data->reference_code,
-            "first_name" => $data->reference_code,
+            "first_name" => $data->first_name,
             "middle_name" => $data->middle_name,
             "last_name" => $data->last_name,
-            "name_suffix" => $data->name_suffix,
-            "civil_status" => $data->civil_status->name,
-            "sex" => $data->sex->name,
-            "nationality" => $data->nationality->name,
+            "name_suffix" => $this->getMaintenanceDataCode(config('homeful-contacts.lazarus_url').'/api/admin/name-suffixes', 'name', $data->name_suffix, 'code') ?? '001',
+            "civil_status" => $this->getMaintenanceDataCode(config('homeful-contacts.lazarus_url').'/api/admin/civil-statuses', 'description', $data->civil_status->value, 'code') ?? '',
+            "sex" => $data->sex->value,
+            "nationality" => $this->getMaintenanceDataCode(config('homeful-contacts.lazarus_url').'/api/admin/nationalities?per_page=1000', 'description', $data->nationality->value, 'code') ?? '',
             "date_of_birth" => $data->date_of_birth->format('Y-m-d'),
             "email" => $data->email,
             "mobile" => $data->mobile,
@@ -237,7 +254,7 @@ class LazarusAPICOntroller extends Controller
             ],
             "co_borrowers" => null
         ];
-        dd($param);
+        return $param;
     }
 
     public function getAttachmentRequirementByID($id){
