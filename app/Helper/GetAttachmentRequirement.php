@@ -66,13 +66,14 @@ class GetAttachmentRequirement
     {
         $matrices = [];
         $list_images = self::getFinalListRequirementMatrix($contact);
+        $cntr = 0;
         foreach($list_images as $key_matrix => $val_matrix){
-            $matrixItem = $contact->$key_matrix ?? null;
             $customer = Customer::find($contact->id)->$key_matrix;
-            $matrices[$key_matrix]['type'] = optional($matrixItem)->mime_type ?? 'unknown';
-            $matrices[$key_matrix]['url'] = optional($customer)->getUrl() ?? null;
-            $matrices[$key_matrix]['code'] = $key_matrix;
-            $matrices[$key_matrix]['name'] = $val_matrix;
+            $matrices[$cntr]['code'] = $key_matrix;
+            $matrices[$cntr]['name'] = $val_matrix;
+            $matrices[$cntr]['type'] = optional($customer)->mime_type ?? 'unknown';
+            $matrices[$cntr]['url'] = optional($customer)->getUrl() ?? null;
+            $cntr++;
         }
 
         return $matrices;
