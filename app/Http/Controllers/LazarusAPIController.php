@@ -163,7 +163,7 @@ class LazarusAPIController extends Controller
             "last_name" => $data->last_name,
             "name_suffix" => $this->getMaintenanceDataCode(config('homeful-contacts.lazarus_url').'/api/admin/name-suffixes', 'name', $data->name_suffix, 'code') ?? '001',
             "civil_status" => $this->getMaintenanceDataCode(config('homeful-contacts.lazarus_url').'/api/admin/civil-statuses', 'description', $data->civil_status?->value ?? null, 'code') ?? '001',
-            "sex" => $data->sex->value,
+            "sex" => $data->sex?->value ?? null,
             "nationality" => $this->getMaintenanceDataCode(config('homeful-contacts.lazarus_url').'/api/admin/nationalities?per_page=1000', 'description', $data->nationality?->value ?? null, 'code') ?? '076',
             "date_of_birth" => $data->date_of_birth->format('Y-m-d'),
             "email" => $data->email,
