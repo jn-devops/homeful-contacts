@@ -157,7 +157,7 @@ class LazarusAPIController extends Controller
     private function convertContactToLazarus($data){
         $param = [
             "homeful_contact_id" => $data->id,
-            "reference_code" => $data->reference_code,
+            "reference_code" => $data->id, // TODO|XIAN: Change this
             "first_name" => $data->first_name,
             "middle_name" => $data->middle_name,
             "last_name" => $data->last_name,
