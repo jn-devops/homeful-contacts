@@ -48,8 +48,10 @@ class MediaController extends Controller
     {
         $user = $request->user();
         $name = $request->get('name');
-        $media = $user->contact->getAttribute($name);
-        $user->contact->deleteMedia($media);
+        $customer = Customer::find($user->contact->id);
+        $media = $customer->getAttribute($name);
+        // dd($customer->$name->id);
+        $customer->deleteMedia($media);
 
         return redirect()->back();
     }
