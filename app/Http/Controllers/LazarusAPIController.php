@@ -99,6 +99,7 @@ class LazarusAPIController extends Controller
                     'data' => $response->json()['data'],
                 ], 200);
             }else{
+                dd($response);
                 return response()->json([
                     'success' => false,
                     'message' => $response->json()['message'] ?? 'Something went wrong',
@@ -241,7 +242,7 @@ class LazarusAPIController extends Controller
                         "nationality" => $this->getMaintenanceDataCode(
                                                 config('homeful-contacts.lazarus_url').'/api/admin/nationalities?per_page=1000',
                                                 'description', 
-                                                collect($data->employment)->where('type', 'Primary')->first()['employer']['contact_no'] ?? '', 
+                                                collect($data->employment)->where('type', 'Primary')->first()['employer']['nationality'] ?? '', 
                                                 'code'
                                             ) ?? '',
                         "year_established" => "",
@@ -258,7 +259,7 @@ class LazarusAPIController extends Controller
             ],
             "co_borrowers" => null
         ];
-        dd($param);
+
         return $param;
     }
 
