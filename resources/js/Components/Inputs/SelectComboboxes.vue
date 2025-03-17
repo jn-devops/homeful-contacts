@@ -51,7 +51,7 @@
     )
 
     watch(selectedOption, (newValue) => {
-        emit('update:modelValue', newValue.name)
+        emit('update:modelValue', newValue.id)
     })
 
     const errorMessage = toRef(props, 'errorMessage');

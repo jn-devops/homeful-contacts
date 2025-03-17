@@ -15,7 +15,9 @@ class AddressController extends Controller
     public function edit(Request $request): Response
     {
         return Inertia::render('Address/EditV2', [
-            'contact' => $request->user()->contact
+            'contact' => $request->user()->contact,
+            'lazarus_url' => config('homeful-contacts.lazarus_url'),
+            'lazarus_token' => config('homeful-contacts.lazarus_api_token'),
         ]);
     }
 
