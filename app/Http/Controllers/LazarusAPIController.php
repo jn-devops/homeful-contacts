@@ -143,10 +143,14 @@ class LazarusAPIController extends Controller
     }
 
     private function getMaintenanceDataCode($link, $description_column_name, $description, $column_name){
-        $response = collect(Http::withToken(config('homeful-contacts.lazarus_api_token'))
-                            ->get($link)->json()['data'] ?? []);
-        $returned_desc = optional($response->where($description_column_name, $description)->first())[$column_name] ?? null;
-        return $returned_desc;
+        if($description){
+            $response = collect(Http::withToken(config('homeful-contacts.lazarus_api_token'))
+                                ->get($link)->json()['data'] ?? []);
+            $returned_desc = optional($response->where($description_column_name, $description)->first())[$column_name] ?? null;
+            return $returned_desc;
+        }else{
+            return null;
+        }
 
     }
 
