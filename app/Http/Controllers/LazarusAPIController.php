@@ -171,44 +171,44 @@ class LazarusAPIController extends Controller
                 [
                     "type" => "present",
                     "block" => null,
-                    "region" => "",
+                    "region" => collect($data->addresses)->where('type', 'Present')->first()['region'] ?? '',
                     "street" => null,
-                    "country" => "PH",
-                    "address1" => "",
-                    "locality" => "",
-                    "ownership" => "001",
-                    "postal_code" => "",
-                    "sublocality" => "",
+                    "country" => collect($data->addresses)->where('type', 'Present')->first()['country'] ?? 'PH',
+                    "address1" => collect($data->addresses)->where('type', 'Present')->first()['address1'] ?? '',
+                    "locality" => collect($data->addresses)->where('type', 'Present')->first()['locality'] ?? '',
+                    "ownership" => $this->getMaintenanceDataCode(config('homeful-contacts.lazarus_url').'/api/admin/home-ownerships?per_page=1000', 'description', $data->nationality->value, 'code') ?? '001',
+                    "postal_code" => collect($data->addresses)->where('type', 'Present')->first()['postal_code'] ?? '',
+                    "sublocality" => collect($data->addresses)->where('type', 'Present')->first()['sublocality'] ?? '',
                     "full_address" => "",
-                    "administrative_area" => ""
+                    "administrative_area" => collect($data->addresses)->where('type', 'Present')->first()['administrative_area'] ?? ''
                 ],
                 [
                     "type" => "permanent",
                     "block" => null,
-                    "region" => "",
+                    "region" => collect($data->addresses)->where('type', 'Permanent')->first()['region'] ?? '',
                     "street" => null,
-                    "country" => "PH",
-                    "address1" => "",
-                    "locality" => "",
-                    "ownership" => "001",
-                    "postal_code" => "",
-                    "sublocality" => "",
+                    "country" => collect($data->addresses)->where('type', 'Permanent')->first()['country'] ?? 'PH',
+                    "address1" => collect($data->addresses)->where('type', 'Permanent')->first()['address1'] ?? '',
+                    "locality" => collect($data->addresses)->where('type', 'Permanent')->first()['locality'] ?? '',
+                    "ownership" => $this->getMaintenanceDataCode(config('homeful-contacts.lazarus_url').'/api/admin/home-ownerships?per_page=1000', 'description', $data->nationality->value, 'code') ?? '001',
+                    "postal_code" => collect($data->addresses)->where('type', 'Permanent')->first()['postal_code'] ?? '',
+                    "sublocality" => collect($data->addresses)->where('type', 'Permanent')->first()['sublocality'] ?? '',
                     "full_address" => "",
-                    "administrative_area" => ""
+                    "administrative_area" => collect($data->addresses)->where('type', 'Permanent')->first()['administrative_area'] ?? ''
                 ],
                 [
                     "type" => "primary",
                     "block" => null,
-                    "region" => "",
+                    "region" => collect($data->addresses)->where('type', 'Primary')->first()['region'] ?? '',
                     "street" => null,
-                    "country" => "PH",
-                    "address1" => "",
-                    "locality" => "",
-                    "ownership" => "001",
-                    "postal_code" => "",
-                    "sublocality" => "",
+                    "country" => collect($data->addresses)->where('type', 'Primary')->first()['country'] ?? 'PH',
+                    "address1" => collect($data->addresses)->where('type', 'Primary')->first()['address1'] ?? '',
+                    "locality" => collect($data->addresses)->where('type', 'Primary')->first()['locality'] ?? '',
+                    "ownership" => $this->getMaintenanceDataCode(config('homeful-contacts.lazarus_url').'/api/admin/home-ownerships?per_page=1000', 'description', $data->nationality->value, 'code') ?? '001',
+                    "postal_code" => collect($data->addresses)->where('type', 'Primary')->first()['postal_code'] ?? '',
+                    "sublocality" => collect($data->addresses)->where('type', 'Primary')->first()['sublocality'] ?? '',
                     "full_address" => "",
-                    "administrative_area" => ""
+                    "administrative_area" => collect($data->addresses)->where('type', 'Primary')->first()['administrative_area'] ?? ''
                 ]
             ],
             "employment" => [
@@ -229,30 +229,36 @@ class LazarusAPIController extends Controller
                             "type" => "company",
                             "region" => collect($data->employment)->where('type', 'Primary')->first()['employer']['address']['region'] ?? '',
                             "country" => collect($data->employment)->where('type', 'Primary')->first()['employer']['address']['country'] ?? 'PH',
-                            "address1" => collect($data->employment)->where('type', 'Primary')->first()['employer']['address']['address'] ?? '',
+                            "address1" => collect($data->employment)->where('type', 'Primary')->first()['employer']['address']['address1'] ?? '',
                             "locality" => collect($data->employment)->where('type', 'Primary')->first()['employer']['address']['locality'] ?? '',
                             "ownership" => "001",
                             "sublocality" => collect($data->employment)->where('type', 'Primary')->first()['employer']['address']['sublocality'] ?? '',
                             "full_address" => collect($data->employment)->where('type', 'Primary')->first()['employer']['address']['short_address'] ?? '',
                             "administrative_area" => collect($data->employment)->where('type', 'Primary')->first()['employer']['address']['administrative_area'] ?? ''
                         ],
-                        "industry" => "",
-                        "contact_no" => "",
-                        "nationality" => null,
+                        "industry" => collect($data->employment)->where('type', 'Primary')->first()['employer']['industry'] ?? '',
+                        "contact_no" => collect($data->employment)->where('type', 'Primary')->first()['employer']['contact_no'] ?? '',
+                        "nationality" => $this->getMaintenanceDataCode(
+                                                config('homeful-contacts.lazarus_url').'/api/admin/nationalities?per_page=1000',
+                                                'description', 
+                                                collect($data->employment)->where('type', 'Primary')->first()['employer']['contact_no'] ?? '', 
+                                                'code'
+                                            ) ?? '',
                         "year_established" => "",
                         "total_number_of_employees" => null
                     ],
-                    "industry" => null,
-                    "employment_type" => "",
-                    "current_position" => "",
+                    "industry" => collect($data->employment)->where('type', 'Primary')->first()['employer']['industry'] ?? '',
+                    "employment_type" => collect($data->employment)->where('type', 'Primary')->first()['employment_type'] ?? '',
+                    "current_position" => collect($data->employment)->where('type', 'Primary')->first()['current_position'] ?? '',
                     "years_in_service" => "",
-                    "employment_status" => "",
+                    "employment_status" => collect($data->employment)->where('type', 'Primary')->first()['employment_status'] ?? '',
                     "character_reference" => [],
-                    "monthly_gross_income" => ""
+                    "monthly_gross_income" => collect($data->employment)->where('type', 'Primary')->first()['monthly_gross_income'] ?? 0
                 ]
             ],
             "co_borrowers" => null
         ];
+        dd($param);
         return $param;
     }
 

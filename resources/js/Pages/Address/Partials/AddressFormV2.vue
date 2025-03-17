@@ -77,9 +77,7 @@ const getCountries = async () => {
             Authorization: `Bearer ${props.api_token}`,
         },
         });
-        
         countries.value = response.data
-        console.log(countries.value);
         
     } catch (error) {
         console.error('Error fetching data:', error);
@@ -91,7 +89,6 @@ const formatted_api_regions = ref([]);
 const regions_loading = ref(true);
 const getRegion = async () => {
   try {
-    console.log('token:', props.api_token);
     const response = await axios.get(props.api_url+'/api/admin/philippine-regions?per_page=1000', {
       headers: {
         Authorization: `Bearer ${props.api_token}`,
@@ -410,7 +407,7 @@ onMounted(() => {
                 <div class="col-span-full lg:col-span-4">
                     <TextInput
                         v-model="form.address1"
-                        label="Unit Number, House/Building/Street No, Street Name"
+                        label="Unit No., House/Bldg/St. Name"
                         placeholder="Enter Address"
                         :errorMessage="form.errors.address1"
                         required
