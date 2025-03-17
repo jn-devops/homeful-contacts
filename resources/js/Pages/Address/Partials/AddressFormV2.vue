@@ -72,7 +72,7 @@ const country_loading = ref(true)
 const formatted_country = ref([])
 const getCountries = async () => {
     try {
-        const response = await axios.get(props.api_url+'/api/admin/countries?per_page=1000', {
+        const response = await axios.get(props.api_url+'api/admin/countries?per_page=1000', {
         headers: {
             Authorization: `Bearer ${props.api_token}`,
         },
@@ -89,7 +89,7 @@ const formatted_api_regions = ref([]);
 const regions_loading = ref(true);
 const getRegion = async () => {
   try {
-    const response = await axios.get(props.api_url+'/api/admin/philippine-regions?per_page=1000', {
+    const response = await axios.get(props.api_url+'api/admin/philippine-regions?per_page=1000', {
       headers: {
         Authorization: `Bearer ${props.api_token}`,
       },
@@ -105,7 +105,7 @@ const formatted_api_province = ref([]);
 const province_loading = ref(true);
 const getProvince = async (region_code = null) => {
     try {
-        let link = (region_code) ? props.api_url+'/api/admin/philippine-provinces?per_page=1000&region_code='+region_code : props.api_url+'/api/admin/philippine-provinces?per_page=1000'
+        let link = (region_code) ? props.api_url+'api/admin/philippine-provinces?per_page=1000&region_code='+region_code : props.api_url+'api/admin/philippine-provinces?per_page=1000'
         const response = await axios.get(link, {
         headers: {
             Authorization: `Bearer ${props.api_token}`,
@@ -122,7 +122,7 @@ const formatted_api_city = ref([]);
 const city_loading = ref(true);
 const getCity = async (region_code = null, province_code = null) => {
     try {
-        let link = (province_code) ? props.api_url+'/api/admin/philippine-cities?per_page=1000&province_code='+province_code+'&region_code='+region_code : props.api_url+'/api/admin/philippine-cities?per_page=10'
+        let link = (province_code) ? props.api_url+'api/admin/philippine-cities?per_page=1000&province_code='+province_code+'&region_code='+region_code : props.api_url+'api/admin/philippine-cities?per_page=10'
         
         const response = await axios.get(link, {
         headers: {
@@ -140,7 +140,7 @@ const formatted_api_barangay = ref([]);
 const barangay_loading = ref(true);
 const getBarangay = async (region_code = null, province_code = null, city_code = null) => {
     try {
-        let link = (city_code) ? props.api_url+'/api/admin/philippine-barangays?per_page=100&city_municipality_code='+city_code+'&province_code='+province_code+'&region_code='+region_code : props.api_url+'/api/admin/philippine-barangays?per_page=10'
+        let link = (city_code) ? props.api_url+'api/admin/philippine-barangays?per_page=100&city_municipality_code='+city_code+'&province_code='+province_code+'&region_code='+region_code : props.api_url+'api/admin/philippine-barangays?per_page=10'
         const response = await axios.get(link, {
         headers: {
             Authorization: `Bearer ${props.api_token}`,
