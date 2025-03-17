@@ -89,7 +89,6 @@ class LazarusAPIController extends Controller
             $data = Customer::find($id);
 
             $params = $this->convertContactToLazarus($data);
-            return response()->json($params);
 
             $response = Http::withToken(config('homeful-contacts.lazarus_api_token'))
                             ->post(config('homeful-contacts.lazarus_url').'/api/admin/contacts', $params);
