@@ -214,27 +214,27 @@ class LazarusAPIController extends Controller
             "employment" => [
                 [
                     "id" => [
-                        "sss" => "",
-                        "tin" => "",
-                        "gsis" => "",
-                        "pagibig" => ""
+                        "sss" => collect($data->employment)->where('type', 'Primary')->first()['id']['sss'] ?? '',
+                        "tin" => collect($data->employment)->where('type', 'Primary')->first()['id']['tin'] ?? '',
+                        "gsis" => collect($data->employment)->where('type', 'Primary')->first()['id']['gsis'] ?? '',
+                        "pagibig" => collect($data->employment)->where('type', 'Primary')->first()['id']['pagibig'] ?? '',
                     ],
                     "rank" => "",
                     "type" => "buyer",
                     "employer" => [
                         "fax" => null,
-                        "name" => "",
-                        "email" => "",
+                        "name" => collect($data->employment)->where('type', 'Primary')->first()['employer']['name'] ?? '',
+                        "email" => collect($data->employment)->where('type', 'Primary')->first()['employer']['email'] ?? '',
                         "address" => [
                             "type" => "company",
-                            "region" => "",
-                            "country" => "PH",
-                            "address1" => "",
-                            "locality" => "",
+                            "region" => collect($data->employment)->where('type', 'Primary')->first()['employer']['address']['region'] ?? '',
+                            "country" => collect($data->employment)->where('type', 'Primary')->first()['employer']['address']['country'] ?? 'PH',
+                            "address1" => collect($data->employment)->where('type', 'Primary')->first()['employer']['address']['address'] ?? '',
+                            "locality" => collect($data->employment)->where('type', 'Primary')->first()['employer']['address']['locality'] ?? '',
                             "ownership" => "001",
-                            "sublocality" => "",
-                            "full_address" => null,
-                            "administrative_area" => ""
+                            "sublocality" => collect($data->employment)->where('type', 'Primary')->first()['employer']['address']['sublocality'] ?? '',
+                            "full_address" => collect($data->employment)->where('type', 'Primary')->first()['employer']['address']['short_address'] ?? '',
+                            "administrative_area" => collect($data->employment)->where('type', 'Primary')->first()['employer']['address']['administrative_area'] ?? ''
                         ],
                         "industry" => "",
                         "contact_no" => "",
@@ -273,13 +273,12 @@ class LazarusAPIController extends Controller
 
             $customer = Customer::find($validated['contact_id']);
             if($customer instanceof Customer){
-                
                 $name = $validated['attachment_name'];
                 $customer->$name = $validated['url'];
 
                 return response()->json([
                     'success' => true,
-                    'message' => 'Uploaded Successfully',
+                    'message' => 'Successfully Created Lazarus Data',
                     'data' => $customer,
                 ], 200);
             }else{
