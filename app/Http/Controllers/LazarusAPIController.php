@@ -89,6 +89,7 @@ class LazarusAPIController extends Controller
             $data = Customer::find($id);
 
             $params = $this->convertContactToLazarus($data);
+            return response()->json($params);
 
             $response = Http::withToken(config('homeful-contacts.lazarus_api_token'))
                             ->post(config('homeful-contacts.lazarus_url').'/api/admin/contacts', $params);
@@ -99,7 +100,6 @@ class LazarusAPIController extends Controller
                     'data' => $response->json()['data'],
                 ], 200);
             }else{
-                dd($response);
                 return response()->json([
                     'success' => false,
                     'message' => $response->json()['message'] ?? 'Something went wrong',
@@ -162,9 +162,9 @@ class LazarusAPIController extends Controller
             "middle_name" => $data->middle_name,
             "last_name" => $data->last_name,
             "name_suffix" => $this->getMaintenanceDataCode(config('homeful-contacts.lazarus_url').'/api/admin/name-suffixes', 'name', $data->name_suffix, 'code') ?? '001',
-            "civil_status" => $this->getMaintenanceDataCode(config('homeful-contacts.lazarus_url').'/api/admin/civil-statuses', 'description', $data->civil_status->value, 'code') ?? '',
+            "civil_status" => $this->getMaintenanceDataCode(config('homeful-contacts.lazarus_url').'/api/admin/civil-statuses', 'description', $data->civil_status?->value ?? null, 'code') ?? '001',
             "sex" => $data->sex->value,
-            "nationality" => $this->getMaintenanceDataCode(config('homeful-contacts.lazarus_url').'/api/admin/nationalities?per_page=1000', 'description', $data->nationality->value, 'code') ?? '',
+            "nationality" => $this->getMaintenanceDataCode(config('homeful-contacts.lazarus_url').'/api/admin/nationalities?per_page=1000', 'description', $data->nationality?->value ?? null, 'code') ?? '076',
             "date_of_birth" => $data->date_of_birth->format('Y-m-d'),
             "email" => $data->email,
             "mobile" => $data->mobile,
@@ -181,7 +181,7 @@ class LazarusAPIController extends Controller
                     "country" => collect($data->addresses)->where('type', 'Present')->first()['country'] ?? 'PH',
                     "address1" => collect($data->addresses)->where('type', 'Present')->first()['address1'] ?? '',
                     "locality" => collect($data->addresses)->where('type', 'Present')->first()['locality'] ?? '',
-                    "ownership" => $this->getMaintenanceDataCode(config('homeful-contacts.lazarus_url').'/api/admin/home-ownerships?per_page=1000', 'description', $data->nationality->value, 'code') ?? '001',
+                    "ownership" => $this->getMaintenanceDataCode(config('homeful-contacts.lazarus_url').'/api/admin/home-ownerships?per_page=1000', 'description', collect($data->addresses)->where('type', 'Present')->first()['ownership'] ?? null, 'code') ?? '001',
                     "postal_code" => collect($data->addresses)->where('type', 'Present')->first()['postal_code'] ?? '',
                     "sublocality" => collect($data->addresses)->where('type', 'Present')->first()['sublocality'] ?? '',
                     "full_address" => "",
@@ -195,7 +195,7 @@ class LazarusAPIController extends Controller
                     "country" => collect($data->addresses)->where('type', 'Permanent')->first()['country'] ?? 'PH',
                     "address1" => collect($data->addresses)->where('type', 'Permanent')->first()['address1'] ?? '',
                     "locality" => collect($data->addresses)->where('type', 'Permanent')->first()['locality'] ?? '',
-                    "ownership" => $this->getMaintenanceDataCode(config('homeful-contacts.lazarus_url').'/api/admin/home-ownerships?per_page=1000', 'description', $data->nationality->value, 'code') ?? '001',
+                    "ownership" => $this->getMaintenanceDataCode(config('homeful-contacts.lazarus_url').'/api/admin/home-ownerships?per_page=1000', 'description', collect($data->addresses)->where('type', 'Permanent')->first()['ownership'] ?? null, 'code') ?? '001',
                     "postal_code" => collect($data->addresses)->where('type', 'Permanent')->first()['postal_code'] ?? '',
                     "sublocality" => collect($data->addresses)->where('type', 'Permanent')->first()['sublocality'] ?? '',
                     "full_address" => "",
@@ -209,7 +209,7 @@ class LazarusAPIController extends Controller
                     "country" => collect($data->addresses)->where('type', 'Primary')->first()['country'] ?? 'PH',
                     "address1" => collect($data->addresses)->where('type', 'Primary')->first()['address1'] ?? '',
                     "locality" => collect($data->addresses)->where('type', 'Primary')->first()['locality'] ?? '',
-                    "ownership" => $this->getMaintenanceDataCode(config('homeful-contacts.lazarus_url').'/api/admin/home-ownerships?per_page=1000', 'description', $data->nationality->value, 'code') ?? '001',
+                    "ownership" => $this->getMaintenanceDataCode(config('homeful-contacts.lazarus_url').'/api/admin/home-ownerships?per_page=1000', 'description', collect($data->addresses)->where('type', 'Primary')->first()['ownership'] ?? null, 'code') ?? '001',
                     "postal_code" => collect($data->addresses)->where('type', 'Primary')->first()['postal_code'] ?? '',
                     "sublocality" => collect($data->addresses)->where('type', 'Primary')->first()['sublocality'] ?? '',
                     "full_address" => "",
@@ -263,7 +263,7 @@ class LazarusAPIController extends Controller
             ],
             "co_borrowers" => null
         ];
-
+        // dd($param);
         return $param;
     }
 
