@@ -53,10 +53,10 @@ class GetAttachmentRequirement
             'dtiBusinessRegistrationDocument' => "DTI Business Registration Document",
             'sketchOfBusinessLocationDocument' => "Sketch of Business Location Document",
             'letterOfConsentCreditBackgroundInvestigationDocument' => "Letter of Consent (Credit Background Investigation) Document",
-            'marriageCertificateDocument' => "Marriage Certificate Document",
+            'marriageCertificateDocument' => "Marriage Certificate/Contract Document",
             'governmentIdOfSpouseImage' => "Government ID of Spouse Image",
             'courtDecisionAnnulmentDocument' => "Court Decision (Annulment) Document",
-            'marriageContractDocument' => "Marriage Contract Document",
+            // 'marriageContractDocument' => "Marriage Contract Document",
             'courtDecisionSeparationDocument' => "Court Decision (Separation) Document",
             'deathCertificateDocument' => "Death Certificate Document",
         ];
