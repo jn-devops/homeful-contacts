@@ -90,7 +90,16 @@ class LazarusAPIController extends Controller
                 'contact_id' => 'required|string',
                 'reference_code' => 'required|string',
             ]);
+
             $data = Customer::find($validated['contact_id']);
+            
+            if(!($data instanceof Customer)){
+                return response()->json([
+                    'success' => false,
+                    'message' => "No Contact Found",
+                    'data' => [],
+                ], 404);
+            }
             $params = $this->convertContactToLazarus($data, $validated['reference_code']);
             // return response()->json($params);
 
