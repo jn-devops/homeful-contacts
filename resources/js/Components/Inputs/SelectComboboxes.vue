@@ -49,7 +49,11 @@
                 : r_val = props.options.filter((person) => {
                     return person.name.toLowerCase().includes(query.value.toLowerCase())
                 })
-            r_val.unshift({ 'id': null, 'name': 'Empty' })
+            r_val.unshift({ 'id': null, 'name': 'N/A' })
+            // Remove duplicates based on `id`
+            r_val = r_val.filter((value, index, self) => 
+                index === self.findIndex((t) => t.id === value.id)
+            )
             return r_val
         }
     )

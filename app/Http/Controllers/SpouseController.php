@@ -13,7 +13,9 @@ class SpouseController extends Controller
     public function edit(Request $request): Response
     {
         return Inertia::render('Spouse/EditV2', [
-            'spouse' => $request->user()->contact?->spouse
+            'spouse' => $request->user()->contact?->spouse,
+            'lazarus_url' => config('homeful-contacts.lazarus_url'),
+            'lazarus_token' => config('homeful-contacts.lazarus_api_token'),
         ]);
     }
 

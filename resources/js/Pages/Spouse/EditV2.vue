@@ -6,7 +6,9 @@ import SpouseEmploymentForm from "@/Pages/Spouse/Partials/SpouseEmploymentFormV2
 import { Head } from '@inertiajs/vue3';
 
 const props = defineProps({
-    spouse: Object
+    spouse: Object,
+    lazarus_url: String,
+    lazarus_token: String,
 });
 </script>
 
@@ -25,6 +27,8 @@ const props = defineProps({
             <SpouseEmploymentForm
                 :spouse = "spouse"
                 employment_type = "Primary"
+                :api_token="lazarus_token"
+                :api_url="lazarus_url"
             />
 
         </div>

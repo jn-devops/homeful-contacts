@@ -16,7 +16,9 @@ class CoBorrowerController extends Controller
     {
         // dd($request->user()->contact);
         return Inertia::render('CoBorrower/EditV2', [
-            'contact' => $request->user()->contact
+            'contact' => $request->user()->contact,
+            'lazarus_url' => config('homeful-contacts.lazarus_url'),
+            'lazarus_token' => config('homeful-contacts.lazarus_api_token'),
         ]);
     }
 

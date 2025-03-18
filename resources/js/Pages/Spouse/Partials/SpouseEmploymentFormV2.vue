@@ -6,12 +6,15 @@ import SelectInput from '@/Components/Inputs/SelectComboboxes.vue';
 import SuccessToast from '@/Components/Notification/SuccessToast.vue';
 import WarningToast from '@/Components/Notification/WarningToast.vue';
 import {useForm, usePage} from '@inertiajs/vue3';
-import { ref, watch } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 import PlainBlackButton from '@/Components/Buttons/PlainBlackButton.vue';
+import { Vue3Lottie } from 'vue3-lottie';
 
 const props = defineProps({
     spouse: Object,
-    employment_type: String
+    employment_type: String,
+    api_token: String,
+    api_url: String,
 });
 
 const employment_records = () => {
@@ -44,7 +47,7 @@ const form = useForm({
     employer_industry: employment_record()?.employer?.industry,
 
     employer_address_type: employment_record()?.employer?.address?.type ?? 'Work',
-    employer_address_ownership: employment_record()?.employer?.address?.ownership,
+    employer_address_ownership: (employment_record()?.employer?.address?.ownership) ? employment_record()?.employer?.address?.ownership : 'Owned',
     employer_address_address1: employment_record()?.employer?.address?.address1,
     employer_address_locality: employment_record()?.employer?.address?.locality,
     employer_address_administrative_area: employment_record()?.employer?.address?.administrative_area,
@@ -57,6 +60,128 @@ const form = useForm({
     sss: employment_record()?.id?.sss,
     gsis: employment_record()?.id?.gsis,
 })
+
+const countries = ref([])
+const country_loading = ref(true)
+const formatted_country = ref([])
+const getCountries = async () => {
+    try {
+        const response = await axios.get(props.api_url+'api/admin/countries?per_page=1000', {
+        headers: {
+            Authorization: `Bearer ${props.api_token}`,
+        },
+        });
+        countries.value = response.data
+        
+    } catch (error) {
+        console.error('Error fetching data:', error);
+    }
+}
+
+const api_regions = ref([]);
+const formatted_api_regions = ref([]);
+const regions_loading = ref(true);
+const getRegion = async () => {
+  try {
+    const response = await axios.get(props.api_url+'api/admin/philippine-regions?per_page=1000', {
+      headers: {
+        Authorization: `Bearer ${props.api_token}`,
+      },
+    });
+    api_regions.value = response.data;
+  } catch (error) {
+    console.error('Error fetching data:', error);
+  }
+};
+
+const api_province = ref([]);
+const formatted_api_province = ref([]);
+const province_loading = ref(true);
+const getProvince = async (region_code = null) => {
+    try {
+        let link = (region_code) ? props.api_url+'api/admin/philippine-provinces?per_page=1000&region_code='+region_code : props.api_url+'api/admin/philippine-provinces?per_page=1000'
+        const response = await axios.get(link, {
+        headers: {
+            Authorization: `Bearer ${props.api_token}`,
+        },
+        });
+        api_province.value = response.data;
+    } catch (error) {
+        console.error('Error fetching data:', error);
+    }
+}
+
+const api_city = ref([]);
+const formatted_api_city = ref([]);
+const city_loading = ref(true);
+const getCity = async (region_code = null, province_code = null) => {
+    try {
+        let link = (province_code) ? props.api_url+'api/admin/philippine-cities?per_page=1000&province_code='+province_code+'&region_code='+region_code : props.api_url+'api/admin/philippine-cities?per_page=10'
+        
+        const response = await axios.get(link, {
+        headers: {
+            Authorization: `Bearer ${props.api_token}`,
+        },
+        });
+        api_city.value = response.data;
+    } catch (error) {
+        console.error('Error fetching data:', error);
+    }
+}
+
+const api_barangay = ref([]);
+const formatted_api_barangay = ref([]);
+const barangay_loading = ref(true);
+const getBarangay = async (region_code = null, province_code = null, city_code = null) => {
+    try {
+        let link = (city_code) ? props.api_url+'api/admin/philippine-barangays?per_page=100&city_municipality_code='+city_code+'&province_code='+province_code+'&region_code='+region_code : props.api_url+'api/admin/philippine-barangays?per_page=10'
+        const response = await axios.get(link, {
+        headers: {
+            Authorization: `Bearer ${props.api_token}`,
+        },
+        });
+        api_barangay.value = response.data;
+    } catch (error) {
+        console.error('Error fetching data:', error);
+    }
+}
+
+const formatAPItoComponent = (data, type) => {
+    switch (type) {
+        case 'region':
+            return data.data.map(list => ({
+              id: list.region_code,
+              name: list.region_description
+            }));
+            break;
+        case 'province':
+            return data.data.map(list => ({
+              id: list.province_code,
+              name: list.province_description
+            }));
+            break;
+        case 'city':
+            return data.data.map(list => ({
+              id: list.city_municipality_code,
+              name: list.city_municipality_description
+            }));
+            break;
+        case 'barangay':
+            return data.data.map(list => ({
+              id: list.barangay_code,
+              name: list.barangay_description
+            }));
+            break;
+        case 'country':
+            return data.data.map(list => ({
+              id: list.code,
+              name: list.description
+            }));
+            break;
+        default:
+            break;
+    }
+};
 
 const employmentStatusList = usePage().props.enums.employment_statuses.map(item => ({
     id: item,
@@ -92,6 +217,80 @@ function closeToastFunction(){
 watch(form, (newValue, oldValue) => {
     hasValidationError.value = (form.hasErrors) ? true : false;
 });
+
+watch(regions_loading, (newValue, oldValue) => {
+    if(!newValue){
+        getProvince(form.region).then(() => {
+            formatted_api_province.value = formatAPItoComponent(api_province.value, 'province')
+            province_loading.value = false
+        })
+        
+    }
+})
+
+watch(province_loading, (newValue, oldValue) => {
+    if(!newValue){
+        getCity(form.region, form.administrative_area).then(() => {
+            formatted_api_city.value = formatAPItoComponent(api_city.value, 'city')
+            city_loading.value = false
+        })
+        
+    }
+})
+
+watch(city_loading, (newValue, oldValue) => {
+    if(!newValue){
+        getBarangay(form.region, form.administrative_area, form.locality).then(() => {
+            formatted_api_barangay.value = formatAPItoComponent(api_barangay.value, 'barangay')
+            barangay_loading.value = false
+        })
+        
+    }
+})
+
+watch(
+    () => form.employer_address_region,
+    (newValue, oldValue) => {
+        province_loading.value = true
+        getProvince(newValue).then(() => {
+            formatted_api_province.value = formatAPItoComponent(api_province.value, 'province')
+            province_loading.value = false
+        })
+    }
+)
+
+watch(
+    () => form.employer_address_administrative_area,
+    (newValue, oldValue) => {
+        city_loading.value = true
+        getCity(form.employer_address_region, newValue).then(() => {
+            formatted_api_city.value = formatAPItoComponent(api_city.value, 'city')
+            city_loading.value = false
+        })
+    }
+)
+
+watch(
+    () => form.employer_address_locality,
+    (newValue, oldValue) => {
+        barangay_loading.value = true
+        getBarangay(form.employer_address_region, form.employer_address_administrative_area, newValue).then(() => {
+            formatted_api_barangay.value = formatAPItoComponent(api_barangay.value, 'barangay')
+            barangay_loading.value = false
+        })
+    }
+)
+
+onMounted(() => {
+    getRegion().then(() => {
+            formatted_api_regions.value = formatAPItoComponent(api_regions.value, 'region')
+            regions_loading.value = false
+        });
+    getCountries().then(() => {
+        formatted_country.value = formatAPItoComponent(countries.value, 'country')
+        country_loading.value = false
+    })
+})
 
 </script>
 
@@ -198,7 +397,7 @@ watch(form, (newValue, oldValue) => {
                         :errorMessage="form.errors.employer_nationality"
                     />
                 </div>
-                <div class="col-span-full lg:col-span-3">
+                <div class="col-span-full lg:col-span-5">
                     <SelectInput 
                         v-model="form.employer_industry"
                         label="Industry"
@@ -206,7 +405,7 @@ watch(form, (newValue, oldValue) => {
                         :errorMessage="form.errors.employer_industry"
                     />
                 </div>
-                <div class="col-span-full lg:col-span-2">
+                <!-- <div class="col-span-full lg:col-span-2">
                     <TextInput 
                         v-model="form.employer_address_type"
                         label="Address Type"
@@ -221,29 +420,77 @@ watch(form, (newValue, oldValue) => {
                         placeholder="Enter Employer Address Ownership"
                         :errorMessage="form.errors.employer_address_ownership"
                     />
-                </div>
-                <div class="col-span-full lg:col-span-4">
-                    <TextInput 
-                        v-model="form.employer_address_address1"
-                        label="Address"
-                        placeholder="Enter Employer Address"
-                        :errorMessage="form.errors.employer_address_address1"
+                </div> -->
+                <div v-if="!country_loading" class="col-span-full lg:col-span-4">
+                    <SelectInput 
+                        v-model="form.employer_address_country"
+                        label="Country"
+                        :options="formatted_country"
+                        :errorMessage="form.errors.employer_address_country"
                     />
                 </div>
-                <div class="col-span-full lg:col-span-3">
-                    <TextInput 
+                <div v-else class="col-span-full lg:col-span-4 flex items-center justify-center">
+                    <div class="w-20">
+                        <Vue3Lottie 
+                            animationLink="/animation/simple_loading_animation.json" 
+                            width="100%" 
+                        />
+                    </div>
+                </div>
+                <div v-if="!regions_loading" class="col-span-full lg:col-span-3">
+                    <SelectInput 
+                        v-model="form.employer_address_region"
+                        label="Region"
+                        :options="formatted_api_regions"
+                        :errorMessage="form.errors.employer_address_region"
+                    />
+                </div>
+                <div v-else class="col-span-full lg:col-span-3 flex items-center justify-center">
+                    <div class="w-20">
+                        <Vue3Lottie 
+                            animationLink="/animation/simple_loading_animation.json" 
+                            width="100%" 
+                        />
+                    </div>
+                </div>
+                <div v-if="!province_loading" class="col-span-full lg:col-span-3">
+                    <SelectInput 
+                        v-model="form.employer_address_administrative_area"
+                        label="Province"
+                        :options="formatted_api_province"
+                        :errorMessage="form.errors.employer_address_administrative_area"
+                    />
+                </div>
+                <div v-else class="col-span-full lg:col-span-3 flex items-center justify-center">
+                    <div class="w-20">
+                        <Vue3Lottie 
+                            animationLink="/animation/simple_loading_animation.json" 
+                            width="100%" 
+                        />
+                    </div>
+                </div>
+                <div v-if="!city_loading" class="col-span-full lg:col-span-3">
+                    <SelectInput 
                         v-model="form.employer_address_locality"
                         label="City"
-                        placeholder="Enter Employer City"
+                        :options="formatted_api_city"
                         :errorMessage="form.errors.employer_address_locality"
                     />
                 </div>
-                <div class="col-span-full lg:col-span-3">
+                <div v-else class="col-span-full lg:col-span-3 flex items-center justify-center">
+                    <div class="w-20">
+                        <Vue3Lottie 
+                            animationLink="/animation/simple_loading_animation.json" 
+                            width="100%" 
+                        />
+                    </div>
+                </div>
+                <div class="col-span-full lg:col-span-6">
                     <TextInput 
-                        v-model="form.employer_address_administrative_area"
-                        label="Province"
-                        placeholder="Enter Employer Province"
-                        :errorMessage="form.errors.employer_address_administrative_area"
+                        v-model="form.employer_address_address1"
+                        label="Unit No., House/Bldg/St. Name"
+                        placeholder="Enter Employer Address"
+                        :errorMessage="form.errors.employer_address_address1"
                     />
                 </div>
                 <div class="col-span-full lg:col-span-3">
@@ -252,22 +499,6 @@ watch(form, (newValue, oldValue) => {
                         label="ZIP Code"
                         placeholder="Enter Employer ZIP Code"
                         :errorMessage="form.errors.employer_address_postal_code"
-                    />
-                </div>
-                <div class="col-span-full lg:col-span-3">
-                    <TextInput 
-                        v-model="form.employer_address_region"
-                        label="Region"
-                        placeholder="Enter Employer Region"
-                        :errorMessage="form.errors.employer_address_region"
-                    />
-                </div>
-                <div class="col-span-full lg:col-span-3">
-                    <TextInput 
-                        v-model="form.employer_address_country"
-                        label="Country"
-                        placeholder="Enter Employer Country"
-                        :errorMessage="form.errors.employer_address_country"
                     />
                 </div>
                 <div class="col-span-full lg:col-span-3">

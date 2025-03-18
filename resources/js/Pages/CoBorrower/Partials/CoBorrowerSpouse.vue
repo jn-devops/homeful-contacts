@@ -76,6 +76,10 @@ const nationalityList = usePage().props.enums.nationalities.map(item => ({
     id: item,
     name: item
 }));
+const nameSuffixList = usePage().props.enums.name_suffixes.map(item => ({
+    id: item,
+    name: item
+}));
 
 watch(form, (newValue, oldValue) => {
     hasValidationError.value = (form.hasErrors) ? true : false;
@@ -142,10 +146,10 @@ watch(form, (newValue, oldValue) => {
                     />
                 </div>
                 <div class="col-span-full lg:col-span-3">
-                    <TextInput 
+                    <SelectInput 
                         v-model="form.name_suffix"
                         label="Suffix"
-                        placeholder="Enter Name Suffix"
+                        :options="nameSuffixList"
                         :errorMessage="form.errors.name_suffix"
                     />
                 </div>

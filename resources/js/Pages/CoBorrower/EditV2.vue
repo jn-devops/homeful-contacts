@@ -8,7 +8,9 @@ import SectionBorder from "@/Components/SectionBorder.vue";
 import { Head } from '@inertiajs/vue3';
 
 const props = defineProps({
-    contact: Object
+    contact: Object,
+    lazarus_url: String,
+    lazarus_token: String,
 });
 </script>
 
@@ -32,12 +34,16 @@ const props = defineProps({
                 :contact = "contact"
                 co_borrower_type = "Primary"
                 address_type = "Primary"
+                :api_token="lazarus_token"
+                :api_url="lazarus_url"
             />
             
             <CoBorrowerEmploymentForm
                 :contact = "contact"
                 co_borrower_type = "Primary"
                 employment_type = "Primary"
+                :api_token="lazarus_token"
+                :api_url="lazarus_url"
             />
             <hr class="border-1 border-gray-300" />
             <h1 class="mt-10 text-xl font-bold text-[#006FFD]">Co-Borrower 2:</h1>
@@ -55,12 +61,16 @@ const props = defineProps({
                 :contact = "contact"
                 co_borrower_type = "Secondary"
                 address_type = "Primary"
+                :api_token="lazarus_token"
+                :api_url="lazarus_url"
             />
             
             <CoBorrowerEmploymentForm
                 :contact = "contact"
                 co_borrower_type = "Secondary"
                 employment_type = "Primary"
+                :api_token="lazarus_token"
+                :api_url="lazarus_url"
             />
 
         </div>
