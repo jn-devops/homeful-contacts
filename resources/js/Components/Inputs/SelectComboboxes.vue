@@ -42,12 +42,16 @@
     const query = ref('')
     const selectedOption = ref(props.options.find(item => item.id === props.modelValue))
     const div_ref = ref(null)
-    const filteredOptions = computed(() =>
-        query.value === ''
-            ? props.options
-            : props.options.filter((person) => {
-                return person.name.toLowerCase().includes(query.value.toLowerCase())
-            }),
+    const filteredOptions = computed(() =>{
+            let r_val = []
+            query.value === ''
+                ? r_val = props.options
+                : r_val = props.options.filter((person) => {
+                    return person.name.toLowerCase().includes(query.value.toLowerCase())
+                })
+            r_val.unshift({ 'id': null, 'name': 'Empty' })
+            return r_val
+        }
     )
 
     watch(selectedOption, (newValue) => {

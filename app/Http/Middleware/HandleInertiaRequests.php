@@ -4,7 +4,7 @@ namespace App\Http\Middleware;
 
 use Homeful\Contacts\Enums\{AddressType, CivilStatus, Employment,
     EmploymentStatus, EmploymentType, Industry,
-    Nationality, Ownership, Sex};
+    Nationality, Ownership, Sex, Suffix};
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 
@@ -58,6 +58,7 @@ class HandleInertiaRequests extends Middleware
                 'employment_types' => EmploymentType::toArray(),
                 'employment_statuses' => EmploymentStatus::toArray(),
                 'industries' => Industry::toArray(),
+                'name_suffixes' => Suffix::toArray(),
             ],
             'data' => [
                 'appURL' => env('APP_URL', 'http://homeful-contacts.test/'),

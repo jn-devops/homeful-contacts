@@ -5,7 +5,9 @@ import EmploymentFormV2 from '@/Pages/Employment/Partials/EmploymentFormV2.vue';
 import { Head } from '@inertiajs/vue3';
 
 const props = defineProps({
-   contact: Object
+   contact: Object,
+   lazarus_url: String,
+   lazarus_token: String,
 });
 </script>
 
@@ -18,6 +20,8 @@ const props = defineProps({
                 :contact = "contact"
                 employment_type = "Primary"
                 class="w-full"
+                :api_token="lazarus_token"
+                :api_url="lazarus_url"
             />
         </div>
 

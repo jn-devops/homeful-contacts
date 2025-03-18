@@ -330,11 +330,13 @@ onMounted(() => {
                         required
                     />
                 </div>
-                <div v-else class="col-span-full lg:col-span-2">
-                    <Vue3Lottie 
-                        animationLink="/animation/simple_loading_animation.json" 
-                        width="100%" 
-                    />
+                <div v-else class="col-span-full lg:col-span-2 flex items-center justify-center">
+                    <div class="w-20">
+                        <Vue3Lottie 
+                            animationLink="/animation/simple_loading_animation.json" 
+                            width="100%" 
+                        />
+                    </div>
                 </div>
                 <div v-if="!regions_loading" class="col-span-full lg:col-span-4">
                     <SelectInput

@@ -60,13 +60,14 @@ class LazarusAPIController extends Controller
             ], 404);
     }
 
-    public function setContact(Request $request){
+    public function updateContactFromLazarus(Request $request){
         try {
             $validated = $request->validate([
                 'data' => 'required',
             ]);
 
             $data = $this->convertLazarusToContactData($validated['data']);
+            dd($data);
     
             return response()->json([
                 'success' => true,
@@ -128,30 +129,146 @@ class LazarusAPIController extends Controller
     }
 
     private function convertLazarusToContactData($data){
+        $address_primary = collect($data['addresses'] ?? [])->where('type', 'primary')->first() ?? [];
+        $address_present = collect($data['addresses'] ?? [])->where('type', 'present')->first() ?? [];
+        $address_permanent = collect($data['addresses'] ?? [])->where('type', 'permanent')->first() ?? [];
+        $address_work = collect($data['addresses'] ?? [])->where('type', 'work')->first() ?? [];
+        $address_secondary = collect($data['addresses'] ?? [])->where('type', 'secondary')->first() ?? [];
 
-        dd($this->getMaintenanceDataDescription('http://homeful-lazarus.test/api/admin/civil-statuses/', $data['civil_status'], 'description'));
-        
-        Customer::create([
+        $employment = collect($data['employment'] ?? [])->where('type', 'buyer')->first() ?? [];
+        // dd($employment['current_positison'] ?? '');
+
+        $customer_array = [
             'first_name' => $data['first_name'] ?? '',
             'middle_name' => $data['middle_name'] ?? '', 
             'last_name' => $data['last_name'] ?? '',
-            'name_suffix' => $data['name_suffix'] ?? '',
+            'name_suffix' => (($name_suffix = $this->getMaintenanceData(config('homeful-contacts.lazarus_url').'api/admin/name-suffixes?filter[code]='.($data['name_suffix'] ?? '-'), pure_data:true) ?? '') != 'N/A') ? $name_suffix : '',
             'email' => $data['email'] ?? '',
             'mobile' => $data['mobile'] ?? '',
-            'civil_status' => '',
+            'civil_status' => $this->getMaintenanceData(config('homeful-contacts.lazarus_url').'api/admin/civil-statuses?filter[code]='.($data['civil_status'] ?? '-'), pure_data:true)[0]['description'] ?? '',
             'sex' => $data['sex'] ?? '',
-            'nationality' => $data['nationality'] ?? '',
+            'nationality' => $this->getMaintenanceData(config('homeful-contacts.lazarus_url').'api/admin/nationalities?filter[code]='.($data['nationality'] ?? '-'), pure_data:true)[0]['description'] ?? '',
             'date_of_birth' => $data['date_of_birth'] ?? '',
             'mothers_maiden_name' => $data['mothers_maiden_name'] ?? '',
-        ]);
+            'addresses' => [
+                [
+                    'type' => 'Primary',
+                    'ownership' => $address_primary['ownership'] ?? '',
+                    'address1' => $address_primary['address1'] ?? '',
+                    'sublocality' => $address_primary['sublocality'] ?? '',
+                    'locality' => $address_primary['locality'] ?? '',
+                    'administrative_area' => $address_primary['administrative_area'],
+                    'postal_code' => $address_primary['postal_code'] ?? '',
+                    'region' => $address_primary['region'] ?? '',
+                    'country' => $address_primary['country'] ?? '',
+                ],
+                [
+                    'type' => 'Present',
+                    'ownership' => $address_present['ownership'] ?? '',
+                    'address1' => $address_present['address1'] ?? '',
+                    'sublocality' => $address_present['sublocality'] ?? '',
+                    'locality' => $address_present['locality'] ?? '',
+                    'administrative_area' => $address_present['administrative_area'],
+                    'postal_code' => $address_present['postal_code'] ?? '',
+                    'region' => $address_present['region'] ?? '',
+                    'country' => $address_present['country'] ?? '',
+                ],
+                [
+                    'ownership' => $address_permanent['ownership'] ?? '',
+                    'address1' => $address_permanent['address1'] ?? '',
+                    'sublocality' => $address_permanent['sublocality'] ?? '',
+                    'locality' => $address_permanent['locality'] ?? '',
+                    'administrative_area' => $address_permanent['administrative_area'],
+                    'postal_code' => $address_permanent['postal_code'] ?? '',
+                    'region' => $address_permanent['region'] ?? '',
+                    'country' => $address_permanent['country'] ?? '',
+                ],
+                // [
+                //     'type' => 'Permanent',
+                //     'ownership' => $this->getMaintenanceData(config('homeful-contacts.lazarus_url').'api/admin/home-ownerships/'.$address_permanent['ownership'] ?? '-', 'description') ?? '',
+                //     'address1' => $address_permanent['address1'] ?? '',
+                //     'sublocality' => $this->getMaintenanceData(config('homeful-contacts.lazarus_url').'api/admin/philippine-barangays?filter[barangay_code]='.$address_permanent['sublocality'] ?? '-', pure_data:true)[0]['barangay_description'] ?? '',
+                //     'locality' => $this->getMaintenanceData(config('homeful-contacts.lazarus_url').'api/admin/philippine-cities?filter[city_municipality_code]='.$address_permanent['locality'] ?? '-', pure_data:true)[0]['city_municipality_description'] ?? '',
+                //     'administrative_area' => $this->getMaintenanceData(config('homeful-contacts.lazarus_url').'api/admin/philippine-provinces?filter[province_code]='.$address_permanent['administrative_area'] ?? '-', pure_data:true)[0]['province_description'] ?? '',
+                //     'postal_code' => $address_permanent['postal_code'] ?? '',
+                //     'region' => $this->getMaintenanceData(config('homeful-contacts.lazarus_url').'api/admin/philippine-regions?filter[region_code]='.$address_permanent['region'] ?? '-', pure_data:true)[0]['region_description'] ?? '',
+                //     'country' => $address_permanent['country'] ?? '',
+                // ],
+            ],
+            'employment' => [
+                [
+                    'type' => 'Primary',
+                    'employment_status' => $this->getMaintenanceData(config('homeful-contacts.lazarus_url').'api/admin/employment-statuses?filter[code]='.($employment['employment_status'] ?? '-'), pure_data:true)[0]['description'] ?? '',
+                    'monthly_gross_income' => $employment['monthly_gross_income'] ?? 0,
+                    'current_position' => $this->getMaintenanceData(config('homeful-contacts.lazarus_url').'api/admin/current-positions?filter[code]='.($employment['current_position'] ?? '-'), pure_data:true)[0]['description'] ?? '',
+                    'employment_type' => $this->getMaintenanceData(config('homeful-contacts.lazarus_url').'api/admin/employment-types?filter[code]='.($employment['employment_type'] ?? '-'), pure_data:true)[0]['description'] ?? '',
+                    'employer' => [
+                        'name' => $employment['employer']['name'] ?? '',
+                        'industry' => $this->getMaintenanceData(config('homeful-contacts.lazarus_url').'api/admin/work-industries?filter[code]='.($employment['employer']['industry'] ?? '-'), pure_data:true)[0]['description'] ?? '',
+                        'nationality' => $this->getMaintenanceData(config('homeful-contacts.lazarus_url').'api/admin/nationalities?filter[code]='.($employment['employer']['nationality'] ?? '-'), pure_data:true)[0]['description'] ?? null,
+                        'address' => [
+                            'type' => 'Primary',
+                            'ownership' => $this->getMaintenanceData(config('homeful-contacts.lazarus_url').'api/admin/home-ownerships/'.($employment['employer']['address']['ownership'] ?? '-'), 'description') ?? '',
+                            'address1' => $employment['employer']['address']['address1'] ?? '',
+                            'sublocality' => $this->getMaintenanceData(config('homeful-contacts.lazarus_url').'api/admin/philippine-barangays?filter[barangay_code]='.($employment['employer']['address']['sublocality'] ?? '-'), pure_data:true)[0]['barangay_description'] ?? '',
+                            'locality' => $this->getMaintenanceData(config('homeful-contacts.lazarus_url').'api/admin/philippine-cities?filter[city_municipality_code]='.($employment['employer']['address']['locality'] ?? '-'), pure_data:true)[0]['city_municipality_description'] ?? '',
+                            'postal_code' => $employment['employer']['address']['postal_code'] ?? null,
+                            'region' => $this->getMaintenanceData(config('homeful-contacts.lazarus_url').'api/admin/philippine-regions?filter[region_code]='.($employment['employer']['address']['region'] ?? '-'), pure_data:true)[0]['region_description'] ?? '',
+                            'country' => $employment['employer']['address']['country'],
+                        ],
+                        'contact_no' => $employment['employer']['contact_no'] ?? null,
+                    ],
+                    'id' => [
+                        'tin' => $employment['id']['tin'],
+                        'pagibig' => $employment['id']['pagibig'],
+                        'sss' => $employment['id']['sss'],
+                        'gsis' => $employment['id']['gsis'],
+                    ],
+                ],
+                // [
+                //     'type' => Employment::SIDELINE->value,
+                //     'employment_status' => EmploymentStatus::CONTRACTUAL->value,
+                //     'monthly_gross_income' => (string) ($this->faker->numberBetween(12000, 25000) * 100),
+                //     'current_position' => $this->faker->word(),
+                //     'employment_type' => EmploymentType::LOCALLY_EMPLOYED->value,
+                //     'employer' => [
+                //         'name' => $this->faker->word(),
+                //         'industry' => Industry::random()->value,
+                //         'nationality' => Nationality::random()->value,
+                //         'address' => [
+                //             'type' => AddressType::PRIMARY->value,
+                //             'ownership' => Ownership::random()->value,
+                //             'address1' => $this->faker->address(),
+                //             'sublocality' => $this->faker->city(),
+                //             'locality' => $this->faker->city(),
+                //             'postal_code' => $this->faker->postcode(),
+                //             'region' => 'NCR',
+                //             'country' => 'PH',
+                //         ],
+                //         'contact_no' => $this->faker->word(),
+                //     ],
+                //     'id' => [
+                //         'tin' => $this->faker->word(),
+                //         'pagibig' => $this->faker->word(),
+                //         'sss' => $this->faker->word(),
+                //         'gsis' => $this->faker->word(),
+                //     ],
+                // ],
+            ],
+        ];
+
+        return $customer_array;
     }
 
-    private function getMaintenanceDataDescription($link, $code, $column_name){
-        $response = collect(Http::withToken(config('homeful-contacts.lazarus_api_token'))
-                            ->get($link)->json()['data'] ?? []);
-        $returned_desc = optional($response->where('code', $code)->first())[$column_name] ?? '';
-        return $returned_desc;
-
+    private function getMaintenanceData($link, $column_name = null, $pure_data = false){
+        if($pure_data){
+            $response = Http::withToken(config('homeful-contacts.lazarus_api_token'))
+                                ->get($link)->json()['data'] ?? null;
+        }else{
+            $response = Http::withToken(config('homeful-contacts.lazarus_api_token'))
+                                ->get($link)->json()['data'][$column_name] ?? null;
+        }
+        return $response;
     }
 
     private function getMaintenanceDataCode($link, $description_column_name, $description, $column_name){
