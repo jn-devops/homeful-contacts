@@ -105,6 +105,24 @@ const updateCoBorrowerEmployment = () => {
     });
 };
 
+const api_current_position = ref([])
+const current_position_loading = ref(true)
+const formatted_current_positions = ref([])
+const getCurrentPosition = async () => {
+    try {
+        
+        const response = await axios.get(props.api_url+'api/admin/current-positions?per_page=300', {
+                headers: {
+                    Authorization: `Bearer ${props.api_token}`,
+                },
+            });
+        api_current_position.value = response.data
+        
+    } catch (error) {
+        console.error('Error fetching data:', error);
+    }
+}
+
 const countries = ref([])
 const country_loading = ref(true)
 const formatted_country = ref([])
@@ -222,6 +240,12 @@ const formatAPItoComponent = (data, type) => {
               name: list.description
             }));
             break;
+        case 'current_position':
+            return data.data.map(list => ({
+              id: list.code,
+              name: list.description
+            }));
+            break;
         default:
             break;
     }
@@ -310,6 +334,10 @@ onMounted(() => {
         formatted_country.value = formatAPItoComponent(countries.value, 'country')
         country_loading.value = false
     })
+    getCurrentPosition().then(() => {
+        formatted_current_positions.value = formatAPItoComponent(api_current_position.value, 'current_position')
+        current_position_loading.value = false
+    });
 })
 
 
@@ -374,13 +402,21 @@ onMounted(() => {
                         :errorMessage="form.errors.employer_name"
                     />
                 </div>
-                <div class="col-span-full lg:col-span-4">
-                    <TextInput 
+                <div v-if="!current_position_loading" class="col-span-full lg:col-span-4">
+                    <SelectInput 
                         v-model="form.current_position"
                         label="Employment Position"
-                        placeholder="Enter Employment Position"
+                        :options="formatted_current_positions"
                         :errorMessage="form.errors.current_position"
                     />
+                </div>
+                <div v-else class="col-span-full lg:col-span-4 flex items-center justify-center">
+                    <div class="w-20">
+                        <Vue3Lottie 
+                            animationLink="/animation/simple_loading_animation.json" 
+                            width="100%" 
+                        />
+                    </div>
                 </div>
                 <div class="col-span-full lg:col-span-3">
                     <SelectInput 
