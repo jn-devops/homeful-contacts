@@ -9,6 +9,6 @@ use Inertia\Inertia;
 class RedirectControllers extends Controller
 {
     public function redirect_to_consult(){
-        return Inertia::location('https://contracts.homeful.ph/consult/create?contact_reference_code=');
+        return Inertia::location(config('contract.contract_url').'consult/create?contact_reference_code=');
     }
 }
