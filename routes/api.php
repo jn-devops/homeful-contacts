@@ -28,8 +28,8 @@ Route::post('get-contact-media/{id}', function($id){
 Route::post('/auth/login', [LazarusAPIController::class, 'login']);
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/contact/{id}', [LazarusAPIController::class, 'getContactByID']);
-    // Route::post('/set-contact', [LazarusAPIController::class, 'setContact']);
-    Route::post('/set-lazarus-contact/{id}', [LazarusAPIController::class, 'setLazarusContact']);
+    Route::post('/set-contact', [LazarusAPIController::class, 'setContact']);
+    Route::post('/set-lazarus-contact', [LazarusAPIController::class, 'setLazarusContact']);
     Route::get('/get-attachment-requirement/{id}', [LazarusAPIController::class, 'getAttachmentRequirementByID']);
     Route::post('/set-attachment-requirement', [LazarusAPIController::class, 'setAttachmentRequirementByID']);
     

@@ -84,11 +84,14 @@ class LazarusAPIController extends Controller
         
     }
 
-    public function setLazarusContact($id){
+    public function setLazarusContact(Request $request){
         try {
-            $data = Customer::find($id);
-
-            $params = $this->convertContactToLazarus($data);
+            $validated = $request->validate([
+                'contact_id' => 'required|string',
+                'reference_code' => 'required|string',
+            ]);
+            $data = Customer::find($validated['contact_id']);
+            $params = $this->convertContactToLazarus($data, $validated['reference_code']);
             // return response()->json($params);
 
             $response = Http::withToken(config('homeful-contacts.lazarus_api_token'))
@@ -154,10 +157,10 @@ class LazarusAPIController extends Controller
 
     }
 
-    private function convertContactToLazarus($data){
+    private function convertContactToLazarus($data, $reference_code){
         $param = [
             "homeful_contact_id" => $data->id,
-            "reference_code" => $data->id, // TODO|XIAN: Change this
+            "reference_code" => $reference_code,
             "first_name" => $data->first_name,
             "middle_name" => $data->middle_name,
             "last_name" => $data->last_name,
