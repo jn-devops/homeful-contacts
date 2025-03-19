@@ -6,6 +6,7 @@ use App\Helper\GetAttachmentRequirement;
 use App\Models\User;
 use Homeful\Contacts\Models\Contact;
 use Homeful\Contacts\Models\Customer;
+use Homeful\References\Models\Reference;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
@@ -20,13 +21,13 @@ class LazarusAPIController extends Controller
                 'email' => 'required|email',
                 'password' => 'required',
             ]);
-        
+
             $user = User::where('email', $request->email)->first();
             if($user instanceof User){
                 if (!$user || !Hash::check($request->password, $user->password)) {
                     return response()->json(['message' => 'Invalid credentials'], 401);
                 }
-            
+
                 return response()->json([
                     'token' => $user->createToken('api-token')->plainTextToken,
                 ]);
@@ -68,13 +69,13 @@ class LazarusAPIController extends Controller
 
             $data = $this->convertLazarusToContactData($validated['data']);
             dd($data);
-    
+
             return response()->json([
                 'success' => true,
                 'message' => 'No Contact Found',
                 'data' => $validated['data'],
             ], 200);
-    
+
         } catch (ValidationException $e) {
             return response()->json([
                 'success' => false,
@@ -82,7 +83,7 @@ class LazarusAPIController extends Controller
                 'errors' => $e->errors()
             ], 422);
         }
-        
+
     }
 
     public function setLazarusContact(Request $request){
@@ -93,7 +94,7 @@ class LazarusAPIController extends Controller
             ]);
 
             $data = Customer::find($validated['contact_id']);
-            
+
             if(!($data instanceof Customer)){
                 return response()->json([
                     'success' => false,
@@ -140,7 +141,7 @@ class LazarusAPIController extends Controller
 
         $customer_array = [
             'first_name' => $data['first_name'] ?? '',
-            'middle_name' => $data['middle_name'] ?? '', 
+            'middle_name' => $data['middle_name'] ?? '',
             'last_name' => $data['last_name'] ?? '',
             'name_suffix' => (($name_suffix = $this->getMaintenanceData(config('homeful-contacts.lazarus_url').'api/admin/name-suffixes?filter[code]='.($data['name_suffix'] ?? '-'), pure_data:true) ?? '') != 'N/A') ? $name_suffix : '',
             'email' => $data['email'] ?? '',
@@ -374,8 +375,8 @@ class LazarusAPIController extends Controller
                         "contact_no" => collect($data->employment)->where('type', 'Primary')->first()['employer']['contact_no'] ?? '',
                         "nationality" => $this->getMaintenanceDataCode(
                                                 config('homeful-contacts.lazarus_url').'api/admin/nationalities?per_page=1000',
-                                                'description', 
-                                                collect($data->employment)->where('type', 'Primary')->first()['employer']['nationality'] ?? '', 
+                                                'description',
+                                                collect($data->employment)->where('type', 'Primary')->first()['employer']['nationality'] ?? '',
                                                 'code'
                                             ) ?? '',
                         "year_established" => "",
@@ -428,8 +429,8 @@ class LazarusAPIController extends Controller
                     'data' => [],
                 ], 404);
             }
-    
-    
+
+
         } catch (ValidationException $e) {
             return response()->json([
                 'success' => false,
@@ -438,5 +439,15 @@ class LazarusAPIController extends Controller
             ], 422);
         }
     }
-    
+
+    public function getContactByVoucherCode(Request $request){
+        $reference = Reference::where('code',$request->code)->first();
+        $contact_id = $reference->voucherEntities()->where('entity_type','App\Models\Contact')->first()->entity_id;
+        $contact =  Customer::findOrFail($contact_id);
+        return response()->json([
+            'success' => true,
+            'data' => $contact,
+        ], 200);
+    }
+
 }
