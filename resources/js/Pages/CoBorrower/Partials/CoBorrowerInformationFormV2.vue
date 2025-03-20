@@ -173,6 +173,7 @@ watch(form, (newValue, oldValue) => {
                     <SelectInput 
                         v-model="form.civil_status"
                         label="Civil Status"
+                        required
                         :options="civilStatusList"
                         :errorMessage="form.errors.civil_status"
                     />
@@ -181,6 +182,7 @@ watch(form, (newValue, oldValue) => {
                     <SelectInput 
                         v-model="form.sex"
                         label="Gender"
+                        required
                         :options="genderList"
                         :errorMessage="form.errors.sex"
                     />
@@ -189,6 +191,7 @@ watch(form, (newValue, oldValue) => {
                     <SelectInput 
                         v-model="form.nationality"
                         label="Nationality"
+                        required
                         :options="nationalityList"
                         :errorMessage="form.errors.nationality"
                     />
@@ -196,6 +199,7 @@ watch(form, (newValue, oldValue) => {
                 <div class="col-span-full lg:col-span-3">
                     <DatePicker 
                         v-model="form.date_of_birth"
+                        required
                         label="Date of Birth"
                         :errorMessage="form.errors.date_of_birth"
                     />

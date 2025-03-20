@@ -40,7 +40,7 @@ const form = useForm({
     name_suffix: spouse?.name_suffix,
     mothers_maiden_name: spouse?.mothers_maiden_name,
     civil_status: "Married",
-    sex: spouse?.sex ?? 'Male' === co_borrower()?.sex ? 'Female' : 'Male',
+    sex: spouse?.sex ?? ('Male' === co_borrower()?.sex ? 'Female' : 'Male'),
     nationality: spouse?.nationality ?? co_borrower()?.nationality,
     date_of_birth: spouse?.date_of_birth ?? '',
     email: spouse?.email,
@@ -115,7 +115,6 @@ watch(form, (newValue, oldValue) => {
         <form
             @submit.prevent="updateCoBorrower"
             class="mt-6 space-y-6"
-            v-if="co_borrower() != null && co_borrower()?.civil_status == 'Married'"
         >
             <h3 class="font-bold text-[#006FFD] mt-4">CO-BORROWER SPOUSE:</h3>
             <div class="grid grid-cols-12 gap-4">

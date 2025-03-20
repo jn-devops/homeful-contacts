@@ -5,13 +5,19 @@ import CoBorrowerAddress from "@/Pages/CoBorrower/Partials/CoBorrowerAddress.vue
 import CoBorrowerSpouse from "@/Pages/CoBorrower/Partials/CoBorrowerSpouse.vue";
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayoutV2.vue';
 import SectionBorder from "@/Components/SectionBorder.vue";
-import { Head } from '@inertiajs/vue3';
+import { Head, usePage } from '@inertiajs/vue3';
 
 const props = defineProps({
     contact: Object,
     lazarus_url: String,
     lazarus_token: String,
 });
+
+const page = usePage();
+
+// console.log(page.props.auth.user.contact.co_borrowers.find(item => item.type == "Primary").sex);
+
+
 </script>
 
 <template>
@@ -24,11 +30,12 @@ const props = defineProps({
                 :contact = "contact"
                 co_borrower_type = "Primary"
             />
-
-            <CoBorrowerSpouse
-                :contact = "contact"
-                co_borrower_type = "Primary"
-            />
+            <section v-if="page?.props?.auth?.user?.contact?.co_borrowers?.find(item => item.type == 'Primary')?.civil_status == 'Married'">
+                <CoBorrowerSpouse
+                    :contact = "page.props.auth.user.contact"
+                    co_borrower_type = "Primary"
+                />
+            </section>
 
             <CoBorrowerAddress
                 :contact = "contact"
