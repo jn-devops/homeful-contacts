@@ -246,7 +246,7 @@ watch(form, (newValue, oldValue) => {
 
 watch(regions_loading, (newValue, oldValue) => {
     if(!newValue){
-        getProvince(form.region).then(() => {
+        getProvince(form.employer_address_region).then(() => {
             formatted_api_province.value = formatAPItoComponent(api_province.value, 'province')
             province_loading.value = false
         })
@@ -256,7 +256,7 @@ watch(regions_loading, (newValue, oldValue) => {
 
 watch(province_loading, (newValue, oldValue) => {
     if(!newValue){
-        getCity(form.region, form.administrative_area).then(() => {
+        getCity(form.employer_address_region, form.employer_address_administrative_area).then(() => {
             formatted_api_city.value = formatAPItoComponent(api_city.value, 'city')
             city_loading.value = false
         })
@@ -266,7 +266,7 @@ watch(province_loading, (newValue, oldValue) => {
 
 watch(city_loading, (newValue, oldValue) => {
     if(!newValue){
-        getBarangay(form.region, form.administrative_area, form.locality).then(() => {
+        getBarangay(form.employer_address_region, form.employer_address_administrative_area, form.employer_address_locality).then(() => {
             formatted_api_barangay.value = formatAPItoComponent(api_barangay.value, 'barangay')
             barangay_loading.value = false
         })

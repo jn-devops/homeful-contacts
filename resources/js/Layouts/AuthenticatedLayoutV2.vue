@@ -1,16 +1,38 @@
 <script setup>
 import BreadCrumbs from '@/Components/BreadCrumbs.vue';
-import { Link } from '@inertiajs/vue3';
+import { Link, usePage } from '@inertiajs/vue3';
+import { computed } from 'vue';
 
-const breadcrumbPages = [
-    { name: 'Personal', href: route('personal.edit'), current: route().current('personal.edit'), route_name: 'personal.edit' },
-    { name: 'Address', href: route('address.edit'), current: route().current('address.edit'), route_name: 'address.edit' },
-    { name: 'Employment', href: route('employment.edit'), current: route().current('employment.edit'), route_name: 'employment.edit' },
-    { name: 'Spouse', href: route('spouse.edit'), current: route().current('spouse.edit'), route_name: 'spouse.edit' },
-    { name: 'AIF', href: route('aif.edit'), current: route().current('aif.edit'), route_name: 'aif.edit' },
-    { name: 'Co-Borrower', href: route('co_borrower.edit'), current: route().current('co_borrower.edit'), route_name: 'co_borrower.edit' },
-    { name: 'Attachment', href: route('media.edit'), current: route().current('media.edit'), route_name: 'media.edit' },
-]
+const page = usePage();
+
+const breadcrumbPages = computed(() => {
+    let menus = [
+            { name: 'Personal', href: route('personal.edit'), current: route().current('personal.edit'), route_name: 'personal.edit' },
+            { name: 'Address', href: route('address.edit'), current: route().current('address.edit'), route_name: 'address.edit' },
+            { name: 'Employment', href: route('employment.edit'), current: route().current('employment.edit'), route_name: 'employment.edit' },
+            { name: 'Co-Borrower', href: route('co_borrower.edit'), current: route().current('co_borrower.edit'), route_name: 'co_borrower.edit' },
+            { name: 'Attachment', href: route('media.edit'), current: route().current('media.edit'), route_name: 'media.edit' },
+        ]
+
+    if(typeof page?.props?.auth?.user?.contact?.civil_status !== 'undefined'){
+        if(page.props.auth.user.contact.civil_status == "Married"){
+            const index = menus.findIndex(item => item.name === 'Employment');
+            if (index !== -1) {
+                menus.splice(index + 1, 0, { name: 'Spouse', href: route('spouse.edit'), current: route().current('spouse.edit'), route_name: 'spouse.edit' });
+            }
+        }
+    }
+    if(typeof page?.props?.auth?.user?.contact?.employment?.find(item => item.type == 'Primary')?.employment_type !== 'undefined'){
+        if(page.props.auth.user.contact.employment.find(item => item.type == 'Primary').employment_type == "Overseas Filipino Worker (OFW)"){
+            const index = menus.findIndex(item => item.name === 'Co-Borrower');
+            if (index !== -1) {
+                menus.splice(index, 0, { name: 'AIF', href: route('aif.edit'), current: route().current('aif.edit'), route_name: 'aif.edit' },);
+            }
+        }
+    }
+
+    return menus
+})
 
 </script>
 
