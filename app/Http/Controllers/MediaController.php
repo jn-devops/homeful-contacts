@@ -140,7 +140,7 @@ class MediaController extends Controller
 
     protected function getRequirementMatrix(){
         $response = Http::post('https://contracts.homeful.ph/api/requirement-matrix-filtered', [
-            'employment_status' => $this->contact->employment[0]?->employment_status->value ?? '',
+            'employment_status' => $this->contact->employment[0]?->employment_type->value ?? '',
             'civil_status' => $this->contact->civil_status ?? '',
         ]);
         if ($response->successful()) {
