@@ -53,6 +53,8 @@ class EmploymentController extends Controller
         Arr::set($data, 'employer.address.ownership', $employer_address_ownership);
         $employer_address_address1 = Arr::pull($data, 'employer_address_address1');
         Arr::set($data, 'employer.address.address1', $employer_address_address1);
+        $employer_address_sublocality = Arr::pull($data, 'employer_address_sublocality');
+        Arr::set($data, 'employer.address.sublocality', $employer_address_sublocality);
         $employer_address_locality = Arr::pull($data, 'employer_address_locality');
         Arr::set($data, 'employer.address.locality', $employer_address_locality);
         $employer_address_administrative_area = Arr::pull($data, 'employer_address_administrative_area');

@@ -35,7 +35,7 @@ class UpdateLoanProcessingContactData
         $response = Http::withToken(config('homeful-contacts.lazarus_api_token'))
                         ->get(config('homeful-contacts.lazarus_url').'api/admin/contacts?filter[homeful_contact_id]='.$contact_id);
 
-        return ($response->json()['data']) ? $response->json()['data'][0]['id'] : null;
+        return ($response->json()['data']) ? ($response->json()['data'][0]['id'] ?? null) : null;
     }
 
     protected static function convertContactToLazarus(Contact $data){
