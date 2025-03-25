@@ -14,6 +14,7 @@ class UpdateLoanProcessingContactData
             if($loan_processing_id = self::getLoanProcessingDataID($id)){
                 $homeful_contact = Contact::find($id);
                 $data = self::convertContactToLazarus($homeful_contact);
+                // dd($data);
                 $response = Http::withToken(config('homeful-contacts.lazarus_api_token'))
                                 ->put(config('homeful-contacts.lazarus_url').'api/admin/contacts/'.$loan_processing_id, $data);
                 if($response->successful()){
@@ -45,10 +46,10 @@ class UpdateLoanProcessingContactData
             "first_name" => $data->first_name,
             "middle_name" => $data->middle_name,
             "last_name" => $data->last_name,
-            "name_suffix" => self::getMaintenanceDataCode(config('homeful-contacts.lazarus_url').'api/admin/name-suffixes', 'name', $data->name_suffix, 'code') ?? '001',
-            "civil_status" => self::getMaintenanceDataCode(config('homeful-contacts.lazarus_url').'api/admin/civil-statuses', 'description', $data->civil_status?->value ?? null, 'code') ?? '001',
-            "sex" => $data->sex?->value ?? "Male",
-            "nationality" => self::getMaintenanceDataCode(config('homeful-contacts.lazarus_url').'api/admin/nationalities?per_page=1000', 'description', $data->nationality?->value ?? null, 'code') ?? '076',
+            "name_suffix" => self::getMaintenanceDataCode(config('homeful-contacts.lazarus_url').'api/admin/name-suffixes', 'description', $data->name_suffix, 'code') ?? '001',
+            "civil_status" => self::getMaintenanceDataCode(config('homeful-contacts.lazarus_url').'api/admin/civil-statuses', 'description', $data->civil_status ?? null, 'code') ?? '001',
+            "sex" => $data->sex ?? "Male",
+            "nationality" => self::getMaintenanceDataCode(config('homeful-contacts.lazarus_url').'api/admin/nationalities?per_page=1000', 'description', $data->nationality ?? null, 'code') ?? '076',
             "date_of_birth" => $data->date_of_birth->format('Y-m-d'),
             "email" => $data->email,
             "mobile" => $data->mobile,
