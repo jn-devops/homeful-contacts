@@ -41,7 +41,7 @@ class UpdateLoanProcessingContactData
     protected static function convertContactToLazarus(Contact $data){
         $param = [
             "homeful_contact_id" => $data->id,
-            "reference_code" => $data->reference_code,
+            // "reference_code" => $data->reference_code,
             "first_name" => $data->first_name,
             "middle_name" => $data->middle_name,
             "last_name" => $data->last_name,
