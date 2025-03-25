@@ -45,7 +45,7 @@ onMounted(() => {
                 :contact = "contact"
                 :api_token="lazarus_token"
                 :api_url="lazarus_url"
-                address_type = "Primary"
+                address_type = "Present"
                 class="w-full"
             />
 
@@ -55,7 +55,7 @@ onMounted(() => {
                 :contact = "contact"
                 :api_token="lazarus_token"
                 :api_url="lazarus_url"
-                address_type = "Secondary"
+                address_type = "Permanent"
                 class="w-full"
             />
 
