@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Helper\GetAttachmentRequirement;
 use App\Models\User;
+use Homeful\Contacts\Classes\ContactMetaData;
 use Carbon\Carbon;
 use Exception;
 use Homeful\Contacts\Models\Contact;
@@ -447,9 +448,10 @@ class LazarusAPIController extends Controller
         $reference = Reference::where('code',$request->code)->first();
         $contact_id = $reference->voucherEntities()->where('entity_type','App\Models\Contact')->first()->entity_id;
         $contact =  Customer::findOrFail($contact_id);
+          $contact=  $this->convertContactToLazarus($contact, $request->code);
         return response()->json([
             'success' => true,
-            'data' => $contact,
+            'data' =>$contact,
         ], 200);
     }
 
