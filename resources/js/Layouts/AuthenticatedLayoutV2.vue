@@ -11,7 +11,7 @@ const breadcrumbPages = computed(() => {
             { name: 'Address', href: route('address.edit'), current: route().current('address.edit'), route_name: 'address.edit' },
             { name: 'Employment', href: route('employment.edit'), current: route().current('employment.edit'), route_name: 'employment.edit' },
             { name: 'Co-Borrower', href: route('co_borrower.edit'), current: route().current('co_borrower.edit'), route_name: 'co_borrower.edit' },
-            { name: 'Attachment', href: route('media.edit'), current: route().current('media.edit'), route_name: 'media.edit' },
+            { name: 'Doc Requirements', href: route('media.edit'), current: route().current('media.edit'), route_name: 'media.edit' },
         ]
 
     if(typeof page?.props?.auth?.user?.contact?.civil_status !== 'undefined'){
