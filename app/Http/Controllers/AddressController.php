@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\UpdateLoanProcessingContactData;
 use App\Http\Requests\AddressUpdateRequest;
 use Homeful\Contacts\Models\Customer;
 use Illuminate\Support\Facades\Redirect;
@@ -42,6 +43,8 @@ class AddressController extends Controller
         $customer->update(['addresses' => $address_records]);
         $customer->save();
         // $user->save();
+
+        UpdateLoanProcessingContactData::updateContact($user->contact->id);
 
         return redirect()->back();
     }

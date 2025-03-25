@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\UpdateLoanProcessingContactData;
 use App\Http\Requests\CoBorrowerUpdateRequest;
 use Homeful\Contacts\Models\Customer;
 use Illuminate\Support\Facades\Redirect;
@@ -43,6 +44,8 @@ class CoBorrowerController extends Controller
         $customer->update(['co_borrowers' => $co_borrower_records]);
         $customer->save();
         // $user->save();
+
+        UpdateLoanProcessingContactData::updateContact($user->contact->id);
 
         return redirect()->back();
     }

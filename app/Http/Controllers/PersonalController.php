@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\UpdateLoanProcessingContactData;
 use App\Enums\CivilStatus;
 use Illuminate\Http\{RedirectResponse, Request};
 use App\Http\Requests\PersonalUpdateRequest;
@@ -33,6 +34,8 @@ class PersonalController extends Controller
             $user->contact->fill($request->validated());
             $user->contact->save();
         }
+
+        UpdateLoanProcessingContactData::updateContact($user->contact->id);
 
         return redirect()->back();
     }

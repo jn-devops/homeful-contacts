@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\UpdateLoanProcessingContactData;
 use App\Http\Requests\EmploymentUpdateRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -89,6 +90,8 @@ class EmploymentController extends Controller
             $contact->employment = $employment_records;
             $contact->save();
         }
+
+        UpdateLoanProcessingContactData::updateContact($user->contact->id);
 
         return redirect()->back();
     }

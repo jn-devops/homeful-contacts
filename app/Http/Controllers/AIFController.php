@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\UpdateLoanProcessingContactData;
 use Illuminate\Http\{RedirectResponse, Request};
 use Illuminate\Support\Facades\Redirect;
 use App\Http\Requests\AIFUpdateRequest;
@@ -22,6 +23,8 @@ class AIFController extends Controller
         $user->contact->update(['aif' => $request->validated()]);
         $user->contact->save();
         $user->save();
+
+        UpdateLoanProcessingContactData::updateContact($user->contact->id);
 
         return redirect()->back();
     }

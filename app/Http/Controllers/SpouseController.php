@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\UpdateLoanProcessingContactData;
 use Illuminate\Http\{RedirectResponse, Request};
 use App\Http\Requests\SpouseUpdateRequest;
 use Homeful\Contacts\Models\Customer;
@@ -26,6 +27,8 @@ class SpouseController extends Controller
         $customer->update(['spouse' => $request->validated()]);
         $customer->save();
         // $user->save();
+
+        UpdateLoanProcessingContactData::updateContact($user->contact->id);
 
         return redirect()->back();
     }

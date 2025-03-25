@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\UpdateLoanProcessingContactData;
 use App\Http\Requests\CoBorrowerAddressRequest;
 use App\Http\Requests\CoBorrowerUpdateRequest;
 use Illuminate\Support\Facades\Redirect;
@@ -37,6 +38,8 @@ class CoBorrowerAddressController extends Controller
         $customer->update(['co_borrowers' => $co_borrower_records]);
         $customer->save();
         // $user->save();
+
+        UpdateLoanProcessingContactData::updateContact($user->contact->id);
 
         return redirect()->back();
     }
