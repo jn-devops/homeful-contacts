@@ -23,6 +23,9 @@ class EmploymentUpdateRequest extends FormRequest
             'employer_name' =>  ['required', 'string', 'max:100'],
             'employment_type' =>  ['required_with:employer_name', Rule::enum(EmploymentType::class)],
             'current_position' =>  ['nullable', 'required_with:employer_name', 'string', 'max:100'],
+            'rank' =>  ['nullable', 'string', 'max:100'],
+            'years_in_service' =>  ['nullable', 'string', 'max:100'],
+            'employer_year_established' =>  ['nullable', 'string', 'max:100'],
 
             'employer_email' =>  ['required_with:employer_name', 'email'],
             'employer_contact_no' =>  ['required_with:employer_name', 'string', 'min:10'],
@@ -34,7 +37,7 @@ class EmploymentUpdateRequest extends FormRequest
             'employer_address_locality' => ['required_with:employer_name', 'string', 'max:100'],
             'employer_address_sublocality' => ['required_with:employer_name', 'string', 'max:100'],
             'employer_address_administrative_area' => ['required_with:employer_name', 'string', 'max:100'],
-            'employer_address_postal_code' => ['required_with:employer_name', 'string', 'max:25'],
+            'employer_address_postal_code' => ['nullable', 'string', 'max:25'],
             'employer_address_region' => ['required_with:employer_name', 'string', 'max:100'],
             'employer_address_country' => ['required_with:employer_name', 'nullable', 'string', 'max:100'],
 

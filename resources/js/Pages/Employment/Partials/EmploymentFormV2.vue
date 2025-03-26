@@ -57,6 +57,8 @@ const form = useForm({
     type: props.employment_type,
     monthly_gross_income: employment_record()?.monthly_gross_income,
     employment_status: employment_record()?.employment_status ?? 'Regular',
+    rank: employment_record()?.rank ?? null,
+    years_in_service: employment_record()?.years_in_service ?? null,
 
     employer_name: employment_record()?.employer?.name,
     employment_type: employment_record()?.employment_type,
@@ -65,6 +67,7 @@ const form = useForm({
     employer_contact_no: employment_record()?.employer?.contact_no,
     employer_nationality: employment_record()?.employer?.nationality,
     employer_industry: employment_record()?.employer?.industry,
+    employer_year_established: employment_record()?.employer?.year_established,
 
     employer_address_type: employment_record()?.employer?.address?.type ?? employment_record()?.employer?.name ? 'Work' : "Work",
     employer_address_ownership: employment_record()?.employer?.address?.ownership ? employment_record().employer.address.ownership : 'Owned',
@@ -81,6 +84,24 @@ const form = useForm({
     sss: employment_record()?.id?.sss,
     gsis: employment_record()?.id?.gsis,
 })
+
+const api_tenure = ref([])
+const tenure_loading = ref(true)
+const formatted_tenure = ref([])
+const getTenure = async () => {
+    try {
+        
+        const response = await axios.get(props.api_url+'api/admin/tenures?per_page=300', {
+                headers: {
+                    Authorization: `Bearer ${props.api_token}`,
+                },
+            });
+        api_tenure.value = response.data
+        
+    } catch (error) {
+        console.error('Error fetching data:', error);
+    }
+}
 
 const api_current_position = ref([])
 const current_position_loading = ref(true)
@@ -232,6 +253,12 @@ const formatAPItoComponent = (data, type) => {
               name: list.description
             }));
             break;
+        case 'tenure':
+            return data.data.map(list => ({
+              id: list.code,
+              name: list.description
+            }));
+            break;
         default:
             break;
     }
@@ -321,6 +348,10 @@ onMounted(() => {
         formatted_country.value = formatAPItoComponent(countries.value, 'country')
         country_loading.value = false
     })
+    getTenure().then(() => {
+        formatted_tenure.value = formatAPItoComponent(api_tenure.value, 'tenure')
+        tenure_loading.value = false
+    })
 })
 
 </script>
@@ -377,6 +408,14 @@ onMounted(() => {
                         required
                     />
                 </div>
+                <div class="col-span-full lg:col-span-2">
+                    <TextInput 
+                        v-model="form.rank"
+                        label="Rank"
+                        placeholder="Enter Rank"
+                        :errorMessage="form.errors.rank"
+                    />
+                </div>
                 <div class="col-span-full lg:col-span-4">
                     <TextInput 
                         v-model="form.employer_name"
@@ -384,6 +423,15 @@ onMounted(() => {
                         required
                         placeholder="Enter Employer Name"
                         :errorMessage="form.errors.employer_name"
+                    />
+                </div>
+                <div class="col-span-full lg:col-span-2">
+                    <TextInput 
+                        v-model="form.employer_year_established"
+                        label="Employer Year Established"
+                        placeholder="Enter Year Established"
+                        type="number"
+                        :errorMessage="form.errors.employer_year_established"
                     />
                 </div>
                 <div v-if="!current_position_loading" class="col-span-full lg:col-span-4">
@@ -396,6 +444,22 @@ onMounted(() => {
                     />
                 </div>
                 <div v-else class="col-span-full lg:col-span-4 flex items-center justify-center">
+                    <div class="w-20">
+                        <Vue3Lottie 
+                            animationLink="/animation/simple_loading_animation.json" 
+                            width="100%" 
+                        />
+                    </div>
+                </div>
+                <div v-if="!tenure_loading" class="col-span-full lg:col-span-2">
+                    <SelectInput 
+                        v-model="form.years_in_service"
+                        label="Tenure"
+                        :options="formatted_tenure"
+                        :errorMessage="form.errors.years_in_service"
+                    />
+                </div>
+                <div v-else class="col-span-full lg:col-span-2 flex items-center justify-center">
                     <div class="w-20">
                         <Vue3Lottie 
                             animationLink="/animation/simple_loading_animation.json" 
@@ -421,7 +485,7 @@ onMounted(() => {
                         :errorMessage="form.errors.employer_email"
                     />
                 </div>
-                <div class="col-span-full lg:col-span-3">
+                <div class="col-span-full lg:col-span-2">
                     <TextInput 
                         v-model="form.employer_contact_no"
                         label="Contact No."
@@ -432,7 +496,7 @@ onMounted(() => {
                         :errorMessage="form.errors.employer_contact_no"
                     />
                 </div>
-                <div class="col-span-full lg:col-span-3">
+                <div class="col-span-full lg:col-span-2">
                     <SelectInput 
                         v-model="form.employer_nationality"
                         label="Nationality"
@@ -485,7 +549,7 @@ onMounted(() => {
                         />
                     </div>
                 </div>
-                <div v-if="!regions_loading" class="col-span-full lg:col-span-4">
+                <div v-if="!regions_loading" class="col-span-full lg:col-span-3">
                     <SelectInput 
                         v-model="form.employer_address_region"
                         label="Region"
@@ -494,7 +558,7 @@ onMounted(() => {
                         :errorMessage="form.errors.employer_address_region"
                     />
                 </div>
-                <div v-else class="col-span-full lg:col-span-4 flex items-center justify-center">
+                <div v-else class="col-span-full lg:col-span-3 flex items-center justify-center">
                     <div class="w-20">
                         <Vue3Lottie 
                             animationLink="/animation/simple_loading_animation.json" 
@@ -561,15 +625,14 @@ onMounted(() => {
                         :errorMessage="form.errors.employer_address_address1"
                     />
                 </div>
-                <div class="col-span-full lg:col-span-3">
+                <!-- <div class="col-span-full lg:col-span-3">
                     <TextInput 
                         v-model="form.employer_address_postal_code"
                         label="ZIP Code"
-                        required
                         placeholder="Enter Employer ZIP Code"
                         :errorMessage="form.errors.employer_address_postal_code"
                     />
-                </div>
+                </div> -->
                 <div class="col-span-full lg:col-span-3">
                     <TextInput 
                         v-model="form.tin"

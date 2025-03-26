@@ -47,6 +47,9 @@ class EmploymentController extends Controller
         $employer_industry = Arr::pull($data, 'employer_industry');
         Arr::set($data, 'employer.industry', $employer_industry);
 
+        $employer_year_established = Arr::pull($data, 'employer_year_established');
+        Arr::set($data, 'employer.year_established', $employer_year_established);
+
         $employer_address_type = Arr::pull($data, 'employer_address_type');
         Arr::set($data, 'employer.address.type', $employer_address_type);
         $employer_address_ownership = Arr::pull($data, 'employer_address_ownership');
