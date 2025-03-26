@@ -207,6 +207,8 @@ class LazarusAPIController extends Controller
                     'monthly_gross_income' => $employment['monthly_gross_income'] ?? 0,
                     'current_position' => $this->getMaintenanceData(config('homeful-contacts.lazarus_url').'api/admin/current-positions?filter[code]='.($employment['current_position'] ?? '-'), pure_data:true)[0]['code'] ?? '',
                     'employment_type' => $this->getMaintenanceData(config('homeful-contacts.lazarus_url').'api/admin/employment-types?filter[code]='.($employment['employment_type'] ?? '-'), pure_data:true)[0]['description'] ?? '',
+                    'rank' => $employment['rank'],
+                    'years_in_service' => $employment['years_in_service'],
                     'employer' => [
                         'name' => $employment['employer']['name'] ?? '',
                         'industry' => $this->getMaintenanceData(config('homeful-contacts.lazarus_url').'api/admin/work-industries?filter[code]='.($employment['employer']['industry'] ?? '-'), pure_data:true)[0]['description'] ?? '',
@@ -223,6 +225,8 @@ class LazarusAPIController extends Controller
                             'country' => $employment['employer']['address']['country'],
                         ],
                         'contact_no' => $employment['employer']['contact_no'] ?? null,
+                        'email' => $employment['employer']['email'] ?? null,
+                        'year_established' => $employment['employer']['year_established'] ?? null,
                     ],
                     'id' => [
                         'tin' => $employment['id']['tin'],
@@ -359,7 +363,7 @@ class LazarusAPIController extends Controller
                         "gsis" => collect($data->employment)->where('type', 'Primary')->first()['id']['gsis'] ?? '',
                         "pagibig" => collect($data->employment)->where('type', 'Primary')->first()['id']['pagibig'] ?? '',
                     ],
-                    "rank" => "",
+                    "rank" => collect($data->employment)->where('type', 'Primary')->first()['rank'] ?? '',
                     "type" => "buyer",
                     "employer" => [
                         "fax" => null,
@@ -384,13 +388,13 @@ class LazarusAPIController extends Controller
                                                 collect($data->employment)->where('type', 'Primary')->first()['employer']['nationality'] ?? '',
                                                 'code'
                                             ) ?? '',
-                        "year_established" => "",
+                        "year_established" => collect($data->employment)->where('type', 'Primary')->first()['employer']['year_established'] ?? '',
                         "total_number_of_employees" => null
                     ],
                     "industry" => collect($data->employment)->where('type', 'Primary')->first()['employer']['industry'] ?? '',
                     "employment_type" => collect($data->employment)->where('type', 'Primary')->first()['employment_type'] ?? '',
                     "current_position" => collect($data->employment)->where('type', 'Primary')->first()['current_position'] ?? '',
-                    "years_in_service" => "",
+                    "years_in_service" => collect($data->employment)->where('type', 'Primary')->first()['years_in_service'] ?? '',
                     "employment_status" => collect($data->employment)->where('type', 'Primary')->first()['employment_status'] ?? '',
                     "character_reference" => [],
                     "monthly_gross_income" => collect($data->employment)->where('type', 'Primary')->first()['monthly_gross_income'] ?? 0

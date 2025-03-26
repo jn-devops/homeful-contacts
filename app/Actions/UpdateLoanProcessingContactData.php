@@ -109,7 +109,7 @@ class UpdateLoanProcessingContactData
                         "gsis" => collect($data->employment)->where('type', 'Primary')->first()['id']['gsis'] ?? '',
                         "pagibig" => collect($data->employment)->where('type', 'Primary')->first()['id']['pagibig'] ?? '',
                     ],
-                    "rank" => "",
+                    "rank" =>  collect($data->employment)->where('type', 'Primary')->first()['rank'] ?? '',
                     "type" => "buyer",
                     "employer" => [
                         "fax" => null,
@@ -134,13 +134,13 @@ class UpdateLoanProcessingContactData
                                                 collect($data->employment)->where('type', 'Primary')->first()['employer']['nationality'] ?? '',
                                                 'code'
                                             ) ?? '',
-                        "year_established" => "",
+                        "year_established" => collect($data->employment)->where('type', 'Primary')->first()['employer']['year_established'] ?? '',
                         "total_number_of_employees" => null
                     ],
                     "industry" => collect($data->employment)->where('type', 'Primary')->first()['employer']['industry'] ?? '',
                     "employment_type" => collect($data->employment)->where('type', 'Primary')->first()['employment_type'] ?? '',
                     "current_position" => collect($data->employment)->where('type', 'Primary')->first()['current_position'] ?? '',
-                    "years_in_service" => "",
+                    "years_in_service" => collect($data->employment)->where('type', 'Primary')->first()['years_in_service'] ?? '',
                     "employment_status" => collect($data->employment)->where('type', 'Primary')->first()['employment_status'] ?? '',
                     "character_reference" => [],
                     "monthly_gross_income" => collect($data->employment)->where('type', 'Primary')->first()['monthly_gross_income'] ?? 0
