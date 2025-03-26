@@ -203,15 +203,15 @@ class LazarusAPIController extends Controller
             'employment' => [
                 [
                     'type' => 'Primary',
-                    'employment_status' => $this->getMaintenanceData(config('homeful-contacts.lazarus_url').'api/admin/employment-statuses?filter[code]='.($employment['employment_status'] ?? '-'), pure_data:true)[0]['description'] ?? '',
+                    'employment_status' => $employment['employment_status'] ?? '',
                     'monthly_gross_income' => $employment['monthly_gross_income'] ?? 0,
                     'current_position' => $this->getMaintenanceData(config('homeful-contacts.lazarus_url').'api/admin/current-positions?filter[code]='.($employment['current_position'] ?? '-'), pure_data:true)[0]['code'] ?? '',
-                    'employment_type' => $this->getMaintenanceData(config('homeful-contacts.lazarus_url').'api/admin/employment-types?filter[code]='.($employment['employment_type'] ?? '-'), pure_data:true)[0]['description'] ?? '',
+                    'employment_type' => $employment['employment_type'] ?? '',
                     'rank' => $employment['rank'],
                     'years_in_service' => $employment['years_in_service'],
                     'employer' => [
                         'name' => $employment['employer']['name'] ?? '',
-                        'industry' => $this->getMaintenanceData(config('homeful-contacts.lazarus_url').'api/admin/work-industries?filter[code]='.($employment['employer']['industry'] ?? '-'), pure_data:true)[0]['description'] ?? '',
+                        'industry' => $employment['employer']['industry'] ?? 'N/A',
                         'nationality' => $this->getMaintenanceData(config('homeful-contacts.lazarus_url').'api/admin/nationalities?filter[code]='.($employment['employer']['nationality'] ?? '-'), pure_data:true)[0]['description'] ?? null,
                         'address' => [
                             'type' => 'Primary',

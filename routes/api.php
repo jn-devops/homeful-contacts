@@ -28,7 +28,7 @@ Route::post('get-contact-media/{id}', function($id){
 Route::post('/auth/login', [LazarusAPIController::class, 'login']);
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/contact/{id}', [LazarusAPIController::class, 'getContactByID']);
-    Route::post('/update-contact', [LazarusAPIController::class, 'updateContactFromLazarus']);
+    Route::put('/update-contact', [LazarusAPIController::class, 'updateContactFromLazarus']);
     Route::post('/set-lazarus-contact', [LazarusAPIController::class, 'setLazarusContact']);
     Route::get('/get-attachment-requirement/{id}', [LazarusAPIController::class, 'getAttachmentRequirementByID']);
     Route::post('/set-attachment-requirement', [LazarusAPIController::class, 'setAttachmentRequirementByID']);
