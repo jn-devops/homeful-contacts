@@ -157,7 +157,7 @@ class LazarusAPIController extends Controller
             'first_name' => $data['first_name'] ?? '',
             'middle_name' => $data['middle_name'] ?? '',
             'last_name' => $data['last_name'] ?? '',
-            'name_suffix' => (($name_suffix = $this->getMaintenanceData(config('homeful-contacts.lazarus_url').'api/admin/name-suffixes?filter[code]='.($data['name_suffix'] ?? '-'), pure_data:true) ?? '') != 'N/A') ? $name_suffix : '001',
+            'name_suffix' => (($name_suffix = $this->getMaintenanceData(config('homeful-contacts.lazarus_url').'api/admin/name-suffixes?filter[code]='.($data['name_suffix'] ?? '-'), pure_data:true) ?? '')[0]['code'] != '001') ? $name_suffix[0]['description'] : '',
             'email' => $data['email'] ?? '',
             'mobile' => $data['mobile'] ?? '',
             'civil_status' => $this->getMaintenanceData(config('homeful-contacts.lazarus_url').'api/admin/civil-statuses?filter[code]='.($data['civil_status'] ?? '-'), pure_data:true)[0]['description'] ?? '001',
