@@ -211,7 +211,7 @@ class LazarusAPIController extends Controller
                     'years_in_service' => $employment['years_in_service'],
                     'employer' => [
                         'name' => $employment['employer']['name'] ?? '',
-                        'industry' => $employment['employer']['industry'] ?? 'N/A',
+                        'industry' => $this->getMaintenanceData(config('homeful-contacts.lazarus_url').'api/admin/work-industries?filter[code]='.($employment['employer']['industry'] ?? '-'), pure_data:true)[0]['description'] ?? null,
                         'nationality' => $this->getMaintenanceData(config('homeful-contacts.lazarus_url').'api/admin/nationalities?filter[code]='.($employment['employer']['nationality'] ?? '-'), pure_data:true)[0]['description'] ?? null,
                         'address' => [
                             'type' => 'Primary',
