@@ -11,6 +11,7 @@ use Inertia\{Inertia, Response};
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 
 class MediaController extends Controller
@@ -74,13 +75,13 @@ class MediaController extends Controller
             'governmentId1Image' => "Government ID 1 Image",
             'governmentId2Image' => "Government ID 2 Image",
             'certificateOfEmploymentDocument' => "Certificate of Employment Document",
-            'oneMonthLatestPayslipDocument' => "One-Month Latest Payslip Document",
-            'esavDocument' => "eSAV Document",
+            'oneMonthLatestPayslipDocument' => "One Month Latest Payslip Document",
+            'esavDocument' => "ESAV Document",
             'birthCertificateDocument' => "Birth Certificate Document",
             'photoImage' => "Photo Image",
             'proofOfBillingAddressDocument' => "Proof of Billing Address Document",
-            'letterOfConsentEmployerDocument' => "Letter of Consent (Employer) Document",
-            'threeMonthsCertifiedPayslipsDocument' => "Three-Months Certified Payslips Document",
+            'letterOfConsentEmployerDocument' => "Letter of Consent Employer Document",
+            'threeMonthsCertifiedPayslipsDocument' => "Three Months Certified Payslips Document",
             'employmentContractDocument' => "Employment Contract Document",
             'ofwEmploymentCertificateDocument' => "OFW Employment Certificate Document",
             'passportWithVisaDocument' => "Passport with Visa Document",
@@ -139,7 +140,7 @@ class MediaController extends Controller
     }
 
     protected function getRequirementMatrix(){
-        $response = Http::post('https://contracts.homeful.ph/api/requirement-matrix-filtered', [
+        $response = Http::post(config('contract.contract_url').'/api/requirement-matrix-filtered', [
             'employment_status' => $this->contact->employment[0]?->employment_type->value ?? '',
             'civil_status' => $this->contact->civil_status ?? '',
         ]);
@@ -149,6 +150,25 @@ class MediaController extends Controller
             return [];
         }
         
+    }
+
+    public function file_upload(Request $request){
+        $validator = Validator::make($request->all(), [
+            'file' => 'required|file|max:5120|mimetypes:image/jpeg,image/png,image/jpg,application/pdf,image/heic,image/heif',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->errors()->first()], 422);
+        }
+
+        if ($request->hasFile('file')) {
+            $file = $request->file('file');
+            $path = $file->store('uploads/temp', 'public');
+
+            return response()->json(['path' => $path]);
+        }
+
+        return response()->json(['error' => 'File upload failed.'], 422);
     }
     
 }
