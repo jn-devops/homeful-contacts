@@ -19,7 +19,7 @@ class MediaUpdateRequest extends FormRequest
             'file' => [
                 'required',
                 Rule::filepond([
-                    'max:1024',
+                    'max:5120',
                     'mimes:jpeg,png,pdf'
                 ]),
             ],
