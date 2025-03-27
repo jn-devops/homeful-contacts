@@ -184,6 +184,9 @@ class LazarusAPIController extends Controller
             'nationality' => $this->getMaintenanceData(config('homeful-contacts.lazarus_url').'api/admin/nationalities?filter[code]='.($data['nationality'] ?? '-'), pure_data:true)[0]['description'] ?? '076',
             'date_of_birth' => Carbon::parse($data['date_of_birth'] ?? '')->format('Y-m-d'),
             'mothers_maiden_name' => $data['mothers_maiden_name'] ?? '',
+            'other_mobile' => $data['other_mobile'] ?? '',
+            'help_number' => $data['help_number'] ?? '',
+            'landline' => $data['landline'] ?? '',
             'addresses' => [
                 [
                     'type' => 'Primary',

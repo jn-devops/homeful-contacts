@@ -200,8 +200,8 @@ watch(form, (newValue, oldValue) => {
                 <div class="col-span-full lg:col-span-3">
                     <TextInput 
                         v-model="form.help_number"
-                        label="Help Number"
-                        placeholder="Enter Help Number"
+                        label="HELP Certificate"
+                        placeholder="Enter HELP Certificate Number"
                         :errorMessage="form.errors.help_number"
                     />
                 </div>
