@@ -97,7 +97,7 @@ class GetAttachmentRequirement
     }
 
     private static function getRequirementMatrix($contact){
-        $response = Http::post('https://contracts.homeful.ph/api/requirement-matrix-filtered', [
+        $response = Http::post(config('contract.contract_url').'api/requirement-matrix-filtered', [
             'employment_status' => $contact->employment[0]['employment_type'] ?? '',
             'civil_status' => $contact->civil_status ?? '',
         ]);
