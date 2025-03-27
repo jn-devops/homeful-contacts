@@ -140,7 +140,7 @@ class MediaController extends Controller
     }
 
     protected function getRequirementMatrix(){
-        $response = Http::post(config('contract.contract_url').'/api/requirement-matrix-filtered', [
+        $response = Http::post(config('contract.contract_url').'api/requirement-matrix-filtered', [
             'employment_status' => $this->contact->employment[0]?->employment_type->value ?? '',
             'civil_status' => $this->contact->civil_status ?? '',
         ]);
