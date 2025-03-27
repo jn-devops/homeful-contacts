@@ -165,6 +165,12 @@ class LazarusAPIController extends Controller
         }else{
             $employment_status = $employment['employment_status'];
         }
+        
+        if(is_numeric($employment['employment_type'] ?? '')){
+            $employment_type = $this->getMaintenanceDataCode(config('homeful-contacts.lazarus_url').'api/admin/employment-types?per_page=1000', 'code', $employment['employment_type'] ?? null, 'description') ?? null;
+        }else{
+            $employment_type = $employment['employment_type'];
+        }
 
         $customer_array = [
             'first_name' => $data['first_name'] ?? '',
@@ -219,7 +225,7 @@ class LazarusAPIController extends Controller
                     'employment_status' => $employment_status,
                     'monthly_gross_income' => $employment['monthly_gross_income'] ?? 0,
                     'current_position' => $employment['current_position'] ?? null,
-                    'employment_type' => $employment['employment_type'] ?? null,
+                    'employment_type' => $employment_type ?? null,
                     'rank' => $employment['rank'],
                     'years_in_service' => $employment['years_in_service'],
                     'employer' => [
