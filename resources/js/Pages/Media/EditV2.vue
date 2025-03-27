@@ -5,12 +5,21 @@ import UploadForm from "@/Pages/Media/Partials/UploadForm.vue";
 import SectionBorder from "@/Components/SectionBorder.vue";
 import { Head, Link } from '@inertiajs/vue3';
 import Signature from './Partials/Signature.vue';
-import { computed } from 'vue';
+import { computed, onMounted, ref } from 'vue';
+import ConfirmModal from '@/Components/Modals/ConfirmModal.vue';
 
 const props = defineProps({
     contact: Object,
     matrices: Object,
 });
+
+const showWarningModal = ref(false)
+
+onMounted(() => {
+    if(props.matrices.length === 0){
+        showWarningModal.value = true
+    }
+})
 
 </script>
 
@@ -52,5 +61,15 @@ const props = defineProps({
                 </div> -->
             </div>
         </div>
+
+        <ConfirmModal
+            v-if="showWarningModal"
+            title="To see Document Requirements, enter your Civil Status and Employment Type"
+            description=""
+            true-label="Okay"
+            false-label="Close"
+            @close="showWarningModal = false"
+            @handle-true="routeToLogout"
+        />
     </AuthenticatedLayout>
 </template>
