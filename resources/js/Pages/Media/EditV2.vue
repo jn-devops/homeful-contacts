@@ -3,10 +3,11 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayoutV2.vue';
 import UploadForm from "@/Pages/Media/Partials/UploadForm.vue";
 import SectionBorder from "@/Components/SectionBorder.vue";
-import { Head, Link } from '@inertiajs/vue3';
+import { Head, Link, router } from '@inertiajs/vue3';
 import Signature from './Partials/Signature.vue';
 import { computed, onMounted, ref } from 'vue';
 import ConfirmModal from '@/Components/Modals/ConfirmModal.vue';
+import ExitModal from '@/Components/Modals/ExitModal.vue';
 
 const props = defineProps({
     contact: Object,
@@ -14,6 +15,54 @@ const props = defineProps({
 });
 
 const showWarningModal = ref(false)
+
+const authChild = ref(null);
+const showLogoutModal = ref(false)
+const showLogoutConfirmationModal = ref(false)
+const navigateModalLink = ref(null)
+const isNavigated = ref(false)
+
+const handleTrigger = () => {
+    if (authChild.value) {
+        // if(authChild.value.checkFormDirty()){
+        //     showLogoutConfirmationModal.value = true
+        // }else{
+            showLogoutConfirmationModal.value = true
+        // }
+    }
+}
+
+const routeToLogout = () => {
+    router.post(route('logout'))
+}
+
+const navigatePage = (link) => {
+    navigateModalLink.value = link
+    if (authChild.value) {
+        // if(authChild.value.checkFormDirty()){
+        //     isNavigated.value = true
+        // }else{
+            navigateToNext()
+        // }
+    }
+}
+
+const navigateToNext = (toSave = false) => {
+    if(toSave){
+        saveForm(toSave)
+    }
+    router.visit(navigateModalLink.value, {preserveScroll: true})
+}
+
+const saveForm = (toSave = false) => {
+    if (authChild.value) {
+        if(toSave){
+            authChild.value.saveThisForm()
+            return 
+        }
+        routeToLogout()
+    }
+}
 
 onMounted(() => {
     if(props.matrices.length === 0){
@@ -26,7 +75,7 @@ onMounted(() => {
 <template>
     <Head title="Attachments" />
 
-    <AuthenticatedLayout>
+    <AuthenticatedLayout @trigger-exit="handleTrigger" @navigate-page="navigatePage">
         <div class="mx-auto max-w-7xl px-6 lg:px-8">
             <h3 class="font-bold text-[#006FFD] mt-4 uppercase">Document Information</h3>
             <div class="grid grid-cols-12 gap-4 pb-10">
@@ -44,6 +93,7 @@ onMounted(() => {
                 </div>
                 <div v-else v-for="(item, index) in matrices" :key="index" class="col-span-full lg:col-span-6 xl:col-span-4">
                     <UploadForm
+                        ref="authChild"
                         :contact = "contact"
                         :name = "item?.code"
                         :label = "item?.name"
@@ -72,4 +122,28 @@ onMounted(() => {
             @handle-true="routeToLogout"
         />
     </AuthenticatedLayout>
+
+    <ExitModal
+        v-if="showLogoutModal"
+        @close="showLogoutModal = false"
+        @trigger-save="saveForm"
+    />
+
+    <ConfirmModal
+        v-if="showLogoutConfirmationModal"
+        title="Are you sure you want to logout?"
+        description="Make sure you know your credential. It was sent through your email."
+        @close="showLogoutConfirmationModal = false"
+        @handle-true="routeToLogout"
+    />
+
+    <ConfirmModal
+        v-if="isNavigated"
+        title="Unsaved Form Changes"
+        description="Make sure to save your data before you navigate to other pages."
+        true-label="Save and Proceed"
+        false-label="Cancel"
+        @close="isNavigated = false"
+        @handle-true="navigateToNext(true)"
+    />
 </template>

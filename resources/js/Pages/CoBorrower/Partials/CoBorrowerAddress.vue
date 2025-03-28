@@ -16,6 +16,22 @@ const props = defineProps({
     api_url: String,
 });
 
+const checkFormDirty = () => {
+    return form.isDirty
+};
+const checkFormError = () => {
+    return form.errors
+};
+const saveThisForm = () => {
+    updateCoBorrower()
+};
+
+defineExpose({
+    checkFormDirty,
+    saveThisForm,
+    checkFormError
+});
+
 const co_borrowers = () => {
     if (null != props.contact?.co_borrowers) {
         return Object.groupBy(props.contact?.co_borrowers, co_borrower => co_borrower.type)

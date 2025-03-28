@@ -55,6 +55,18 @@ const removeMedia = () => {
     });
 };
 
+const checkFormDirty = () => {
+    return form.isDirty
+};
+const saveThisForm = () => {
+    uploadMedia()
+};
+
+defineExpose({
+    checkFormDirty,
+    saveThisForm
+});
+
 // Create FilePond component
 const FilePond = vueFilePond(FilePondPluginFileValidateType, FilePondPluginImagePreview);
 
