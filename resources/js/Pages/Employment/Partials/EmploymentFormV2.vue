@@ -17,6 +17,18 @@ const props = defineProps({
     api_url: String,
 });
 
+const checkFormDirty = () => {
+    return form.isDirty
+};
+const saveThisForm = () => {
+    updateEmployment()
+};
+
+defineExpose({
+    checkFormDirty,
+    saveThisForm
+});
+
 const employmentStatusList = usePage().props.enums.employment_statuses.map(item => ({
     id: item,
     name: item

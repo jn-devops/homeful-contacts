@@ -13,6 +13,18 @@ const props = defineProps({
     contact: Object,
 });
 
+const checkFormDirty = () => {
+    return form.isDirty
+};
+const saveThisForm = () => {
+    updatePersonalInformation()
+};
+
+defineExpose({
+    checkFormDirty,
+    saveThisForm
+});
+
 const form = useForm({
     first_name: props.contact?.first_name ?? usePage().props.auth.user.first_name,
     middle_name: props.contact?.middle_name,

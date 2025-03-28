@@ -11,13 +11,23 @@ import PlainBlackButton from '@/Components/Buttons/PlainBlackButton.vue';
 import axios from 'axios';
 import { Vue3Lottie } from "vue3-lottie";
 
-
-
 const props = defineProps({
     contact: Object,
     address_type: String,
     api_token: String,
     api_url: String,
+});
+
+const checkFormDirty = () => {
+    return form.isDirty
+};
+const saveThisForm = () => {
+    updateAddress()
+};
+
+defineExpose({
+    checkFormDirty,
+    saveThisForm
 });
 
 const addresses = () => {
