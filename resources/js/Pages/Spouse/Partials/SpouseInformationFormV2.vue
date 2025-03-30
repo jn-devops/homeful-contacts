@@ -13,6 +13,18 @@ const props = defineProps({
     spouse: Object,
 });
 
+const checkFormDirty = () => {
+    return form.isDirty
+};
+const saveThisForm = () => {
+    updateSpouseInformation()
+};
+
+defineExpose({
+    checkFormDirty,
+    saveThisForm
+});
+
 const form = useForm({
     first_name: props.spouse?.first_name,
     middle_name: props.spouse?.middle_name,
@@ -213,7 +225,7 @@ watch(form, (newValue, oldValue) => {
                 <div class="w-full lg:w-64">
                     <PlainBlackButton :disabled="form.processing" type="submit" customClass="w-auto">
                         <p class="text-white font-bold text-center">
-                            Save {{ employment_type }} Data
+                            Save Spouse Data
                         </p>
                     </PlainBlackButton>
                 </div>

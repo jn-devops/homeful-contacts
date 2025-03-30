@@ -13,6 +13,18 @@ const props = defineProps({
     aif: Object,
 });
 
+const checkFormDirty = () => {
+    return form.isDirty
+};
+const saveThisForm = () => {
+    updateAIFInformation()
+};
+
+defineExpose({
+    checkFormDirty,
+    saveThisForm
+});
+
 const form = useForm({
     first_name: props.aif?.first_name,
     middle_name: props.aif?.middle_name,

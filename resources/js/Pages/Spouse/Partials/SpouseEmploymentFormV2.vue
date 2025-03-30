@@ -17,6 +17,18 @@ const props = defineProps({
     api_url: String,
 });
 
+const checkFormDirty = () => {
+    return form.isDirty
+};
+const saveThisForm = () => {
+    updateSpouseEmployment()
+};
+
+defineExpose({
+    checkFormDirty,
+    saveThisForm
+});
+
 const employment_records = () => {
     if (null != props.spouse?.employment) {
         return Object.groupBy(props.spouse?.employment, employment => employment.type)
