@@ -81,6 +81,11 @@ const emit = defineEmits(['trigger-exit', 'navigate-page'])
                                             Profile
                                         </DropdownLink>
                                         <DropdownLink
+                                            :href="route('consult-page')"
+                                        >
+                                            Consult Page
+                                        </DropdownLink>
+                                        <DropdownLink
                                             :href="route('logout')"
                                             method="post"
                                             as="button"
