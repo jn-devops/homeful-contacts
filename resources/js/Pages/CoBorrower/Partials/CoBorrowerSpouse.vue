@@ -66,8 +66,8 @@ const form = useForm({
     landline: spouse?.landline,
 })
 
-const updateCoBorrower = () => {
-    form.patch(route('co_borrower-spouse.update'), {
+const updateCoBorrower = async () => {
+    await form.patch(route('co_borrower-spouse.update'), {
         errorBag: 'updateCoBorrower',
         preserveScroll: true,
     });

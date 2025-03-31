@@ -75,8 +75,8 @@ const form = useForm({
     employment: []
 })
 
-const updateCoBorrower = () => {
-    form.patch(route('co_borrower.update'), {
+const updateCoBorrower = async () => {
+    await form.patch(route('co_borrower.update'), {
         errorBag: 'updateCoBorrower',
         preserveScroll: true,
     });

@@ -59,8 +59,8 @@ const form = useForm({
     country: address()?.country ?? 'PH'
 })
 
-const updateAddress = () => {
-    form.patch(route('address.update'), {
+const updateAddress = async () => {
+    await form.patch(route('address.update'), {
         errorBag: 'updateAddress',
         preserveScroll: true,
     });

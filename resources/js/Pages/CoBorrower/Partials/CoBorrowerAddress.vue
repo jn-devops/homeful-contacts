@@ -202,8 +202,8 @@ const formatAPItoComponent = (data, type) => {
     }
 };
 
-const updateCoBorrower = () => {
-    form.patch(route('co_borrower-address.update'), {
+const updateCoBorrower = async () => {
+    await form.patch(route('co_borrower-address.update'), {
         errorBag: 'updateCoBorrower',
         preserveScroll: true,
     });

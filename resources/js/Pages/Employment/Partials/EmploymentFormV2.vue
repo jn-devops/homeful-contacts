@@ -218,8 +218,8 @@ const getBarangay = async (region_code = null, province_code = null, city_code =
     }
 }
 
-const updateEmployment = () => {
-    form.patch(route('employment.update'), {
+const updateEmployment = async () => {
+    await form.patch(route('employment.update'), {
         errorBag: 'updateEmployment',
         preserveScroll: true,
     });

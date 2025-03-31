@@ -115,8 +115,8 @@ const employmentTypeList = usePage().props.enums.employment_types.map(item => ({
     name: item
 }));
 
-const updateCoBorrowerEmployment = () => {
-    form.patch(route('co_borrower-employment.update'), {
+const updateCoBorrowerEmployment = async () => {
+    await form.patch(route('co_borrower-employment.update'), {
         errorBag: 'updateCoBorrowerEmployment',
         preserveScroll: true,
     });

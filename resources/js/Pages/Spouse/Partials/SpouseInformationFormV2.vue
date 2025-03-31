@@ -60,8 +60,8 @@ const nameSuffixList = usePage().props.enums.name_suffixes.map(item => ({
     name: item
 }));
 
-const updateSpouseInformation = () => {
-    form.patch(route('spouse.update'), {
+const updateSpouseInformation = async () => {
+    await form.patch(route('spouse.update'), {
         errorBag: 'updateSpouseInformation',
         preserveScroll: true,
     });

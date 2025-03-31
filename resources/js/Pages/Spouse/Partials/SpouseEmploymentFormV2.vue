@@ -237,8 +237,8 @@ const employmentTypeList = usePage().props.enums.employment_types.map(item => ({
     name: item
 }));
 
-const updateSpouseEmployment = () => {
-    form.patch(route('spouse-employment.update'), {
+const updateSpouseEmployment = async () => {
+    await form.patch(route('spouse-employment.update'), {
         errorBag: 'updateSpouseEmployment',
         preserveScroll: true,
     });
