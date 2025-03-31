@@ -42,11 +42,12 @@ const form = useForm({
     landline: props.contact?.landline,
 })
 
-const updatePersonalInformation = () => {
-    form.patch(route('personal.update'), {
+const updatePersonalInformation = async () => {
+    await form.patch(route('personal.update'), {
         errorBag: 'updatePersonalInformation',
         preserveScroll: true,
     });
+
 };
 
 const civilStatusList = usePage().props.enums.civil_statuses.map(item => ({
