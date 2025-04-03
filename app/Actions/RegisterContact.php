@@ -2,7 +2,9 @@
 
 namespace App\Actions;
 
+use Carbon\Carbon;
 use Homeful\Contacts\Enums\{CivilStatus, Employment, EmploymentStatus, Nationality, Sex, Suffix};
+use Illuminate\Support\Facades\Date;
 use Illuminate\Validation\{Rule, Rules, ValidationException};
 use Homeful\Contacts\Classes\ReferenceMetadata;
 use Propaganistas\LaravelPhone\Rules\Phone;
@@ -38,6 +40,8 @@ class RegisterContact
         //it is not needed in the persisting of the contact
         //but will be used later in the employment
         $gmi = (float) Arr::pull($validated, 'monthly_gross_income');
+        $cobo_gmi = (float) Arr::pull($validated, 'cobo_monthly_gross_income');
+        $cobo_date_of_birth = Carbon::parse(Arr::pull($validated, 'cobo_date_of_birth'));
 
         if (!Arr::get($validated, 'name')) {
             Arr::set($validated, 'name', $validated['first_name'] . ' ' . $validated['last_name']);
@@ -64,6 +68,28 @@ class RegisterContact
             ]];
             $contact->save();
         }
+
+        if ($cobo_gmi > 0.0 && $cobo_date_of_birth !=null) {
+            $contact->co_borrowers[] = [
+                'first_name' => 'Coborrower 1',
+                'last_name' => 'Coborrower 1',
+                'name_suffix'=> Suffix::default(),
+                'civil_status' => CivilStatus::default(),
+                'sex'=> Sex::default(),
+                'nationality'=> Nationality::default(),
+                'date_of_birth' => $cobo_date_of_birth,
+                'employement'=>[
+                    'type' => Employment::default(),
+                    'monthly_gross_income' => $cobo_gmi,
+                    'employment_status' => EmploymentStatus::default(),
+                    'id' => [
+                        'tin' => Dummy::TIN
+                    ]
+                ]
+            ];
+        }
+
+
         //associate the contact with the user
         $user->contact()->associate($contact);
         $user->save();
