@@ -55,7 +55,7 @@ const form = useForm({
     date_of_birth: '',
     monthly_gross_income: null,
     cobo_monthly_gross_income: null,
-    cobo_date_of_birth: null,
+    cobo_date_of_birth: '',
 });
 
 const submit = () => {
@@ -194,6 +194,7 @@ const viewAgreements = () => {
                             <div class="mt-5">
                                 <GradientStyleDateInput
                                     label="Coborrower's Birthdate"
+                                    required
                                     v-model="form.cobo_date_of_birth"
                                     :error="form.errors.cobo_date_of_birth"
                                 />

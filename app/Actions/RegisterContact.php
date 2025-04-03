@@ -70,12 +70,12 @@ class RegisterContact
         }
 
         if ($cobo_gmi > 0.0 && $cobo_date_of_birth !=null) {
-            $contact->co_borrowers[] = [
+            $co_borrowers[] = [
                 'first_name' => 'Coborrower 1',
                 'last_name' => 'Coborrower 1',
                 'name_suffix'=> Suffix::default(),
                 'civil_status' => CivilStatus::default(),
-                'sex'=> Sex::default(),
+                'sex'=> Sex::MALE,
                 'nationality'=> Nationality::default(),
                 'date_of_birth' => $cobo_date_of_birth,
                 'employement'=>[
@@ -87,8 +87,10 @@ class RegisterContact
                     ]
                 ]
             ];
+            $contact->update(['co_borrowers' => $co_borrowers]);
         }
 
+        dd($contact, $cobo_gmi, $cobo_date_of_birth, $cobo_gmi > 0.0 && $cobo_date_of_birth !=null);
 
         //associate the contact with the user
         $user->contact()->associate($contact);
@@ -143,6 +145,9 @@ class RegisterContact
             'co_borrowers' => ['nullable', 'array'],
             'aif' => ['nullable', 'array'],
             'order' => ['nullable', 'array'],
+            'cobo_monthly_gross_income' => ['nullable', 'string'],
+            'cobo_date_of_birth' => ['nullable', 'date'],
+
         ];
     }
 
