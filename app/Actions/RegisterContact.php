@@ -3,7 +3,7 @@
 namespace App\Actions;
 
 use Carbon\Carbon;
-use Homeful\Contacts\Enums\{CivilStatus, Employment, EmploymentStatus, Nationality, Sex, Suffix};
+use Homeful\Contacts\Enums\{CivilStatus, CoBorrowerType, Employment, EmploymentStatus, Nationality, Sex, Suffix};
 use Illuminate\Support\Facades\Date;
 use Illuminate\Validation\{Rule, Rules, ValidationException};
 use Homeful\Contacts\Classes\ReferenceMetadata;
@@ -71,6 +71,7 @@ class RegisterContact
 
         if ($cobo_gmi > 0.0 && $cobo_date_of_birth !=null) {
             $co_borrowers[] = [
+                'type' => CoBorrowerType::default(),
                 'first_name' => 'Coborrower 1',
                 'last_name' => 'Coborrower 1',
                 'name_suffix'=> Suffix::default(),
