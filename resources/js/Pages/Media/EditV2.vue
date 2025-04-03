@@ -8,7 +8,6 @@ import Signature from './Partials/Signature.vue';
 import { computed, onMounted, ref } from 'vue';
 import ConfirmModal from '@/Components/Modals/ConfirmModal.vue';
 import ExitModal from '@/Components/Modals/ExitModal.vue';
-import SelectDocumentMenu from '@/Components/Inputs/SelectDocumentMenu.vue';
 
 const props = defineProps({
     contact: Object,
@@ -22,6 +21,13 @@ onMounted(() => {
         showWarningModal.value = true
     }
 })
+
+const handleTrigger = () => {
+}
+
+const navigatePage = (link) => {
+    router.visit(link, {preserveScroll: true})
+}
 
 </script>
 
@@ -44,9 +50,9 @@ onMounted(() => {
                         </div>
                     </div>
                 </div>
-                <div v-else class="col-span-full">
+                <div v-else class="col-span-full grid grid-cols-12 gap-4">
                     <!-- New Uploading Version -->
-                    <div class="flex flex-col md:flex-row gap-2 mt-3">
+                    <!-- <div class="flex flex-col md:flex-row gap-2 mt-3">
                         <div class="basis-1/4">
                             <div class="px-3 ">
                                 <SelectDocumentMenu 
@@ -58,24 +64,21 @@ onMounted(() => {
                         <div class="basis-3/4 p-2">
                             
                         </div>
-                    </div>
+                    </div> -->
                     <!-- END New Uploading Version -->
+                    <!-- Old Upload Version -->
+                    <div v-for="(item, index) in matrices" :key="index" class="col-span-full lg:col-span-6 xl:col-span-4">
+                        <UploadForm
+                            ref="authChild"
+                            :contact = "contact"
+                            :name = "item?.code"
+                            :label = "item?.name"
+                            :preview-url="item?.url"
+                            :file-type="item?.type"
+                        />
+                    </div>
+                    <!-- END Old Upload Version -->
                 </div>
-
-                <!-- Old Upload Version -->
-                <!-- <div v-else v-for="(item, index) in matrices" :key="index" class="col-span-full lg:col-span-6 xl:col-span-4">
-                    <UploadForm
-                        ref="authChild"
-                        :contact = "contact"
-                        :name = "item?.code"
-                        :label = "item?.name"
-                        :preview-url="item?.url"
-                        :file-type="item?.type"
-                    />
-                </div> -->
-                <!-- END Old Upload Version -->
-
-
                 <!-- Signature -->
                 <!-- <div class="col-span-full lg:col-span-6 xl:col-span-4">
                     <p class="text-sm font-medium text-gray-700 w-full text-start pb-4">Signature</p>
