@@ -94,8 +94,8 @@ return [
     */
     'validation_rules' => [
         'required',
-        'file',
-        'max:5000',
+        'mimes:jpg,jpeg,png,pdf,heic,heif',
+        'max:10240',
     ],
 
     /*

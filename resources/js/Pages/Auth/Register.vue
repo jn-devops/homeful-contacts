@@ -35,6 +35,7 @@ const props = defineProps({
 });
 
 const showTC = ref(false)
+const showCoBorrowerGMI = ref(false)
 const showAgreementPage = ref(false)
 
 const toggleTC = () => {
@@ -53,6 +54,8 @@ const form = useForm({
     password_confirmation: props.autoPassword,
     date_of_birth: '',
     monthly_gross_income: null,
+    cobo_monthly_gross_income: null,
+    cobo_date_of_birth: null,
 });
 
 const submit = () => {
@@ -165,8 +168,40 @@ const viewAgreements = () => {
                             :error="form.errors.monthly_gross_income"
                         />
                     </div>
+                    <div class="mt-1">
+                        <div class="flex flex-row items-center gap-2">
+                            <input type="checkbox" v-model="showCoBorrowerGMI" id="add_coborrower" class="rounded text-black border-black focus:ring-0">
+                            <label for="add_coborrower" class="text-sm"> Add Co-coborrower</label>
+                        </div>
+                    </div>
+                    <Transition
+                        enter-active-class="transition ease-in-out"
+                        enter-from-class="opacity-0"
+                        leave-active-class="transition ease-in-out"
+                        leave-to-class="opacity-0"
+                    >
+                        <div v-if="showCoBorrowerGMI">
+                            <div class="mt-5" >
+                                <GradientStyleInput
+                                    label="Co-Borrower's GMI"
+                                    type="number"
+                                    placeholder="Enter Co-borrower's Gross Monthly Income"
+                                    v-model="form.cobo_monthly_gross_income"
+                                    :error="form.errors.cobo_monthly_gross_income"
+                                />
+                                
+                            </div>
+                            <div class="mt-5">
+                                <GradientStyleDateInput
+                                    label="Coborrower's Birthdate"
+                                    v-model="form.cobo_date_of_birth"
+                                    :error="form.errors.cobo_date_of_birth"
+                                />
+                            </div>
+                        </div>
+                    </Transition>
                 </div>
-                <div class="mt-3 px-2">
+                <div class="mt-10 px-2">
                     <div class="flex items-center mb-4 gap-2" @click="viewAgreements">
                         <!-- <input type="checkbox"  @click="viewAgreements" v-model="disclaimerChecked" id="default-checkbox" class="w-5 h-5 text-[#F7C947] rounded-sm focus:ring-[#E94572]"> -->
                          <div v-if="disclaimerChecked" class="w-6 h-5 bg-[#F7C947] rounded border-2 border-black">
@@ -181,7 +216,7 @@ const viewAgreements = () => {
                         </label>
                     </div>
                 </div>
-                <div class="mt-14">
+                <div class="">
                     <PlainBlackButton type="submit" :disabled="!disclaimerChecked">
                         Register
                     </PlainBlackButton>

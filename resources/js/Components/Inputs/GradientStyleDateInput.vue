@@ -50,7 +50,7 @@ const dateFormat  =  {
 </script>
 <template>
     <div>
-        <label class="block text-sm/6 font-medium mb-2" :class="error ? 'text-red-600' : 'text-gray-900'">{{label}} <span v-if="required" class="text-red-600">*</span></label>
+        <label class="block text-sm/6 font-semibold mb-2" :class="error ? 'text-red-600' : 'text-gray-900'">{{label}} <span v-if="required" class="text-red-600">*</span></label>
         <DefaultGradientBorder>
             <VueDatepicker 
                 v-model="model"

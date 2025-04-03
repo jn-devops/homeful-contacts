@@ -8,6 +8,7 @@ import Signature from './Partials/Signature.vue';
 import { computed, onMounted, ref } from 'vue';
 import ConfirmModal from '@/Components/Modals/ConfirmModal.vue';
 import ExitModal from '@/Components/Modals/ExitModal.vue';
+import SelectDocumentMenu from '@/Components/Inputs/SelectDocumentMenu.vue';
 
 const props = defineProps({
     contact: Object,
@@ -15,54 +16,6 @@ const props = defineProps({
 });
 
 const showWarningModal = ref(false)
-
-const authChild = ref(null);
-const showLogoutModal = ref(false)
-const showLogoutConfirmationModal = ref(false)
-const navigateModalLink = ref(null)
-const isNavigated = ref(false)
-
-const handleTrigger = () => {
-    if (authChild.value) {
-        // if(authChild.value.checkFormDirty()){
-        //     showLogoutConfirmationModal.value = true
-        // }else{
-            showLogoutConfirmationModal.value = true
-        // }
-    }
-}
-
-const routeToLogout = () => {
-    router.post(route('logout'))
-}
-
-const navigatePage = (link) => {
-    navigateModalLink.value = link
-    if (authChild.value) {
-        // if(authChild.value.checkFormDirty()){
-        //     isNavigated.value = true
-        // }else{
-            navigateToNext()
-        // }
-    }
-}
-
-const navigateToNext = (toSave = false) => {
-    if(toSave){
-        saveForm(toSave)
-    }
-    router.visit(navigateModalLink.value, {preserveScroll: true})
-}
-
-const saveForm = (toSave = false) => {
-    if (authChild.value) {
-        if(toSave){
-            authChild.value.saveThisForm()
-            return 
-        }
-        routeToLogout()
-    }
-}
 
 onMounted(() => {
     if(props.matrices.length === 0){
@@ -91,7 +44,26 @@ onMounted(() => {
                         </div>
                     </div>
                 </div>
-                <div v-else v-for="(item, index) in matrices" :key="index" class="col-span-full lg:col-span-6 xl:col-span-4">
+                <div v-else class="col-span-full">
+                    <!-- New Uploading Version -->
+                    <div class="flex flex-col md:flex-row gap-2 mt-3">
+                        <div class="basis-1/4">
+                            <div class="px-3 ">
+                                <SelectDocumentMenu 
+                                    :options="filteredOptions"
+                                    v-model="selectedCode"
+                                />
+                            </div>
+                        </div>
+                        <div class="basis-3/4 p-2">
+                            
+                        </div>
+                    </div>
+                    <!-- END New Uploading Version -->
+                </div>
+
+                <!-- Old Upload Version -->
+                <!-- <div v-else v-for="(item, index) in matrices" :key="index" class="col-span-full lg:col-span-6 xl:col-span-4">
                     <UploadForm
                         ref="authChild"
                         :contact = "contact"
@@ -100,7 +72,11 @@ onMounted(() => {
                         :preview-url="item?.url"
                         :file-type="item?.type"
                     />
-                </div>
+                </div> -->
+                <!-- END Old Upload Version -->
+
+
+                <!-- Signature -->
                 <!-- <div class="col-span-full lg:col-span-6 xl:col-span-4">
                     <p class="text-sm font-medium text-gray-700 w-full text-start pb-4">Signature</p>
                     <div class="w-full h-[300px] flex flex-col items-center justify-center bg-white rounded-lg">
@@ -109,6 +85,7 @@ onMounted(() => {
                         />
                     </div>
                 </div> -->
+                <!-- END Signature -->
             </div>
         </div>
 
