@@ -90,8 +90,6 @@ class RegisterContact
             $contact->update(['co_borrowers' => $co_borrowers]);
         }
 
-        dd($contact, $cobo_gmi, $cobo_date_of_birth, $cobo_gmi > 0.0 && $cobo_date_of_birth !=null);
-
         //associate the contact with the user
         $user->contact()->associate($contact);
         $user->save();
