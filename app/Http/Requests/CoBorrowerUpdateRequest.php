@@ -30,6 +30,7 @@ class CoBorrowerUpdateRequest extends FormRequest
             'mobile' => ['nullable', 'string', 'max:11'],
             'other_mobile' => 'nullable|string|max:20',
             'landline' => 'nullable|string|max:20',
+            'relation' => 'required|string|max:30',
             'employment' => ['nullable']
         ];
     }

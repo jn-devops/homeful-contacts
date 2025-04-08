@@ -6,8 +6,9 @@ import TextInput from '@/Components/Inputs/TextInput.vue';
 import SuccessToast from '@/Components/Notification/SuccessToast.vue';
 import WarningToast from '@/Components/Notification/WarningToast.vue';
 import { useForm, usePage } from '@inertiajs/vue3';
-import { ref, watch } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 import PlainBlackButton from '@/Components/Buttons/PlainBlackButton.vue';
+import axios from 'axios';
 
 const props = defineProps({
     contact: Object,
@@ -72,6 +73,7 @@ const form = useForm({
     mobile: co_borrower()?.mobile,
     other_mobile: co_borrower()?.other_mobile,
     landline: co_borrower()?.landline,
+    relation: co_borrower()?.relation,
     employment: []
 })
 
@@ -96,6 +98,10 @@ const nationalityList = usePage().props.enums.nationalities.map(item => ({
     name: item
 }));
 const nameSuffixList = usePage().props.enums.name_suffixes.map(item => ({
+    id: item,
+    name: item
+}));
+const relationList = usePage().props.enums.relations.map(item => ({
     id: item,
     name: item
 }));
@@ -201,6 +207,15 @@ watch(form, (newValue, oldValue) => {
                         required
                         :options="genderList"
                         :errorMessage="form.errors.sex"
+                    />
+                </div>
+                <div class="col-span-full lg:col-span-3">
+                    <SelectInput 
+                        v-model="form.relation"
+                        label="Relationship to Buyer"
+                        required
+                        :options="relationList"
+                        :errorMessage="form.errors.relation"
                     />
                 </div>
                 <div class="col-span-full lg:col-span-3">
