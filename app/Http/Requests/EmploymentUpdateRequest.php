@@ -26,6 +26,7 @@ class EmploymentUpdateRequest extends FormRequest
             'rank' =>  ['nullable', 'string', 'max:100'],
             'years_in_service' =>  ['nullable', 'string', 'max:100'],
             'employer_year_established' =>  ['nullable', 'string', 'max:100'],
+            'employer_total_number_of_employees' =>  ['nullable', 'string'],
 
             'employer_email' =>  ['required_with:employer_name', 'email'],
             'employer_contact_no' =>  ['required_with:employer_name', 'string', 'min:10'],
