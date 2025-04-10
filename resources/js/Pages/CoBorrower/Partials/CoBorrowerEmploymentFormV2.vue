@@ -86,6 +86,7 @@ const form = useForm({
     employer_address_ownership: employment_record()?.employer?.address?.ownership ?? 'Unknown',
     employer_address_address1: employment_record()?.employer?.address?.address1,
     employer_address_locality: employment_record()?.employer?.address?.locality,
+    employer_address_sublocality: employment_record()?.employer?.address?.sublocality,
     employer_address_administrative_area: employment_record()?.employer?.address?.administrative_area,
     employer_address_postal_code: employment_record()?.employer?.address?.postal_code,
     employer_address_region: employment_record()?.employer?.address?.region,
@@ -547,6 +548,22 @@ onMounted(() => {
                         label="City"
                         :options="formatted_api_city"
                         :errorMessage="form.errors.employer_address_locality"
+                    />
+                </div>
+                <div v-else class="col-span-full lg:col-span-3 flex items-center justify-center">
+                    <div class="w-20">
+                        <Vue3Lottie 
+                            animationLink="/animation/simple_loading_animation.json" 
+                            width="100%" 
+                        />
+                    </div>
+                </div>
+                <div v-if="!barangay_loading" class="col-span-full lg:col-span-3">
+                    <SelectInput 
+                        v-model="form.employer_address_sublocality"
+                        label="Barangay"
+                        :options="formatted_api_barangay"
+                        :errorMessage="form.errors.employer_address_sublocality"
                     />
                 </div>
                 <div v-else class="col-span-full lg:col-span-3 flex items-center justify-center">
