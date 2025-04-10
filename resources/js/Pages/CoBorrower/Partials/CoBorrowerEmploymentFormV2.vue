@@ -73,6 +73,8 @@ const form = useForm({
     co_borrower_type: props.co_borrower_type,
     co_borrower_employment: props.employment_type,
     employment_status: employment_record()?.employment_status,
+    employment_rank: employment_record()?.rank,
+    employment_years_in_service: employment_record()?.years_in_service,
     monthly_gross_income: employment_record()?.monthly_gross_income,
     current_position: employment_record()?.current_position,
     employment_type: employment_record()?.employment_type,
@@ -81,6 +83,7 @@ const form = useForm({
     employer_contact_no: employment_record()?.employer?.contact_no,
     employer_nationality: employment_record()?.employer?.nationality,
     employer_industry: employment_record()?.employer?.industry,
+    employer_total_number_of_employees: employment_record()?.employer?.total_number_of_employees,
 
     employer_address_type: employment_record()?.employer?.address?.type ?? 'Work',
     employer_address_ownership: employment_record()?.employer?.address?.ownership ?? 'Unknown',
@@ -122,6 +125,24 @@ const updateCoBorrowerEmployment = async () => {
         preserveScroll: true,
     });
 };
+
+const api_tenure = ref([])
+const tenure_loading = ref(true)
+const formatted_tenure = ref([])
+const getTenure = async () => {
+    try {
+        
+        const response = await axios.get(props.api_url+'api/admin/tenures?per_page=300', {
+                headers: {
+                    Authorization: `Bearer ${props.api_token}`,
+                },
+            });
+        api_tenure.value = response.data
+        
+    } catch (error) {
+        console.error('Error fetching data:', error);
+    }
+}
 
 const api_current_position = ref([])
 const current_position_loading = ref(true)
@@ -264,6 +285,12 @@ const formatAPItoComponent = (data, type) => {
               name: list.description
             }));
             break;
+        case 'tenure':
+            return data.data.map(list => ({
+              id: list.code,
+              name: list.description
+            }));
+            break;
         default:
             break;
     }
@@ -356,6 +383,10 @@ onMounted(() => {
         formatted_current_positions.value = formatAPItoComponent(api_current_position.value, 'current_position')
         current_position_loading.value = false
     });
+    getTenure().then(() => {
+        formatted_tenure.value = formatAPItoComponent(api_tenure.value, 'tenure')
+        tenure_loading.value = false
+    })
 })
 
 
@@ -412,6 +443,30 @@ onMounted(() => {
                         required
                     />
                 </div>
+                <div class="col-span-full lg:col-span-2">
+                    <TextInput 
+                        v-model="form.employment_rank"
+                        label="Rank"
+                        placeholder="Enter Rank"
+                        :errorMessage="form.errors.employment_rank"
+                    />
+                </div>
+                <div v-if="!tenure_loading" class="col-span-full lg:col-span-2">
+                    <SelectInput 
+                        v-model="form.employment_years_in_service"
+                        label="Tenure"
+                        :options="formatted_tenure"
+                        :errorMessage="form.errors.employment_years_in_service"
+                    />
+                </div>
+                <div v-else class="col-span-full lg:col-span-2 flex items-center justify-center">
+                    <div class="w-20">
+                        <Vue3Lottie 
+                            animationLink="/animation/simple_loading_animation.json" 
+                            width="100%" 
+                        />
+                    </div>
+                </div>
                 <div class="col-span-full lg:col-span-4">
                     <TextInput 
                         v-model="form.employer_name"
@@ -436,7 +491,7 @@ onMounted(() => {
                         />
                     </div>
                 </div>
-                <div class="col-span-full lg:col-span-3">
+                <div class="col-span-full lg:col-span-4">
                     <SelectInput 
                         v-model="form.employment_type"
                         label="Employment Type"
@@ -444,7 +499,7 @@ onMounted(() => {
                         :errorMessage="form.errors.employment_type"
                     />
                 </div>
-                <div class="col-span-full lg:col-span-3">
+                <div class="col-span-full lg:col-span-4">
                     <TextInput 
                         v-model="form.employer_email"
                         label="Email"
@@ -494,6 +549,15 @@ onMounted(() => {
                         :errorMessage="form.errors.employer_address_ownership"
                     />
                 </div> -->
+                <div class="col-span-full lg:col-span-3">
+                    <TextInput 
+                        v-model="form.employer_total_number_of_employees"
+                        label="Total Number of Employees"
+                        placeholder="Enter No. of Employees"
+                        type="number"
+                        :errorMessage="form.errors.employer_total_number_of_employees"
+                    />
+                </div>
                 <div v-if="!country_loading" class="col-span-full lg:col-span-3">
                     <SelectInput 
                         v-model="form.employer_address_country"

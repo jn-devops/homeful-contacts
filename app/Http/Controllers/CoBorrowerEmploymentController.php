@@ -37,6 +37,10 @@ class CoBorrowerEmploymentController extends Controller
 
             $employment = Arr::pull($data, 'co_borrower_employment');
             Arr::set($data, 'type', $employment);
+            $employment_rank = Arr::pull($data, 'employment_rank');
+            Arr::set($data, 'rank', $employment_rank);
+            $employment_years_in_service = Arr::pull($data, 'employment_years_in_service');
+            Arr::set($data, 'years_in_service', $employment_years_in_service);
 
             $employer_email = Arr::pull($data, 'employer_email');
             Arr::set($data, 'employer.email', $employer_email);
@@ -46,6 +50,8 @@ class CoBorrowerEmploymentController extends Controller
             Arr::set($data, 'employer.nationality', $employer_nationality);
             $employer_industry = Arr::pull($data, 'employer_industry');
             Arr::set($data, 'employer.industry', $employer_industry);
+            $employer_total_number_of_employees = Arr::pull($data, 'employer_total_number_of_employees');
+            Arr::set($data, 'employer.total_number_of_employees', $employer_total_number_of_employees);
 
             $employer_address_type = Arr::pull($data, 'employer_address_type');
             Arr::set($data, 'employer.address.type', $employer_address_type);
