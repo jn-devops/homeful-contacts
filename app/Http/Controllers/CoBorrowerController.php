@@ -62,6 +62,10 @@ class CoBorrowerController extends Controller
             $records[$type]['spouse']['mobile'] = $spouse['mobile'];
             $records[$type]['spouse']['other_mobile'] = $spouse['other_mobile'];
             $records[$type]['spouse']['landline'] = $spouse['landline'];
+            $records[$type]['spouse']['employment'][0]['id']['tin'] = $spouse['employment'][0]['id']['tin'] ?? '---';
+            $records[$type]['spouse']['employment'][0]['type'] = $spouse['employment'][0]['type'] ?? 'Primary';
+            $records[$type]['spouse']['employment'][0]['monthly_gross_income'] = $spouse['employment'][0]['monthly_gross_income'] ?? 10000;
+            $records[$type]['spouse']['employment'][0]['employment_status'] = $spouse['employment'][0]['employment_status'] ?? 'Regular';
         }
         if(!empty($employment)){
             $records[$type]['employment'][0]['type'] = $employment[0]['type'] ?? null;

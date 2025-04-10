@@ -64,7 +64,7 @@ const form = useForm({
     help_number: spouse?.help_number,
     other_mobile: spouse?.other_mobile,
     landline: spouse?.landline,
-    tin: spouse?.employment['0']?.id?.tin,
+    tin: spouse?.employment[0]?.id?.tin,
 })
 
 const updateCoBorrower = async () => {

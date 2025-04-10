@@ -126,6 +126,8 @@ const saveFormToLogout = () => {
                 :contact = "contact"
                 co_borrower_type = "Primary"
                 ref="primaryCoboInfo"
+                :api_token="lazarus_token"
+                :api_url="lazarus_url"
             />
             <CoBorrowerSpouse
                 v-if="page?.props?.auth?.user?.contact?.co_borrowers?.find(item => item.type == 'Primary')?.civil_status == 'Married'"
@@ -158,6 +160,8 @@ const saveFormToLogout = () => {
                 co_borrower_type = "Secondary"
                 employment_type = "Primary"
                 ref="secondaryCoboInfo"
+                :api_token="lazarus_token"
+                :api_url="lazarus_url"
             />
             <CoBorrowerSpouse
                 v-if="page?.props?.auth?.user?.contact?.co_borrowers?.find(item => item.type == 'Secondary')?.civil_status == 'Married'"

@@ -9,10 +9,13 @@ import { useForm, usePage } from '@inertiajs/vue3';
 import { onMounted, ref, watch } from 'vue';
 import PlainBlackButton from '@/Components/Buttons/PlainBlackButton.vue';
 import axios from 'axios';
+import { Vue3Lottie } from 'vue3-lottie';
 
 const props = defineProps({
     contact: Object,
-    co_borrower_type: String
+    co_borrower_type: String,
+    api_token: String,
+    api_url: String,
 });
 
 const checkFormDirty = () => {
@@ -84,6 +87,37 @@ const updateCoBorrower = async () => {
     });
 };
 
+const formatAPItoComponent = (data, type) => {
+    switch (type) {
+        case 'relation':
+            return data.data.map(list => ({
+              id: list.description,
+              name: list.description
+            }));
+            break;
+        default:
+            break;
+    }
+};
+
+const api_relation = ref([])
+const relation_loading = ref(true)
+const formatted_relation = ref([])
+const getRelation = async () => {
+    try {
+        
+        const response = await axios.get(props.api_url+'api/admin/maintenance/relationships?per_page=1000', {
+                headers: {
+                    Authorization: `Bearer ${props.api_token}`,
+                },
+            });
+        api_relation.value = response.data
+        
+    } catch (error) {
+        console.error('Error fetching data:', error);
+    }
+}
+
 const civilStatusList = usePage().props.enums.civil_statuses.map(item => ({
     id: item,
     name: item
@@ -115,6 +149,13 @@ function closeToastFunction(){
 watch(form, (newValue, oldValue) => {
     hasValidationError.value = (form.hasErrors) ? true : false;
 });
+
+onMounted(() => {
+    getRelation().then(() => {
+        formatted_relation.value = formatAPItoComponent(api_relation.value, 'relation')
+        relation_loading.value = false
+    })
+})
 
 </script>
 
@@ -209,14 +250,22 @@ watch(form, (newValue, oldValue) => {
                         :errorMessage="form.errors.sex"
                     />
                 </div>
-                <div class="col-span-full lg:col-span-3">
+                <div v-if="!relation_loading" class="col-span-full lg:col-span-3">
                     <SelectInput 
                         v-model="form.relation"
                         label="Relationship to Buyer"
                         required
-                        :options="relationList"
+                        :options="formatted_relation"
                         :errorMessage="form.errors.relation"
                     />
+                </div>
+                <div v-else class="col-span-full lg:col-span-3 flex items-center justify-center">
+                    <div class="w-20">
+                        <Vue3Lottie 
+                            animationLink="/animation/simple_loading_animation.json" 
+                            width="100%" 
+                        />
+                    </div>
                 </div>
                 <div class="col-span-full lg:col-span-3">
                     <SelectInput 
