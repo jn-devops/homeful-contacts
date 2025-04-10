@@ -30,6 +30,7 @@ class CoBorrowerSpouseRequest extends FormRequest
             'mobile' => ['nullable', 'string', 'max:11'],
             'other_mobile' => 'nullable|string|max:20',
             'landline' => 'nullable|string|max:20',
+            'tin' => 'required|string|max:30',
         ];
     }
 }

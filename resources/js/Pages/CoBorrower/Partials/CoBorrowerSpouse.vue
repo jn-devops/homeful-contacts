@@ -64,6 +64,7 @@ const form = useForm({
     help_number: spouse?.help_number,
     other_mobile: spouse?.other_mobile,
     landline: spouse?.landline,
+    tin: spouse?.employment['0']?.id?.tin,
 })
 
 const updateCoBorrower = async () => {
@@ -240,6 +241,15 @@ watch(form, (newValue, oldValue) => {
                         label="Landline "
                         placeholder="Enter Landline "
                         :errorMessage="form.errors.landline"
+                    />
+                </div>
+                <div class="col-span-full lg:col-span-3">
+                    <TextInput 
+                        v-model="form.tin"
+                        label="TIN"
+                        placeholder="Enter TIN "
+                        :errorMessage="form.errors.tin"
+                        required
                     />
                 </div>
             </div>

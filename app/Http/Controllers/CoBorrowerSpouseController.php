@@ -26,6 +26,11 @@ class CoBorrowerSpouseController extends Controller
 
         $type = $data['co_borrower_type'];
         unset($data['co_borrower_type']);
+        $tin = Arr::pull($data, 'tin');
+        Arr::set($data, 'employment.0.id.tin', $tin);
+        Arr::set($data, 'employment.0.type', 'Primary');
+        Arr::set($data, 'employment.0.monthly_gross_income', 10000);
+        Arr::set($data, 'employment.0.employment_status', 'Regular');
         $records[$type]['spouse'] = $data;
         
         $co_borrower_records = [];
