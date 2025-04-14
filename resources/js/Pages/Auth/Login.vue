@@ -1,5 +1,5 @@
 <script setup>
-import { Head, Link, useForm, usePage } from '@inertiajs/vue3';
+import { Head, Link, router, useForm, usePage } from '@inertiajs/vue3';
 import GuestLayoutV2 from '@/Layouts/GuestLayoutV2.vue';
 import TextInput from '@/Components/Inputs/TextInput.vue';
 import PasswordInput from '@/Components/Inputs/PasswordInput.vue';
@@ -61,7 +61,7 @@ const submit = () => {
                             />
                         </div>
                         <div class="">
-                            <span class="text-blue-600 text-xs font-semibold">Forgot Password?</span>
+                            <span class="text-blue-600 text-xs font-semibold cursor-pointer" @click="router.get(route('password.request'))">Forgot Password?</span>
                         </div>
                         <div class="mt-5">
                             <PlainBlackButton type="submit">
