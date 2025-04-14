@@ -34,7 +34,7 @@ const submit = () => {
                 <div class="relative w-full">
                     <div class="w-full h-[400px]">
                         <img 
-                            :src="usePage().props.data.appURL + '/images/ModelUnitWalkthrough.gif'" alt="IMG"
+                            src="https://jn-img.enclaves.ph/Agapeya/Facade/ModelUnitWalkthrough.gif" alt="IMG"
                             class="w-full h-full object-cover"
                         >
                     </div>
