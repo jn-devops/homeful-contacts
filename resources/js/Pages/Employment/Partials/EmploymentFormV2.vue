@@ -90,7 +90,7 @@ const form = useForm({
     employer_address_administrative_area: employment_record()?.employer?.address?.administrative_area,
     employer_address_postal_code: employment_record()?.employer?.address?.postal_code,
     employer_address_region: employment_record()?.employer?.address?.region,
-    employer_address_country: employment_record()?.employer?.address?.country ?? employment_record()?.employer?.name ? 'PH' : "PH",
+    employer_address_country: employment_record()?.employer?.address?.country ?? "PH",
 
     tin: employment_record()?.id?.tin,
     pagibig: employment_record()?.id?.pagibig,
@@ -401,7 +401,78 @@ onMounted(() => {
         >
             <h3 class="font-bold text-[#006FFD] mt-4 uppercase">{{ employment_type + ' Employment Information:' }}</h3>
 
-            <div class="grid grid-cols-12 gap-4">
+            <h6 class="font-semibold text-sm">Employment</h6>
+
+            <div class="grid grid-cols-12 gap-4 px-4 mb-10">
+                <div class="col-span-full lg:col-span-4">
+                    <SelectInput 
+                        v-model="form.employment_type"
+                        label="Employment Type"
+                        required
+                        :options="employmentTypeList"
+                        :errorMessage="form.errors.employment_type"
+                    />
+                </div>
+                <template v-if="form.employment_type != 'Self-Employed'">
+                    <div class="col-span-full lg:col-span-2">
+                        <SelectInput 
+                            v-model="form.employment_status"
+                            label="Employment Status"
+                            :options="employmentStatusList"
+                            :errorMessage="form.errors.employment_status"
+                            required
+                        />
+                    </div>
+                    <div v-if="!tenure_loading" class="col-span-full lg:col-span-2">
+                        <SelectInput 
+                            v-model="form.years_in_service"
+                            label="Tenure"
+                            :options="formatted_tenure"
+                            :errorMessage="form.errors.years_in_service"
+                        />
+                    </div>
+                    <div v-else class="col-span-full lg:col-span-2 flex items-center justify-center">
+                        <div class="w-20">
+                            <Vue3Lottie 
+                                animationLink="/animation/simple_loading_animation.json" 
+                                width="100%" 
+                            />
+                        </div>
+                    </div>
+                    <div v-if="!current_position_loading" class="col-span-full lg:col-span-4">
+                        <SelectInput 
+                            v-model="form.current_position"
+                            label="Employment Position"
+                            :options="formatted_current_positions"
+                            :errorMessage="form.errors.current_position"
+                        />
+                    </div>
+                    <div v-else class="col-span-full lg:col-span-4 flex items-center justify-center">
+                        <div class="w-20">
+                            <Vue3Lottie 
+                                animationLink="/animation/simple_loading_animation.json" 
+                                width="100%" 
+                            />
+                        </div>
+                    </div>
+                    <div class="col-span-full lg:col-span-2">
+                        <TextInput 
+                            v-model="form.rank"
+                            label="Rank"
+                            placeholder="Enter Rank"
+                            :errorMessage="form.errors.rank"
+                        />
+                    </div>
+                </template>
+                <div class="col-span-full lg:col-span-5">
+                    <SelectInput 
+                        v-model="form.employer_industry"
+                        label="Industry"
+                        required
+                        :options="industryList"
+                        :errorMessage="form.errors.employer_industry"
+                    />
+                </div>
                 <div class="col-span-full lg:col-span-2">
                     <TextInput 
                         v-model="form.monthly_gross_income"
@@ -412,84 +483,53 @@ onMounted(() => {
                         required
                     />
                 </div>
-                <div class="col-span-full lg:col-span-2">
-                    <SelectInput 
-                        v-model="form.employment_status"
-                        label="Employment Status"
-                        :options="employmentStatusList"
-                        :errorMessage="form.errors.employment_status"
-                        required
-                    />
-                </div>
-                <div class="col-span-full lg:col-span-2">
+                <div class="col-span-full lg:col-span-3">
                     <TextInput 
-                        v-model="form.rank"
-                        label="Rank"
-                        placeholder="Enter Rank"
-                        :errorMessage="form.errors.rank"
+                        v-model="form.tin"
+                        label="TIN"
+                        placeholder="Enter TIN"
+                        :errorMessage="form.errors.tin"
                     />
                 </div>
+                <div class="col-span-full lg:col-span-3">
+                    <TextInput 
+                        v-model="form.pagibig"
+                        label="Pag-IBIG"
+                        placeholder="Enter Pag-IBIG Number"
+                        :errorMessage="form.errors.pagibig"
+                    />
+                </div>
+                <div class="col-span-full lg:col-span-3">
+                    <TextInput 
+                        v-model="form.sss"
+                        label="SSS/GSIS Number"
+                        placeholder="Enter SSS Number"
+                        :errorMessage="form.errors.sss"
+                    />
+                </div>
+                <!-- <div class="col-span-full lg:col-span-3">
+                    <TextInput 
+                        v-model="form.gsis"
+                        label="GSIS"
+                        placeholder="Enter GSIS Number"
+                        :errorMessage="form.errors.gsis"
+                    />
+                </div> -->
+            </div>
+
+            <h6 class="font-semibold text-sm"><span class="mt-10"><br><br>Employer/Business</span></h6>
+
+            <div class="grid grid-cols-12 gap-4 px-4">
                 <div class="col-span-full lg:col-span-4">
                     <TextInput 
                         v-model="form.employer_name"
-                        label="Employer Name"
+                        label="Employer/Business Name"
                         required
                         placeholder="Enter Employer Name"
                         :errorMessage="form.errors.employer_name"
                     />
                 </div>
-                <div class="col-span-full lg:col-span-2">
-                    <TextInput 
-                        v-model="form.employer_year_established"
-                        label="Employer Year Established"
-                        placeholder="Enter Year Established"
-                        type="number"
-                        :errorMessage="form.errors.employer_year_established"
-                    />
-                </div>
-                <div v-if="!current_position_loading" class="col-span-full lg:col-span-4">
-                    <SelectInput 
-                        v-model="form.current_position"
-                        label="Employment Position"
-                        required
-                        :options="formatted_current_positions"
-                        :errorMessage="form.errors.current_position"
-                    />
-                </div>
-                <div v-else class="col-span-full lg:col-span-4 flex items-center justify-center">
-                    <div class="w-20">
-                        <Vue3Lottie 
-                            animationLink="/animation/simple_loading_animation.json" 
-                            width="100%" 
-                        />
-                    </div>
-                </div>
-                <div v-if="!tenure_loading" class="col-span-full lg:col-span-2">
-                    <SelectInput 
-                        v-model="form.years_in_service"
-                        label="Tenure"
-                        :options="formatted_tenure"
-                        :errorMessage="form.errors.years_in_service"
-                    />
-                </div>
-                <div v-else class="col-span-full lg:col-span-2 flex items-center justify-center">
-                    <div class="w-20">
-                        <Vue3Lottie 
-                            animationLink="/animation/simple_loading_animation.json" 
-                            width="100%" 
-                        />
-                    </div>
-                </div>
-                <div class="col-span-full lg:col-span-3">
-                    <SelectInput 
-                        v-model="form.employment_type"
-                        label="Employment Type"
-                        required
-                        :options="employmentTypeList"
-                        :errorMessage="form.errors.employment_type"
-                    />
-                </div>
-                <div class="col-span-full lg:col-span-3">
+                <div class="col-span-full lg:col-span-4">
                     <TextInput 
                         v-model="form.employer_email"
                         label="Email"
@@ -510,181 +550,116 @@ onMounted(() => {
                     />
                 </div>
                 <div class="col-span-full lg:col-span-2">
-                    <SelectInput 
-                        v-model="form.employer_nationality"
-                        label="Nationality"
-                        :options="employerNationalityList"
-                        :errorMessage="form.errors.employer_nationality"
-                    />
-                </div>
-                <div class="col-span-full lg:col-span-5">
-                    <SelectInput 
-                        v-model="form.employer_industry"
-                        label="Industry"
-                        required
-                        :options="industryList"
-                        :errorMessage="form.errors.employer_industry"
-                    />
-                </div>
-                <!-- <div class="col-span-full lg:col-span-2">
                     <TextInput 
-                        v-model="form.employer_address_type"
-                        readOnly
-                        label="Address Type"
-                        required
-                        placeholder="Enter Employer Address Type"
-                        :errorMessage="form.errors.employer_address_type"
-                    />
-                </div> -->
-                <!-- <div class="col-span-full lg:col-span-3">
-                    <TextInput 
-                        v-model="form.employer_address_ownership"
-                        label="Address Ownership"
-                        required
-                        placeholder="Enter Employer Address Ownership"
-                        :errorMessage="form.errors.employer_address_ownership"
-                    />
-                </div> -->
-                <div class="col-span-full lg:col-span-3">
-                    <TextInput 
-                        v-model="form.employer_total_number_of_employees"
-                        label="Total Number of Employees"
-                        placeholder="Enter No. of Employees"
+                        v-model="form.employer_year_established"
+                        label="Year Established"
+                        placeholder="Enter Year Established"
                         type="number"
-                        :errorMessage="form.errors.employer_total_number_of_employees"
+                        :errorMessage="form.errors.employer_year_established"
                     />
                 </div>
-                <div v-if="!country_loading" class="col-span-full lg:col-span-3">
-                    <SelectInput
-                        v-model="form.employer_address_country"
-                        label="Country"
-                        :options="formatted_country"
-                        :errorMessage="form.errors.employer_address_country"
-                        required
-                    />
+
+                <!-- ADDRESS -->
+                <div class="col-span-full text-sm font-semibold pt-5">
+                    Address
                 </div>
-                <div v-else class="col-span-full lg:col-span-3 flex items-center justify-center">
-                    <div class="w-20">
-                        <Vue3Lottie 
-                            animationLink="/animation/simple_loading_animation.json" 
-                            width="100%" 
-                        />
+                <div class="col-span-full">
+                    <div class="grid grid-cols-12 gap-4">
+                        <div v-if="!country_loading" class="col-span-full lg:col-span-3">
+                            <SelectInput
+                                v-model="form.employer_address_country"
+                                label="Country"
+                                :options="formatted_country"
+                                :errorMessage="form.errors.employer_address_country"
+                                required
+                            />
+                        </div>
+                        <div v-else class="col-span-full lg:col-span-3 flex items-center justify-center">
+                            <div class="w-20">
+                                <Vue3Lottie 
+                                    animationLink="/animation/simple_loading_animation.json" 
+                                    width="100%" 
+                                />
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div v-if="!regions_loading" class="col-span-full lg:col-span-3">
-                    <SelectInput 
-                        v-model="form.employer_address_region"
-                        label="Region"
-                        required
-                        :options="formatted_api_regions"
-                        :errorMessage="form.errors.employer_address_region"
-                    />
-                </div>
-                <div v-else class="col-span-full lg:col-span-3 flex items-center justify-center">
-                    <div class="w-20">
-                        <Vue3Lottie 
-                            animationLink="/animation/simple_loading_animation.json" 
-                            width="100%" 
+                <template v-if="form.employer_address_country == 'PH'">
+                    <div v-if="!regions_loading" class="col-span-full lg:col-span-3">
+                        <SelectInput 
+                            v-model="form.employer_address_region"
+                            label="Region"
+                            required
+                            :options="formatted_api_regions"
+                            :errorMessage="form.errors.employer_address_region"
                         />
                     </div>
-                </div>
-                <div v-if="!province_loading" class="col-span-full lg:col-span-3">
-                    <SelectInput 
-                        v-model="form.employer_address_administrative_area"
-                        label="Province"
-                        required
-                        :options="formatted_api_province"
-                        :errorMessage="form.errors.employer_address_administrative_area"
-                    />
-                </div>
-                <div v-else class="col-span-full lg:col-span-3 flex items-center justify-center">
-                    <div class="w-20">
-                        <Vue3Lottie 
-                            animationLink="/animation/simple_loading_animation.json" 
-                            width="100%" 
+                    <div v-else class="col-span-full lg:col-span-3 flex items-center justify-center">
+                        <div class="w-20">
+                            <Vue3Lottie 
+                                animationLink="/animation/simple_loading_animation.json" 
+                                width="100%" 
+                            />
+                        </div>
+                    </div>
+                    <div v-if="!province_loading" class="col-span-full lg:col-span-3">
+                        <SelectInput 
+                            v-model="form.employer_address_administrative_area"
+                            label="Province"
+                            required
+                            :options="formatted_api_province"
+                            :errorMessage="form.errors.employer_address_administrative_area"
                         />
                     </div>
-                </div>
-                <div v-if="!city_loading" class="col-span-full lg:col-span-3">
-                    <SelectInput 
-                        v-model="form.employer_address_locality"
-                        label="City"
-                        required
-                        :options="formatted_api_city"
-                        :errorMessage="form.errors.employer_address_locality"
-                    />
-                </div>
-                <div v-else class="col-span-full lg:col-span-3 flex items-center justify-center">
-                    <div class="w-20">
-                        <Vue3Lottie 
-                            animationLink="/animation/simple_loading_animation.json" 
-                            width="100%" 
+                    <div v-else class="col-span-full lg:col-span-3 flex items-center justify-center">
+                        <div class="w-20">
+                            <Vue3Lottie 
+                                animationLink="/animation/simple_loading_animation.json" 
+                                width="100%" 
+                            />
+                        </div>
+                    </div>
+                    <div v-if="!city_loading" class="col-span-full lg:col-span-3">
+                        <SelectInput 
+                            v-model="form.employer_address_locality"
+                            label="City"
+                            required
+                            :options="formatted_api_city"
+                            :errorMessage="form.errors.employer_address_locality"
                         />
                     </div>
-                </div>
-                <div v-if="!barangay_loading" class="col-span-full lg:col-span-3">
-                    <SelectInput 
-                        v-model="form.employer_address_sublocality"
-                        label="Barangay"
-                        required
-                        :options="formatted_api_barangay"
-                        :errorMessage="form.errors.employer_address_sublocality"
-                    />
-                </div>
-                <div v-else class="col-span-full lg:col-span-3 flex items-center justify-center">
-                    <div class="w-20">
-                        <Vue3Lottie 
-                            animationLink="/animation/simple_loading_animation.json" 
-                            width="100%" 
+                    <div v-else class="col-span-full lg:col-span-3 flex items-center justify-center">
+                        <div class="w-20">
+                            <Vue3Lottie 
+                                animationLink="/animation/simple_loading_animation.json" 
+                                width="100%" 
+                            />
+                        </div>
+                    </div>
+                    <div v-if="!barangay_loading" class="col-span-full lg:col-span-3">
+                        <SelectInput 
+                            v-model="form.employer_address_sublocality"
+                            label="Barangay"
+                            required
+                            :options="formatted_api_barangay"
+                            :errorMessage="form.errors.employer_address_sublocality"
                         />
                     </div>
-                </div>
-                <div class="col-span-full lg:col-span-3">
+                    <div v-else class="col-span-full lg:col-span-3 flex items-center justify-center">
+                        <div class="w-20">
+                            <Vue3Lottie 
+                                animationLink="/animation/simple_loading_animation.json" 
+                                width="100%" 
+                            />
+                        </div>
+                    </div>
+                </template>
+                <div class="col-span-full">
                     <TextInput 
                         v-model="form.employer_address_address1"
                         label="Unit No., House/Bldg/St. Name"
                         placeholder="Enter Employer Address"
                         :errorMessage="form.errors.employer_address_address1"
-                    />
-                </div>
-                <!-- <div class="col-span-full lg:col-span-3">
-                    <TextInput 
-                        v-model="form.employer_address_postal_code"
-                        label="ZIP Code"
-                        placeholder="Enter Employer ZIP Code"
-                        :errorMessage="form.errors.employer_address_postal_code"
-                    />
-                </div> -->
-                <div class="col-span-full lg:col-span-3">
-                    <TextInput 
-                        v-model="form.tin"
-                        label="TIN"
-                        placeholder="Enter TIN"
-                        :errorMessage="form.errors.tin"
-                    />
-                </div>
-                <div class="col-span-full lg:col-span-3">
-                    <TextInput 
-                        v-model="form.pagibig"
-                        label="Pag-IBIG"
-                        placeholder="Enter Pag-IBIG Number"
-                        :errorMessage="form.errors.pagibig"
-                    />
-                </div>
-                <div class="col-span-full lg:col-span-3">
-                    <TextInput 
-                        v-model="form.sss"
-                        label="SSS"
-                        placeholder="Enter SSS Number"
-                        :errorMessage="form.errors.sss"
-                    />
-                </div>
-                <div class="col-span-full lg:col-span-3">
-                    <TextInput 
-                        v-model="form.gsis"
-                        label="GSIS"
-                        placeholder="Enter GSIS Number"
-                        :errorMessage="form.errors.gsis"
                     />
                 </div>
             </div>
