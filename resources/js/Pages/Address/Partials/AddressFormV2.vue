@@ -16,6 +16,10 @@ const props = defineProps({
     address_type: String,
     api_token: String,
     api_url: String,
+    sameWithPermanentAddress: {
+        type : Boolean,
+        default: false
+    },
 });
 
 const checkFormDirty = () => {
@@ -29,6 +33,8 @@ defineExpose({
     checkFormDirty,
     saveThisForm
 });
+
+const emit = defineEmits(['update:sameWithPermanentAddress']);
 
 const addresses = () => {
     if (null != props.contact?.addresses) {
@@ -56,7 +62,8 @@ const form = useForm({
     administrative_area: address()?.administrative_area,
     postal_code: address()?.postal_code,
     region: address()?.region,
-    country: address()?.country ?? 'PH'
+    country: address()?.country ?? 'PH',
+    sameWithPermanentAddress: props.sameWithPermanentAddress,
 })
 
 const updateAddress = async () => {
@@ -277,6 +284,13 @@ watch(
     }
 )
 
+watch(
+    () => form.sameWithPermanentAddress,
+    (newValue, oldValue) => {
+        emit('update:sameWithPermanentAddress', newValue)
+    }
+)
+
 onMounted(() => {
     getRegion().then(() => {
             formatted_api_regions.value = formatAPItoComponent(api_regions.value, 'region')
@@ -320,7 +334,14 @@ onMounted(() => {
             @submit.prevent="updateAddress"
             class="mt-6 space-y-6"
         >
-            <h3 class="font-bold text-[#006FFD] mt-4 uppercase">{{ props.address_type }} Address:</h3>
+            <div>
+                <h3 class="font-bold text-[#006FFD] mt-4 uppercase">{{ props.address_type }} Address:</h3>
+                <div v-if="address_type == 'Present'" class="flex flex-row items-center gap-2 cursor-pointer">
+                    <input type="checkbox" v-model="form.sameWithPermanentAddress" class="rounded text-black border-black focus:ring-0">
+                    <label class="text-sm italic"> Same with Permanent Address </label>
+                </div>
+
+            </div>
             <div class="grid grid-cols-12 gap-4">
                 <div class="col-span-full lg:col-span-2">
                     <SelectInput

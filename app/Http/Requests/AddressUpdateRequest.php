@@ -26,6 +26,7 @@ class AddressUpdateRequest extends FormRequest
             'postal_code' => ['required', 'string', 'max:25'],
             'region' => ['required', 'string', 'max:100'],
             'country' => ['required', 'string', 'max:100'],
+            'sameWithPermanentAddress' => ['required', 'boolean', 'max:100'],
         ];
     }
 

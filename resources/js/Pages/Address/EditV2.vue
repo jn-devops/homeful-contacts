@@ -8,9 +8,13 @@ import { onMounted, ref, watch } from 'vue';import ExitModal from '@/Components/
 import ConfirmModal from '@/Components/Modals/ConfirmModal.vue';
 
 const props = defineProps({
-   contact: Object,
-   lazarus_url: String,
-   lazarus_token: String,
+    contact: Object,
+    lazarus_url: String,
+    lazarus_token: String,
+    duplicate_data: {
+        type : Boolean,
+        default: false
+    },
 });
 
 const presentAddress = ref(null);
@@ -20,6 +24,7 @@ const showLogoutConfirmationModal = ref(false)
 const navigateModalLink = ref(null)
 const isNavigated = ref(false)
 const messageText = ref('You have unsaved changes that will be lost.')
+const sameWithPermanentAddress = ref(props.duplicate_data)
 
 const handleTrigger = () => {
     if (presentAddress.value && permanentAddress.value) {
@@ -86,6 +91,7 @@ onMounted(() => {
                 :api_token="lazarus_token"
                 :api_url="lazarus_url"
                 address_type = "Present"
+                v-model:sameWithPermanentAddress="sameWithPermanentAddress"
                 class="w-full"
             />
 
@@ -93,6 +99,7 @@ onMounted(() => {
             
             <AddressForm
                 ref="permanentAddress"
+                v-if="!sameWithPermanentAddress"
                 :contact = "contact"
                 :api_token="lazarus_token"
                 :api_url="lazarus_url"
