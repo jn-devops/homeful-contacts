@@ -46,7 +46,7 @@ const routeToLogout = () => {
 
 const navigatePage = (link) => {
     navigateModalLink.value = link
-    if(presentAddress.value.checkFormDirty() || permanentAddress.value.checkFormDirty()){
+    if(presentAddress?.value?.checkFormDirty() || permanentAddress?.value?.checkFormDirty()){
         isNavigated.value = true
     }else{
         navigateToNext()

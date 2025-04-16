@@ -336,11 +336,6 @@ onMounted(() => {
         >
             <div>
                 <h3 class="font-bold text-[#006FFD] mt-4 uppercase">{{ props.address_type }} Address:</h3>
-                <div v-if="address_type == 'Present'" class="flex flex-row items-center gap-2 cursor-pointer">
-                    <input type="checkbox" v-model="form.sameWithPermanentAddress" class="rounded text-black border-black focus:ring-0">
-                    <label class="text-sm italic"> Same with Permanent Address </label>
-                </div>
-
             </div>
             <div class="grid grid-cols-12 gap-4">
                 <div class="col-span-full lg:col-span-2">
@@ -456,6 +451,10 @@ onMounted(() => {
                     />
                 </div>
                 
+            </div>
+            <div v-if="address_type == 'Present'" class="flex flex-row items-center gap-2 cursor-pointer">
+                <input type="checkbox" v-model="form.sameWithPermanentAddress" class="rounded text-black border-black focus:ring-0">
+                <label class="text-sm italic"> Same with Permanent Address </label>
             </div>
             <div class="w-full lg:flex lg:flex-row lg:items-center lg:justify-center text-center pb-10">
                 <div class="w-full lg:w-64">
