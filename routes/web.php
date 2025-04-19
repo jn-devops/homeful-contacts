@@ -54,7 +54,7 @@ Route::prefix('review')->middleware('auth')->group(function () {
     Route::delete('/media', [MediaController::class, 'destroy'])->name('media.destroy');
 });
 
-Route::post('/upload-file', [MediaController::class, 'file_upload'])->name('filepond.upload');
+Route::post('/upload-file', [MediaController::class, 'file_upload'])->name('filepond-upload-file');
 Route::get('/signature', function () {
     return Inertia::render('Signature');
 });

@@ -171,7 +171,7 @@ const viewAgreements = () => {
                     <div class="mt-1">
                         <div class="flex flex-row items-center gap-2">
                             <input type="checkbox" v-model="showCoBorrowerGMI" id="add_coborrower" class="rounded text-black border-black focus:ring-0">
-                            <label for="add_coborrower" class="text-sm"> Add Co-coborrower</label>
+                            <label for="add_coborrower" class="text-sm"> Add Co-borrower</label>
                         </div>
                     </div>
                     <Transition

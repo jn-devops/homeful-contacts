@@ -12,9 +12,13 @@ import ExitModal from '@/Components/Modals/ExitModal.vue';
 const props = defineProps({
     contact: Object,
     matrices: Object,
+    csrf_token: String,
 });
 
 const showWarningModal = ref(false)
+const showLogoutModal = ref(false)
+const showLogoutConfirmationModal = ref(false)
+const isNavigated = ref(false)
 
 onMounted(() => {
     if(props.matrices.length === 0){
@@ -23,6 +27,11 @@ onMounted(() => {
 })
 
 const handleTrigger = () => {
+    showLogoutConfirmationModal.value = true
+}
+
+const routeToLogout = () => {
+    router.post(route('logout'))
 }
 
 const navigatePage = (link) => {
@@ -50,7 +59,7 @@ const navigatePage = (link) => {
                         </div>
                     </div>
                 </div>
-                <div v-else class="col-span-full grid grid-cols-12 gap-4">
+                <div v-else class="col-span-full grid grid-cols-12 gap-y-20 gap-4 pb-10">
                     <!-- New Uploading Version -->
                     <!-- <div class="flex flex-col md:flex-row gap-2 mt-3">
                         <div class="basis-1/4">
@@ -70,6 +79,7 @@ const navigatePage = (link) => {
                     <div v-for="(item, index) in matrices" :key="index" class="col-span-full lg:col-span-6 xl:col-span-4">
                         <UploadForm
                             ref="authChild"
+                            :csrf_token="csrf_token"
                             :contact = "contact"
                             :name = "item?.code"
                             :label = "item?.name"

@@ -70,18 +70,49 @@ defineExpose({
 // Create FilePond component
 const FilePond = vueFilePond(FilePondPluginFileValidateType, FilePondPluginImagePreview);
 
-// Set global options on filepond init
-const handleFilePondInit = () => {
-    setOptions({
-        credits: false,
-        server: {
-            url: '/filepond',
-            headers: {
-                'X-CSRF-TOKEN': usePage().props.csrf_token,
-            }
-        }
-    });
+const filePondServer = {
+  process: (fieldName, file, metadata, load, error, progress, abort) => {
+    const formData = new FormData();
+    formData.append(fieldName, file);
+    formData.append('file_type', props.name);
+    console.log(fieldName, file, props.name);
+    
+
+    const controller = new AbortController();
+
+    fetch('/upload-file', {
+      method: 'POST',
+      body: formData,
+      signal: controller.signal,
+      headers: {
+        Accept: 'application/json',
+        'X-CSRF-TOKEN': props.csrf_token,
+      },
+    })
+      .then(res => res.json())
+      .then(data => {
+        load(data.path); // Pass the uploaded file path back to FilePond
+      })
+      .catch(err => {
+        error('Upload failed');
+      });
+
+    // Handle progress if needed
+    // FilePond expects you to return an object with an `abort` method
+    return {
+      abort: () => {
+        controller.abort();
+        abort();
+      }
+    };
+    
+  },
+
+  revert: (uniqueFileId, load, error) => {
+    removeMedia()
+  }
 };
+
 // Set the server id from response
 const handleFilePondAvatarProcess = (error, file) => {
     form.file = file.serverId;
@@ -140,7 +171,7 @@ onMounted(() => {
                             <path fill-rule="evenodd" d="M8.586 2.586A2 2 0 0 1 10 2h4a2 2 0 0 1 2 2v2h3a1 1 0 1 1 0 2v12a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V8a1 1 0 0 1 0-2h3V4a2 2 0 0 1 .586-1.414ZM10 6h4V4h-4v2Zm1 4a1 1 0 1 0-2 0v8a1 1 0 1 0 2 0v-8Zm4 0a1 1 0 1 0-2 0v8a1 1 0 1 0 2 0v-8Z" clip-rule="evenodd"/>
                         </svg>
                         <p class="text-white font-bold text-center">
-                            Remove File
+                            Remove {{ label }}
                         </p>
                     </div>
                 </DangerButton>
@@ -152,11 +183,9 @@ onMounted(() => {
                     class-name="my-pond"
                     allow-multiple="false"
                     accepted-file-types="image/*, application/pdf"
-                    @init="handleFilePondInit"
-                    @processfile="handleFilePondAvatarProcess"
-                    @removefile="handleFilePondAvatarRemoveFile"
+                    :server="filePondServer"
                 />
-                <InputError class="mt-2" :message="form.errors.file" />
+                <!-- <InputError class="mt-2" :message="form.errors.file" />
                 <SecondaryButton :disabled="form.processing" type="submit" customClass="w-auto">
                     <div class="flex flex-row items-center gap-1">
                         <svg class="w-4 h-4 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
@@ -167,7 +196,7 @@ onMounted(() => {
                             Upload File
                         </p>
                     </div>
-                </SecondaryButton>
+                </SecondaryButton> -->
             </template>
         </form>
     </section>
