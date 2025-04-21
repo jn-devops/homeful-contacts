@@ -23,9 +23,12 @@ class MediaController extends Controller
     {
         $contact = $request->user()->contact;
         $this->contact = $contact;
+        // $customer = Customer::find($contact->id);
+        // dd($customer->selfieImage);
         return Inertia::render('Media/EditV2', [
             'contact' => $contact,
             'matrices' => $this->getMediaMatrix($contact),
+            'csrf_token' => csrf_token(),
         ]);
     }
 
@@ -105,19 +108,30 @@ class MediaController extends Controller
     }
 
     public function file_upload(Request $request){
+        
         $validator = Validator::make($request->all(), [
             'file' => 'required|file|max:5120|mimetypes:image/jpeg,image/png,image/jpg,application/pdf,image/heic,image/heif',
+            'file_type' => 'required|string',
         ]);
 
         if ($validator->fails()) {
             return response()->json(['error' => $validator->errors()->first()], 422);
         }
 
+        $user = $request->user();
+        $name = $request->input('file_type');
+
         if ($request->hasFile('file')) {
             $file = $request->file('file');
             $path = $file->store('uploads/temp', 'public');
+            $url = asset('storage/' . $path);
+            // $url = Storage::disk('digitalocean')->url($path);
+            $customer = Customer::find($user->contact->id);
+            $customer->$name = $url;
 
-            return response()->json(['path' => $path]);
+            Storage::disk('public')->delete($path);
+
+            return response()->json(['path' => $path], 200);
         }
 
         return response()->json(['error' => 'File upload failed.'], 422);
