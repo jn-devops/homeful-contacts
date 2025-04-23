@@ -453,9 +453,9 @@ class LazarusAPIController extends Controller
                 if(isset($validated['government_id_type'])){
                     $order = $customer->order;
                     if(is_array($order)){
-                        $order['government_id_type'] = $validated['government_id_type'];
+                        $order['government_id_1_type'] = $validated['government_id_type'];
                     }else{
-                        $order = ['government_id_type' => $validated['government_id_type']];
+                        $order = ['government_id_1_type' => $validated['government_id_type']];
                     }
                     $customer->order = $order;
                     $customer->save();
