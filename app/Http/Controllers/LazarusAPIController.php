@@ -441,16 +441,29 @@ class LazarusAPIController extends Controller
                 'contact_id' => 'required',
                 'attachment_name' => 'required|string',
                 'url' => 'required|string',
+                'government_id_type' => 'string',
             ]);
-
+            
             $customer = Customer::find($validated['contact_id']);
             if($customer instanceof Customer){
                 $name = $validated['attachment_name'];
                 $customer->$name = $validated['url'];
+                
+                // Save the Government ID Type if available
+                if(isset($validated['government_id_type'])){
+                    $order = $customer->order;
+                    if(is_array($order)){
+                        $order['government_id_type'] = $validated['government_id_type'];
+                    }else{
+                        $order = ['government_id_type' => $validated['government_id_type']];
+                    }
+                    $customer->order = $order;
+                    $customer->save();
+                }
 
                 return response()->json([
                     'success' => true,
-                    'message' => 'Successfully Created Lazarus Data',
+                    'message' => 'Successfully Saved Data',
                     'data' => $customer,
                 ], 200);
             }else{
