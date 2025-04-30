@@ -107,6 +107,7 @@ class LazarusAPIController extends Controller
             $validated = $request->validate([
                 'contact_id' => 'required|string',
                 'reference_code' => 'required|string',
+                'project_code' => 'nullable|string',
             ]);
 
             $data = Customer::find($validated['contact_id']);
@@ -118,7 +119,7 @@ class LazarusAPIController extends Controller
                     'data' => [],
                 ], 404);
             }
-            $params = $this->convertContactToLazarus($data, $validated['reference_code']);
+            $params = $this->convertContactToLazarus($data, $validated['reference_code'], $validated['project_code']);
 
             $response = Http::withToken(config('homeful-contacts.lazarus_api_token'))
                             ->post(config('homeful-contacts.lazarus_url').'api/admin/contacts', $params);
@@ -315,7 +316,7 @@ class LazarusAPIController extends Controller
 
     }
 
-    private function convertContactToLazarus($data, $reference_code){
+    private function convertContactToLazarus($data, $reference_code, $project_code = null){
         $param = [
             "homeful_contact_id" => $data->id,
             "reference_code" => $reference_code,
@@ -422,9 +423,48 @@ class LazarusAPIController extends Controller
                     "monthly_gross_income" => collect($data->employment)->where('type', 'Primary')->first()['monthly_gross_income'] ?? 0
                 ]
             ],
-            "co_borrowers" => null
+            'order' => [
+                'project_code' => $project_code,
+            ]
+            // "co_borrowers" => [
+            //     [
+            //         "sex" => "Female",
+            //         "name" => "CACABILOS MARJORIE  DE GUIA",
+            //         "email" => "majocacabilos260@gmail.com",
+            //         "mobile" => "9331141290",
+            //         "spouse" => [
+            //             "sex" => null,
+            //             "tin" => null,
+            //             "email" => null,
+            //             "mobile" => null,
+            //             "landline" => null,
+            //             "last_name" => null,
+            //             "first_name" => null,
+            //             "middle_name" => null,
+            //             "name_suffix" => null,
+            //             "nationality" => null,
+            //             "civil_status" => null,
+            //             "date_of_birth" => null,
+            //             "mothers_maiden_name" => null
+            //         ],
+            //         "passport" => "",
+            //         "last_name" => "DE GUIA",
+            //         "first_name" => "CACABILOS",
+            //         "date_issued" => null,
+            //         "help_number" => "WeiHYdFAOF",
+            //         "middle_name" => "MARJORIE ",
+            //         "name_suffix" => "001",
+            //         "nationality" => "076",
+            //         "civil_status" => "001",
+            //         "other_mobile" => null,
+            //         "place_issued" => "",
+            //         "date_of_birth" => "2000-02-06",
+            //         "mothers_maiden_name" => "REA B. DE GUIA ",
+            //         "relationship_to_buyer" => ""
+            //     ]
+            // ],
         ];
-        // dd($param);
+        // dd($data->employment);
         return $param;
     }
 
@@ -447,6 +487,9 @@ class LazarusAPIController extends Controller
             $customer = Customer::find($validated['contact_id']);
             if($customer instanceof Customer){
                 $name = $validated['attachment_name'];
+                if($customer->$name){
+                    $customer->$name->delete();
+                }
                 $customer->$name = $validated['url'];
                 
                 // Save the Government ID Type if available
