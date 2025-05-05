@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\ContactRegistered;
 use App\Helper\GetAttachmentRequirement;
 use App\Models\User;
 use Homeful\Contacts\Classes\ContactMetaData;
@@ -9,11 +10,13 @@ use Carbon\Carbon;
 use Exception;
 use Homeful\Contacts\Models\Contact;
 use Homeful\Contacts\Models\Customer;
+use Homeful\References\Facades\References;
 use Homeful\References\Models\Reference;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 
 class LazarusAPIController extends Controller
@@ -166,7 +169,7 @@ class LazarusAPIController extends Controller
         }else{
             $employment_status = $employment['employment_status'];
         }
-        
+
         if(is_numeric($employment['employment_type'] ?? '')){
             $employment_type = $this->getMaintenanceDataCode(config('homeful-contacts.lazarus_url').'api/admin/employment-types?per_page=1000', 'code', $employment['employment_type'] ?? null, 'description') ?? null;
         }else{
@@ -483,7 +486,7 @@ class LazarusAPIController extends Controller
                 'url' => 'required|string',
                 'government_id_type' => 'string',
             ]);
-            
+
             $customer = Customer::find($validated['contact_id']);
             if($customer instanceof Customer){
                 $name = $validated['attachment_name'];
@@ -491,7 +494,7 @@ class LazarusAPIController extends Controller
                     $customer->$name->delete();
                 }
                 $customer->$name = $validated['url'];
-                
+
                 // Save the Government ID Type if available
                 if(isset($validated['government_id_type'])){
                     $order = $customer->order;
@@ -537,5 +540,33 @@ class LazarusAPIController extends Controller
             'data' =>$contact,
         ], 200);
     }
+    public function createContact(Request $request){
+        $data = $request->contact_data;
 
+        $contact=\App\Models\Contact::where('last_name',$data['last_name'])
+            ->where('first_name',$data['first_name'])
+            ->where('date_of_birth',$data['date_of_birth']);
+        if($contact->exists()){
+            return;
+        }else{
+            $user = app(User::class)->create([
+                'name' => $data['first_name'].' '.$data['last_name'],
+                'email' => $data['email'],
+                'password'=>Hash::make(Str::uuid())
+            ]);
+            $converted = $this->convertLazarusToContactData($data);
+            $contact = app(\App\Models\Contact::class)->create($converted);
+            $user->contact()->associate($contact);
+
+            $reference = References::withOwner($user)->create();
+            $reference->addEntities($contact);
+
+            $order = $contact->order;
+            $order['homeful_id']=$reference->code;
+            $contact->order = $order;
+            $contact->save();
+
+            event(new ContactRegistered($reference));
+        }
+    }
 }
