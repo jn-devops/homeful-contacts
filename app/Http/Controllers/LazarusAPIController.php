@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Events\ContactRegistered;
 use App\Helper\GetAttachmentRequirement;
 use App\Models\User;
+use App\Notifications\SendContactReferenceCodeNotification;
 use Homeful\Contacts\Classes\ContactMetaData;
 use Carbon\Carbon;
 use Exception;
@@ -122,10 +123,10 @@ class LazarusAPIController extends Controller
                     'data' => [],
                 ], 404);
             }
-            $params = $this->convertContactToLazarus($data, $validated['reference_code'], $validated['project_code']);
-
+            $params = $this->convertContactToLazarus($data, $validated['reference_code'], $validated['project_code'] ?? null);
             $response = Http::withToken(config('homeful-contacts.lazarus_api_token'))
                             ->post(config('homeful-contacts.lazarus_url').'api/admin/contacts', $params);
+            // dd(config('homeful-contacts.lazarus_api_token'), config('homeful-contacts.lazarus_url').'api/admin/contacts', $params);
             if($response->successful()){
                 return response()->json([
                     'success' => true,
@@ -547,7 +548,11 @@ class LazarusAPIController extends Controller
             ->where('first_name',$data['first_name'])
             ->where('date_of_birth',$data['date_of_birth']);
         if($contact->exists()){
-            return;
+            return response()->json([
+                'success' => false,
+                'message' => 'Contact not found.',
+                'errors' => 'Contact not found.'
+            ], 404);
         }else{
             $user = app(User::class)->create([
                 'name' => $data['first_name'].' '.$data['last_name'],
@@ -558,15 +563,25 @@ class LazarusAPIController extends Controller
             $contact = app(\App\Models\Contact::class)->create($converted);
             $user->contact()->associate($contact);
 
+            $user->contact_id = $contact->id;
+            $user->mobile = $data['mobile'];
+            $user->save();
+
             $reference = References::withOwner($user)->create();
             $reference->addEntities($contact);
 
             $order = $contact->order;
             $order['homeful_id']=$reference->code;
+            $contact->reference_code = $reference->code;
             $contact->order = $order;
             $contact->save();
+            // $user->notify(new SendContactReferenceCodeNotification($contact->reference_code));
 
-            event(new ContactRegistered($reference));
+            // event(new ContactRegistered($reference));
+            return response()->json([
+                'success' => true,
+                'data' => $contact,
+            ], 200);
         }
     }
 }

@@ -53,6 +53,7 @@ class GetAttachmentRequirement
         // 'marriageContractDocument' => "Marriage Contract Document",
         'courtDecisionSeparationDocument' => "Court Decision (Separation) Document",
         'deathCertificateDocument' => "Death Certificate Document",
+        'cashDepositProofOfPaymentDocument' => "Cash Deposit Proof Of Payment",
     ];
 
     public static function getAttachmentByID($id){
