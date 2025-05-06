@@ -557,7 +557,7 @@ class LazarusAPIController extends Controller
             $user = app(User::class)->create([
                 'name' => $data['first_name'].' '.$data['last_name'],
                 'email' => $data['email'],
-                'password'=>Hash::make(Str::uuid())
+                'password'=>Hash::make(config('homeful-contacts.default_password'))
             ]);
             $converted = $this->convertLazarusToContactData($data);
             $contact = app(\App\Models\Contact::class)->create($converted);
@@ -575,9 +575,10 @@ class LazarusAPIController extends Controller
             $contact->reference_code = $reference->code;
             $contact->order = $order;
             $contact->save();
+
             // $user->notify(new SendContactReferenceCodeNotification($contact->reference_code));
 
-            // event(new ContactRegistered($reference));
+            event(new ContactRegistered($reference));
             return response()->json([
                 'success' => true,
                 'data' => $contact,
