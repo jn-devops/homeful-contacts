@@ -67,8 +67,8 @@ class MediaController extends Controller
         $list_images = $this->getFinalListRequirementMatrix();
         foreach($list_images as $key_matrix => $val_matrix){
             $matrixItem = $contact->$key_matrix ?? null;
-            $customer = Customer::find($contact->id)->$key_matrix;
-            $matrices[$key_matrix]['type'] = optional($matrixItem)->mime_type ?? 'unknown';
+            $customer = Customer::find($contact->id)->$key_matrix ?? null;
+            $matrices[$key_matrix]['type'] = optional($customer)->mime_type ?? 'unknown';
             $matrices[$key_matrix]['url'] = optional($customer)->getUrl() ?? null;
             $matrices[$key_matrix]['code'] = $key_matrix;
             $matrices[$key_matrix]['name'] = $val_matrix;
@@ -107,7 +107,7 @@ class MediaController extends Controller
         
     }
 
-    public function file_upload(Request $request){
+    public function file_upload_deprecated(Request $request){
         
         $validator = Validator::make($request->all(), [
             'file' => 'required|file|max:5120|mimetypes:image/jpeg,image/png,image/jpg,application/pdf,image/heic,image/heif',
@@ -135,6 +135,41 @@ class MediaController extends Controller
         }
 
         return response()->json(['error' => 'File upload failed.'], 422);
+    }
+
+    public function file_upload(Request $request){
+        
+        $validator = Validator::make($request->all(), [
+            'file' => 'required|file|max:5120|mimetypes:image/jpeg,image/png,image/jpg,application/pdf,image/heic,image/heif',
+            'file_type' => 'required|string',
+        ]);
+
+        if ($validator->fails()) {
+            return back()->withErrors([
+                'file' => $validator->errors()->first(),
+            ]);
+        }
+
+        $user = $request->user();
+        $name = $request->input('file_type');
+
+        if ($request->hasFile('file')) {
+            $file = $request->file('file');
+            $path = $file->store('uploads/temp', 'public');
+            $url = asset('storage/' . $path);
+            // $url = Storage::disk('digitalocean')->url($path);
+            $customer = Customer::find($user->contact->id);
+            $customer->$name = $url;
+
+            Storage::disk('public')->delete($path);
+
+            return back()->with('data', ['path' => $path]);
+        }
+
+        return back()->withErrors([
+            'file' => 'Something went wrong in uploading',
+        ]);
+        
     }
     
 }
