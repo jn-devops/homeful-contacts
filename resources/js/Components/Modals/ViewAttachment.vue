@@ -1,5 +1,6 @@
 <script setup>
-import { computed, onMounted, ref } from 'vue';
+import { computed, onMounted, ref, watch } from 'vue';
+import { Vue3Lottie } from 'vue3-lottie';
 
 const props = defineProps({
     name: {
@@ -33,6 +34,8 @@ const isPDF = computed(() =>{
         return false
     }
 })
+const loading = ref(true)
+
 
 onMounted(() => {
     show.value = true
@@ -51,7 +54,7 @@ onMounted(() => {
             leave-from-class="translate-y-0"
             leave-to-class="translate-y-full"
         >
-            <div @click.stop v-if="show" class="bg-white w-full max-w-[450px] h-[90vh] rounded-t-xl shadow-lg p-4">
+            <div @click.stop v-if="show" class="bg-white w-full max-w-[450px] h-[87vh] rounded-t-xl shadow-lg p-4">
                 <div class="flex flex-row-reverse">
                     <button @click="close">
                         <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
@@ -63,10 +66,23 @@ onMounted(() => {
                     <div class="h-full">
                         <h2 class="font-bold pb-5">{{ name }}</h2>
                         <div class="h-full">
-                            <img class="rounded-xl" v-if="!isPDF" :src="file" alt="">
+                            <img class="rounded-xl" v-if="!isPDF" :src="file" @load="loading = false" v-show="!loading" alt="">
                             <div class="h-[90%] pb-4" v-else>
-                                <embed :src="file" type="application/pdf" width="100%" height="100%" class="rounded-xl" />
+                                <iframe
+                                    :src="file"
+                                    @load="loading = false"
+                                    v-show="!loading"
+                                    type="application/pdf"
+                                    width="100%"
+                                    height="100%"
+                                    class="rounded-xl"
+                                />
                             </div>
+                            <Vue3Lottie
+                            v-if="loading"
+                                animationLink="/animation/loading_document.json" 
+                                width="100%" 
+                            />
                         </div>
                     </div>
                 </div>
