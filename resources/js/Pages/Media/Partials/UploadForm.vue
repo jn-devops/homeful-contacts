@@ -74,8 +74,8 @@ const removeMedia = () => {
             />
         </Transition>
         <div 
-            class="flex flex-row w-full bg-white py-4 rounded-xl shadow-lg px-3"
-            :class="{'bg-[#84A2FC]' : previewUrl}"
+            class="flex flex-row w-full py-4 rounded-xl shadow-lg px-3"
+            :class="{'bg-[#84A2FC]' : previewUrl, 'bg-green' : !previewUrl, }"
         >
             <div 
                 class="basis-1/12 flex justify-center items-center"
