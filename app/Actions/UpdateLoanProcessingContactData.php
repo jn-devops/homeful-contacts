@@ -146,8 +146,115 @@ class UpdateLoanProcessingContactData
                     "monthly_gross_income" => collect($data->employment)->where('type', 'Primary')->first()['monthly_gross_income'] ?? 0
                 ]
             ],
-            "co_borrowers" => null
+            "co_borrowers" => null,
         ];
+
+        // Check if there is a coborrower
+        if($data->co_borrowers){
+            $co_borrower = [];
+            $co_borrower_addresses = null;
+            $co_borrower_employment = null;
+            if(isset($data->co_borrowers[0]['addresses'])){
+                $co_borrower_addresses = [
+                    "type" => "co_borrower",
+                    "block" => null,
+                    "region" => collect($data->co_borrowers[0]['addresses'])->where('type', 'Primary')->first()['region'] ?? '',
+                    "street" => null,
+                    "country" => collect($data->co_borrowers[0]['addresses'])->where('type', 'Primary')->first()['country'] ?? 'PH',
+                    "address1" => collect($data->co_borrowers[0]['addresses'])->where('type', 'Primary')->first()['address1'] ?? '',
+                    "locality" => collect($data->co_borrowers[0]['addresses'])->where('type', 'Primary')->first()['locality'] ?? '',
+                    "ownership" => self::getMaintenanceDataCode(config('homeful-contacts.lazarus_url').'api/admin/home-ownerships?per_page=1000', 'description', collect($data->co_borrowers[0]['addresses'])->where('type', 'Primary')->first()['ownership'] ?? null, 'code') ?? '001',
+                    "postal_code" => collect($data->co_borrowers[0]['addresses'])->where('type', 'Primary')->first()['postal_code'] ?? '',
+                    "sublocality" => collect($data->co_borrowers[0]['addresses'])->where('type', 'Primary')->first()['sublocality'] ?? '',
+                    "full_address" => "",
+                    "administrative_area" => collect($data->co_borrowers[0]['addresses'])->where('type', 'Primary')->first()['administrative_area'] ?? ''
+                ];
+            }
+            if(isset($data->co_borrowers[0]['employment'])){
+                $co_borrower_employment = [
+                    "id" => [
+                        "sss" => $data->co_borrowers[0]['employment'][0]['id']['sss'] ?? '',
+                        "tin" => $data->co_borrowers[0]['employment'][0]['id']['tin'] ?? '',
+                        "gsis" => $data->co_borrowers[0]['employment'][0]['id']['gsis'] ?? '',
+                        "pagibig" => $data->co_borrowers[0]['employment'][0]['id']['pagibig'] ?? '',
+                    ],
+                    "rank" => $data->co_borrowers[0]['employment'][0]['rank'] ?? '',
+                    "type" => "co_borrower",
+                    "employer" => [
+                        "fax" => $data->co_borrowers[0]['employment'][0]['employer']['fax'] ?? null,
+                        "name" => $data->co_borrowers[0]['employment'][0]['employer']['name'] ?? '',
+                        "email" => $data->co_borrowers[0]['employment'][0]['employer']['email'] ?? '',
+                        "address" => [
+                            "type" => "company",
+                            "region" => $data->co_borrowers[0]['employment'][0]['employer']['address']['region'] ?? '',
+                            "country" => $data->co_borrowers[0]['employment'][0]['employer']['address']['country'] ?? 'PH',
+                            "address1" => $data->co_borrowers[0]['employment'][0]['employer']['address']['address1'] ?? '',
+                            "locality" => $data->co_borrowers[0]['employment'][0]['employer']['address']['locality'] ?? '',
+                            "ownership" => $data->co_borrowers[0]['employment'][0]['employer']['address']['ownership'] ?? '',
+                            "sublocality" => $data->co_borrowers[0]['employment'][0]['employer']['address']['sublocality'] ?? '',
+                            "full_address" => $data->co_borrowers[0]['employment'][0]['employer']['address']['full_address'] ?? '',
+                            "administrative_area" => $data->co_borrowers[0]['employment'][0]['employer']['address']['administrative_area'] ?? '',
+                        ],
+                        "industry" => $data->co_borrowers[0]['employment'][0]['employer']['industry'] ?? '',
+                        "contact_no" => $data->co_borrowers[0]['employment'][0]['employer']['contact_no'] ?? '',
+                        "nationality" => self::getMaintenanceDataCode(config('homeful-contacts.lazarus_url').'api/admin/nationalities?per_page=1000', 'description', $data->co_borrowers[0]['employment'][0]['employer']['nationality'] ?? null, 'code') ?? '076',
+                        "year_established" => $data->co_borrowers[0]['employment'][0]['employer']['year_established'] ?? '', // Missing
+                        "total_number_of_employees" => $data->co_borrowers[0]['employment'][0]['employer']['total_number_of_employees'] ?? null,
+                    ],
+                    "industry" => null,
+                    "employment_type" => self::getMaintenanceDataCode(config('homeful-contacts.lazarus_url').'api/admin/employment-types', 'description', $data->co_borrowers[0]['employment'][0]['industry'] ?? null, 'code') ?? '001',
+                    "current_position" => $data->co_borrowers[0]['employment'][0]['current_position'] ?? null,
+                    "years_in_service" => $data->co_borrowers[0]['employment'][0]['years_in_service'] ?? '',
+                    "employment_status" => self::getMaintenanceDataCode(config('homeful-contacts.lazarus_url').'api/admin/employment-statuses', 'description', $data->co_borrowers[0]['employment'][0]['employment_status'] ?? null, 'code') ?? '001',
+                    "character_reference" => [
+                        "name" => "",
+                        "mobile" => "",
+                    ],
+                    "monthly_gross_income" => $data->co_borrowers[0]['employment'][0]['monthly_gross_income'] ?? '0',
+                ];
+            }
+            $co_borrower = [
+                [
+                    "sex" => $data->co_borrowers[0]['sex'] ?? 'Male',
+                    "name" => $data->co_borrowers[0]['name'] ?? '',
+                    "email" => $data->co_borrowers[0]['email'] ?? '',
+                    "mobile" => $data->co_borrowers[0]['mobile'] ?? '',
+                    "spouse" => [
+                        "sex" => $data->co_borrowers[0]['spouse']['sex'] ?? null,
+                        "email" => $data->co_borrowers[0]['spouse']['email'] ?? null,
+                        "mobile" => $data->co_borrowers[0]['spouse']['mobile'] ?? null,
+                        "landline" => $data->co_borrowers[0]['spouse']['landline'] ?? null,
+                        "last_name" => $data->co_borrowers[0]['spouse']['last_name'] ?? null,
+                        "first_name" => $data->co_borrowers[0]['spouse']['first_name'] ?? null,
+                        "middle_name" => $data->co_borrowers[0]['spouse']['middle_name'] ?? null,
+                        "name_suffix" => self::getMaintenanceDataCode(config('homeful-contacts.lazarus_url').'api/admin/name-suffixes', 'description', $data->co_borrowers[0]['spouse']['name_suffix'] ?? null, 'code') ?? '001',
+                        "nationality" => self::getMaintenanceDataCode(config('homeful-contacts.lazarus_url').'api/admin/nationalities?per_page=1000', 'description', $data->co_borrowers[0]['spouse']['nationality'] ?? null, 'code') ?? '076',
+                        "civil_status" => self::getMaintenanceDataCode(config('homeful-contacts.lazarus_url').'api/admin/civil-statuses', 'description', $data->co_borrowers[0]['spouse']['civil_status'] ?? null, 'code') ?? '001',
+                        "date_of_birth" => $data->co_borrowers[0]['spouse']['date_of_birth'] ?? null,
+                        "mothers_maiden_name" => $data->co_borrowers[0]['spouse']['mothers_maiden_name'] ?? null
+                    ],
+                    "passport" => $data->co_borrowers[0]['passport'] ?? null,
+                    "last_name" => $data->co_borrowers[0]['last_name'] ?? null,
+                    "first_name" => $data->co_borrowers[0]['first_name'] ?? null,
+                    "date_issued" => $data->co_borrowers[0]['date_issued'] ?? null,
+                    "help_number" => $data->co_borrowers[0]['help_number'] ?? null,
+                    "middle_name" => $data->co_borrowers[0]['middle_name'] ?? null,
+                    "name_suffix" => self::getMaintenanceDataCode(config('homeful-contacts.lazarus_url').'api/admin/name-suffixes', 'description', $data->co_borrowers[0]['name_suffix'] ?? null, 'code') ?? '001',
+                    "nationality" => self::getMaintenanceDataCode(config('homeful-contacts.lazarus_url').'api/admin/nationalities?per_page=1000', 'description', $data->co_borrowers[0]['nationality'] ?? null, 'code') ?? '076',
+                    "civil_status" => self::getMaintenanceDataCode(config('homeful-contacts.lazarus_url').'api/admin/civil-statuses', 'description', $data->co_borrowers[0]['civil_status'] ?? null, 'code') ?? '001',
+                    "other_mobile" => $data->co_borrowers[0]['other_mobile'] ?? '',
+                    "place_issued" => $data->co_borrowers[0]['place_issued'] ?? '',
+                    "date_of_birth" => $data->co_borrowers[0]['date_of_birth'] ?? '',
+                    "mothers_maiden_name" => $data->co_borrowers[0]['mothers_maiden_name'] ?? '',
+                    "relationship_to_buyer" => self::getMaintenanceDataCode(config('homeful-contacts.lazarus_url').'api/admin/maintenance/relationships?per_page=1000', 'description', $data->co_borrowers[0]['relation'] ?? null, 'code') ?? null,
+                    "relation" => self::getMaintenanceDataCode(config('homeful-contacts.lazarus_url').'api/admin/maintenance/relationships?per_page=1000', 'description', $data->co_borrowers[0]['relation'] ?? null, 'code') ?? null,
+                ]
+            ];
+            
+            $param["co_borrowers"] = $co_borrower;
+            $param["addresses"][] = $co_borrower_addresses;
+            $param["employment"][] = $co_borrower_employment;
+        }
         return $param;
     }
 

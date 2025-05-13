@@ -84,6 +84,7 @@ const form = useForm({
     employer_nationality: employment_record()?.employer?.nationality,
     employer_industry: employment_record()?.employer?.industry,
     employer_total_number_of_employees: employment_record()?.employer?.total_number_of_employees,
+    employer_year_established: employment_record()?.employer?.year_established,
 
     employer_address_type: employment_record()?.employer?.address?.type ?? 'Work',
     employer_address_ownership: employment_record()?.employer?.address?.ownership ?? 'Unknown',
@@ -549,6 +550,15 @@ onMounted(() => {
                         :errorMessage="form.errors.employer_address_ownership"
                     />
                 </div> -->
+                <div class="col-span-full lg:col-span-3">
+                    <TextInput 
+                        v-model="form.employer_year_established"
+                        label="Year Established"
+                        placeholder="Enter the year the employer was established"
+                        type="number"
+                        :errorMessage="form.errors.employer_year_established"
+                    />
+                </div>
                 <div class="col-span-full lg:col-span-3">
                     <TextInput 
                         v-model="form.employer_total_number_of_employees"

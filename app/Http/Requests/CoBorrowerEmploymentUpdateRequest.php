@@ -28,6 +28,7 @@ class CoBorrowerEmploymentUpdateRequest extends FormRequest
             'employer_industry' => ['nullable', Rule::enum(Industry::class)],
             'employment_rank' => ['nullable', 'string'],
             'employment_years_in_service' => ['nullable', 'string'],
+            'employer_year_established' => ['nullable', 'string'],
 
             'employer_address_type' => ['nullable', Rule::enum(AddressType::class)],
             'employer_address_ownership' => ['required_with:employer_address_type', Rule::enum(Ownership::class)],
