@@ -22,6 +22,7 @@ use Homeful\Contacts\Enums\Nationality;
 use Homeful\Contacts\Enums\Sex;
 use Homeful\Contacts\Enums\Suffix;
 use Homeful\References\Facades\References;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Inertia\{Inertia, Response};
@@ -96,9 +97,12 @@ class RegisteredUserController extends Controller
                 'cobo_date_of_birth' => 'nullable|date',
             ]);
 
-            $cobo_gmi = $validated['cobo_gross_monthly_income'] ?? null;
-            $cobo_date_of_birth = $validated['cobo_date_of_birth'] ?? null;
+            
+            $gmi = (float) Arr::pull($validated, 'gross_monthly_income');
+            $cobo_gmi = (float) Arr::pull($validated, 'cobo_gross_monthly_income');
+            $cobo_date_of_birth = Carbon::parse(Arr::pull($validated, 'cobo_date_of_birth'));
             $password = $validated['password'] ?? Str::uuid();
+            $validated['password'] = Hash::make($password);
 
             $contact = Contact::where('last_name', $validated['last_name'])
                 ->where('first_name', $validated['first_name'])
@@ -117,7 +121,7 @@ class RegisteredUserController extends Controller
                 'name' => "{$validated['first_name']} {$validated['last_name']}",
                 'email' => $validated['email'],
                 'mobile' => $validated['mobile'],
-                'password' => Hash::make($password)
+                'password' => $validated['password'],
             ]);
 
             $contact = Contact::create($validated);
@@ -131,6 +135,20 @@ class RegisteredUserController extends Controller
             $order['homeful_id'] = $reference->code;
             $contact->order = $order;
             $contact->save();
+
+            if ($gmi > 0.0) {
+                $contact->employment = [
+                    [
+                        'type' => Employment::default(),
+                        'monthly_gross_income' => $gmi,
+                        'employment_status' => EmploymentStatus::default(),
+                        'id' => [
+                            'tin' => Dummy::TIN
+                        ]
+                ]];
+                $contact->save();
+            }
+    
 
             if ($cobo_gmi > 0.0 && $cobo_date_of_birth !=null) {
                 $co_borrowers[] = [
