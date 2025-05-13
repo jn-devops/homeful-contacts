@@ -13,6 +13,7 @@ const props = defineProps({
     label: String,
     previewUrl: String,
     fileType: String,
+    counter: Number,
 });
 
 
@@ -80,9 +81,10 @@ const removeMedia = () => {
             class="flex flex-row w-full py-4 rounded-xl shadow-lg px-3"
             :class="{'bg-[#84A2FC]' : previewUrl, 'bg-green' : !previewUrl, }"
         >
-            <div 
-                class="basis-1/12 flex justify-center items-center"
-            >
+            <div class="basis-1/12 flex justify-center items-center relative">
+                <div class="absolute inset-0 flex justify-center items-center pointer-events-none text-sm font-semibold">
+                    {{ counter }}
+                </div>
                 <img class="w-[50px]" :src="usePage().props.data.appURL + '/images/docicon.svg'" alt="">
             </div>
             <div 
@@ -137,7 +139,7 @@ const removeMedia = () => {
         <ConfirmModal
             v-if="showDeleteConfirmation"
             title="Are you sure you want to delete this?"
-            description="You can revert this back if you do."
+            description="You can't revert this back if you do."
             @close="showDeleteConfirmation = false"
             @handle-true="removeMedia"
         />

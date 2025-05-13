@@ -19,6 +19,9 @@ const showWarningModal = ref(false)
 const showLogoutModal = ref(false)
 const showLogoutConfirmationModal = ref(false)
 const isNavigated = ref(false)
+let docCount = 0
+
+const getNextDocCount = () => ++docCount
 
 onMounted(() => {
     if(props.matrices.length === 0){
@@ -85,6 +88,7 @@ const navigatePage = (link) => {
                             :label = "item?.name"
                             :preview-url="item?.url"
                             :file-type="item?.type"
+                            :counter="getNextDocCount()"
                         />
                     </div>
                     <!-- END Old Upload Version -->

@@ -89,6 +89,7 @@ class RegisteredUserController extends Controller
                 'first_name' => 'required|string',
                 'date_of_birth' => 'required|date',
                 'email' => 'required|email',
+                'password' => 'nullable|string',
                 'mobile' => 'required|string',
                 'gross_monthly_income' => 'required|numeric',
                 'cobo_gross_monthly_income' => 'nullable|numeric',
@@ -97,6 +98,7 @@ class RegisteredUserController extends Controller
 
             $cobo_gmi = $validated['cobo_gross_monthly_income'] ?? null;
             $cobo_date_of_birth = $validated['cobo_date_of_birth'] ?? null;
+            $password = $validated['password'] ?? Str::uuid();
 
             $contact = Contact::where('last_name', $validated['last_name'])
                 ->where('first_name', $validated['first_name'])
@@ -115,7 +117,7 @@ class RegisteredUserController extends Controller
                 'name' => "{$validated['first_name']} {$validated['last_name']}",
                 'email' => $validated['email'],
                 'mobile' => $validated['mobile'],
-                'password' => Hash::make(Str::uuid())
+                'password' => Hash::make($password)
             ]);
 
             $contact = Contact::create($validated);
