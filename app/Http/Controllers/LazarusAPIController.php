@@ -557,6 +557,7 @@ class LazarusAPIController extends Controller
             $user = app(User::class)->create([
                 'name' => $data['first_name'].' '.$data['last_name'],
                 'email' => $data['email'],
+                'mobile' => $data['mobile'],
                 'password'=>Hash::make(config('homeful-contacts.default_password'))
             ]);
             $converted = $this->convertLazarusToContactData($data);
