@@ -25,10 +25,11 @@ Route::post('get-contact-media/{id}', function($id){
     $customer = Customer::find($id);
     dd($customer->getMedia(), $customer->birthCertificateDocument);
 });
-Route::post('/create-contacts-seller-app', [RegisteredUserController::class, 'createContactForSellerApp']);
 
 Route::post('/auth/login', [LazarusAPIController::class, 'login']);
 Route::middleware(['auth:sanctum'])->group(function () {
+    Route::post('/create-contacts-seller-app', [RegisteredUserController::class, 'createContactForSellerApp']);
+
     Route::get('/contact/{id}', [LazarusAPIController::class, 'getContactByID']);
     Route::put('/update-contact', [LazarusAPIController::class, 'updateContactFromLazarus']);
     Route::post('/set-lazarus-contact', [LazarusAPIController::class, 'setLazarusContact']);

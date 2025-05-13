@@ -29,9 +29,12 @@ class LazarusAPIController extends Controller
                 'password' => 'required',
             ]);
 
+
             $user = User::where('email', $request->email)->first();
+
             if($user instanceof User){
                 if (!$user || !Hash::check($request->password, $user->password)) {
+
                     return response()->json(['message' => 'Invalid credentials'], 401);
                 }
 
