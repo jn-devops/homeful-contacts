@@ -3,6 +3,7 @@
 use App\Http\Controllers\{ContactController, LazarusAPIController, ReferenceController};
 use Illuminate\Support\Facades\Route;
 use App\Actions\RegisterContact;
+use App\Http\Controllers\Auth\RegisteredUserController;
 use Homeful\Contacts\Models\Customer;
 use Illuminate\Http\Request;
 
@@ -24,6 +25,7 @@ Route::post('get-contact-media/{id}', function($id){
     $customer = Customer::find($id);
     dd($customer->getMedia(), $customer->birthCertificateDocument);
 });
+Route::post('/create-contacts-seller-app', [RegisteredUserController::class, 'createContactForSellerApp']);
 
 Route::post('/auth/login', [LazarusAPIController::class, 'login']);
 Route::middleware(['auth:sanctum'])->group(function () {
