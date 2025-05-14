@@ -552,10 +552,10 @@ class LazarusAPIController extends Controller
             ->where('date_of_birth',$data['date_of_birth']);
         if($contact->exists()){
             return response()->json([
-                'success' => true,
-                'message' => 'Contact already exists.',
-                'data' => $contact,
-            ], 200);
+                'success' => false,
+                'message' => 'Contact already exist',
+                'data' => $contact
+            ], 409);
         }else{
             $user = app(User::class)->create([
                 'name' => $data['first_name'].' '.$data['last_name'],
