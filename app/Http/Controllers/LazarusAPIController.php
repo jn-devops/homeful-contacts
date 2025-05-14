@@ -9,6 +9,7 @@ use App\Notifications\SendContactReferenceCodeNotification;
 use Homeful\Contacts\Classes\ContactMetaData;
 use Carbon\Carbon;
 use Exception;
+use FrittenKeeZ\Vouchers\Models\VoucherEntity;
 use Homeful\Contacts\Models\Contact;
 use Homeful\Contacts\Models\Customer;
 use Homeful\References\Facades\References;
@@ -126,11 +127,20 @@ class LazarusAPIController extends Controller
                     'data' => [],
                 ], 404);
             }
+            $homeful_id = VoucherEntity::where('entity_id', $validated['contact_id'])->first()->voucher->code ?? null;
             $params = $this->convertContactToLazarus($data, $validated['reference_code'], $validated['project_code'] ?? null);
             $response = Http::withToken(config('homeful-contacts.lazarus_api_token'))
                             ->post(config('homeful-contacts.lazarus_url').'api/admin/contacts', $params);
             // dd(config('homeful-contacts.lazarus_api_token'), config('homeful-contacts.lazarus_url').'api/admin/contacts', $params);
             if($response->successful()){
+                // Update the Lazarus Data with homeful_id
+                $lazarus_id = $response->json()['data']['id'];
+                $lazarus_data = [
+                    'order' => $response->json()['data']['order'],
+                ];
+                $lazarus_data['order']['homeful_id'] = $homeful_id;
+                $lazarus_api_contact_update = Http::withToken(config('homeful-contacts.lazarus_api_token'))
+                                ->put(config('homeful-contacts.lazarus_url').'api/admin/contacts/'.$lazarus_id, $lazarus_data);
                 return response()->json([
                     'success' => true,
                     'message' => 'Successfully Created Lazarus Data',
@@ -538,7 +548,8 @@ class LazarusAPIController extends Controller
         $reference = Reference::where('code',$request->code)->first();
         $contact_id = $reference->voucherEntities()->where('entity_type','App\Models\Contact')->first()->entity_id;
         $contact =  Customer::findOrFail($contact_id);
-          $contact=  $this->convertContactToLazarus($contact, $request->code);
+
+        $contact=  $this->convertContactToLazarus($contact, $request->code, null, null);
         return response()->json([
             'success' => true,
             'data' =>$contact,
@@ -552,10 +563,10 @@ class LazarusAPIController extends Controller
             ->where('date_of_birth',$data['date_of_birth']);
         if($contact->exists()){
             return response()->json([
-                'success' => false,
-                'message' => 'Contact already exist',
-                'data' => $contact
-            ], 409);
+                'success' => true,
+                'message' => 'Contact already exists.',
+                'data' => $contact,
+            ], 200);
         }else{
             $user = app(User::class)->create([
                 'name' => $data['first_name'].' '.$data['last_name'],
