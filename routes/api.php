@@ -37,4 +37,5 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/get-attachment-requirement/{id}', [LazarusAPIController::class, 'getAttachmentRequirementByID']);
     Route::post('/set-attachment-requirement', [LazarusAPIController::class, 'setAttachmentRequirementByID']);
     Route::post('/get-contact-by-homeful-id', [LazarusAPIController::class, 'getContactByVoucherCode']);
+    Route::post('/update-contact-by-homeful-id', [ContactController::class, 'updateContactByHomefulId']);
 });
