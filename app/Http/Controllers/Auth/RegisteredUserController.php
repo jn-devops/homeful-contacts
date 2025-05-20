@@ -190,7 +190,7 @@ class RegisteredUserController extends Controller
             Log::error('CreateContactForSellerApp error', ['error' => $e->getMessage()]);
             return response()->json([
                 'success' => false,
-                'message' => 'An error occurred while creating the contact.',
+                'message' =>  $e->getMessage(),
             ], HttpResponse::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
