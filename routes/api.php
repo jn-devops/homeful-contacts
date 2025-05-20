@@ -38,4 +38,5 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/set-attachment-requirement', [LazarusAPIController::class, 'setAttachmentRequirementByID']);
     Route::post('/get-contact-by-homeful-id', [LazarusAPIController::class, 'getContactByVoucherCode']);
     Route::post('/update-contact-by-homeful-id', [ContactController::class, 'updateContactByHomefulId']);
+    Route::get('/check-contact-if-referral-exists/{homeful_id}', [ContactController::class, 'checkReferralContact']);
 });

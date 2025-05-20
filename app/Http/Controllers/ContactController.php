@@ -13,6 +13,7 @@ use Homeful\Contacts\Models\Customer;
 use Homeful\Contracts\Models\Contact as ContractsModelsContact;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
+use Inertia\Inertia;
 
 class ContactController extends Controller
 {
@@ -300,6 +301,45 @@ class ContactController extends Controller
                 'success' => false,
                 'message' => $e->getMessage(),
             ], 500);
+        }
+    }
+    public function checkReferralContact($homeful_id){
+        try {
+            $reference = Reference::where('code', $homeful_id)->first();
+            if($reference && $contact = $reference->getContact()){
+                
+                if (
+                    isset($contact->order) &&
+                    is_array($contact->order) &&
+                    array_key_exists('referral_code', $contact->order)
+                ){
+                    return response()->json([
+                        'success' => true,
+                        'referral_code_exists' => true,
+                        'referral_code' => $contact->order['referral_code'],
+                        'message' => 'Contacts Not Found',
+                    ]);
+                }else{
+                    return response()->json([
+                        'success' => true,
+                        'referral_code_exists' => false,
+                        'referral_code' => null,
+                        'message' => 'Contacts Not Found',
+                    ]);
+                }
+            }else{
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Contacts Not Found',
+                    'referral_code_exists' => false,
+                ]);
+            }
+        } catch (\Throwable $th) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Something Went Wrong with the data',
+                'referral_code_exists' => false,
+            ]);
         }
     }
 }
