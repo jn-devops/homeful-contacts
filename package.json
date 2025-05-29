@@ -26,6 +26,7 @@
         "filepond-plugin-file-validate-type": "^1.2.9",
         "filepond-plugin-image-preview": "^4.6.12",
         "flowbite": "^2.5.2",
+        "pinia": "^3.0.2",
         "vue-filepond": "^7.0.4",
         "vue-tailwind-datepicker": "^1.7.3",
         "vue3-lottie": "^3.3.1"

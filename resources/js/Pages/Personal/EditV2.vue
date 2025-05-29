@@ -6,10 +6,17 @@ import PersonalInformationForm from './Partials/PersonalInformationFormV2.vue';
 import { ref } from 'vue';
 import ExitModal from '@/Components/Modals/ExitModal.vue';
 import ConfirmModal from '@/Components/Modals/ConfirmModal.vue';
+import { useFormStore } from '@/Stores/useFormStore';
+import InitialPopUp from '@/Components/Modals/InitialPopUp.vue';
 
 const props = defineProps({
    contact: Object,
 });
+
+const useForm = useFormStore()
+const toggleInitialPopUp = () => {
+    useForm.initialAccess = false;
+}
 
 const authChild = ref(null);
 const showLogoutModal = ref(false)
@@ -97,5 +104,10 @@ const saveForm = (toSave = false) => {
         false-label="Cancel"
         @close="isNavigated = false"
         @handle-true="navigateToNext(true)"
+    />
+
+    <InitialPopUp 
+        v-if="useForm.initialAccess"
+        @close="toggleInitialPopUp"
     />
 </template>

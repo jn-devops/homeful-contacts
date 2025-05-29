@@ -34,23 +34,32 @@ import { onMounted, ref } from 'vue';
 </script>
 
 <template>
-    <nav class="flex border-b border-gray-200 bg-white" aria-label="Breadcrumb">
-        <ol role="list" class="mx-auto ps-5 flex w-full max-w-screen-xl space-x-4 px-1 sm:px-6 lg:px-8 overflow-x-auto scrollbar-hide">
-            <li v-for="page in pages" :key="page.name" class="flex flex-shrink-0" :ref="el => (divRefs[page.name] = el)">
-                <div class="flex items-center">
-                    <button 
-                        @click="navigateTo(page.href)"
-                        class="ps-3 pe-5 text-sm font-medium hover:text-[#006FFD] hover:font-semibold" 
-                        :class="page.current ? 'text-[#006FFD] font-semibold' : 'text-gray-500'" 
-                        :aria-current="page.current ? 'page' : undefined"
-                    >
+    <div class="border-b border-gray-200 bg-white">
+        <div class="mx-auto flex w-full max-w-screen-xl space-x-4 sm:px-6 lg:px-8 overflow-x-auto scrollbar-hide">
+            <div class="flex">
+                <div
+                    v-for="page in pages"
+                    :key="page.name"
+                    @click="navigateTo(page.href)"
+                    class="relative py-3 w-fit h-[50px] ps-9 pe-4 flex items-center justify-center cursor-pointer"
+                    :class="page.current ? 'bg-[#006FFD] text-white font-bold' : 'bg-transparent text-gray-500'"
+                    :ref="el => (divRefs[page.name] = el)"
+                >
+                    <div class="text-sm hover:font-semibold z-30 whitespace-nowrap leading-none">
                         {{ page.name }}
-                    </button>
-                    <svg class="h-full w-6 shrink-0 text-gray-200" viewBox="0 0 24 44" preserveAspectRatio="none" fill="currentColor" aria-hidden="true">
-                        <path d="M.293 0l22 22-22 22h1.414l22-22-22-22H.293z" />
-                    </svg>
+                        <br>
+                        <!-- <template v-if="page.name == 'Docs Requirements'">
+                            <span class="text-xs ">{{ totalAccomplished }}/{{ totalNumber }}</span>
+                        </template> -->
+                    </div>
+                    <div
+                        class="absolute z-20 border-t border-r border-r-gray-200 border-t-gray-200 right-[-16px] w-[50px] h-[50px] rotate-45"
+                        :class="page.current ? 'bg-[#006FFD]' : 'bg-white'"
+                        
+                    ></div>
                 </div>
-            </li>
-        </ol>
-    </nav>
+            </div>
+        </div>
+    </div>
+    
 </template>
