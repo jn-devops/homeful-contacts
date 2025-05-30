@@ -342,4 +342,23 @@ class ContactController extends Controller
             ]);
         }
     }
+
+    public function validate_email($email){
+        $contact = Contact::where('email', $email)->first();
+        if($contact){
+            return response()->json(['success' => true, 'exists' => true], 200);
+        }else{
+            return response()->json(['success' => true, 'exists' => false], 200);
+        }
+    }
+
+    public function validate_mobile($mobile){
+        $mobile_formatted = '0'.substr($mobile, 2);
+        $contact = Contact::where('mobile', $mobile_formatted)->first();
+        if($contact){
+            return response()->json(['success' => true, 'exists' => true], 200);
+        }else{
+            return response()->json(['success' => true, 'exists' => false], 200);
+        }
+    }
 }

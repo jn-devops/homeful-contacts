@@ -26,6 +26,9 @@ Route::post('get-contact-media/{id}', function($id){
     dd($customer->getMedia(), $customer->birthCertificateDocument);
 });
 
+Route::get('/validate/email/{email}', [ContactController::class, 'validate_email']);
+Route::get('/validate/mobile/{mobile}', [ContactController::class, 'validate_mobile']);
+
 Route::post('/auth/login', [LazarusAPIController::class, 'login']);
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/create-contacts-seller-app', [RegisteredUserController::class, 'createContactForSellerApp']);
