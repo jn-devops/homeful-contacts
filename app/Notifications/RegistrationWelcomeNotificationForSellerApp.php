@@ -3,10 +3,13 @@
 namespace App\Notifications;
 
 use App\Models\Reference;
+use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
+use MagicLink\Actions\LoginAction;
+use MagicLink\MagicLink;
 
 class RegistrationWelcomeNotificationForSellerApp extends Notification
 {
@@ -78,8 +81,4 @@ class RegistrationWelcomeNotificationForSellerApp extends Notification
         return "https://google.com";
     }
 
-    public function getContactReferenceCode(): string
-    {
-        return $this->message;
-    }
 }
