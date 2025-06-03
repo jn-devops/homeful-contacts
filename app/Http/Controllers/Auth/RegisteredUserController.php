@@ -12,6 +12,7 @@ use App\Actions\RegisterContact;
 use App\Events\ContactRegistered;
 use App\Models\Contact;
 use App\Models\User;
+use App\Notifications\RegistrationWelcomeNotificationForSellerApp;
 use Carbon\Carbon;
 use Homeful\Contacts\Classes\Dummy;
 use Homeful\Contacts\Enums\CivilStatus;
@@ -172,7 +173,9 @@ class RegisteredUserController extends Controller
                 $contact->update(['co_borrowers' => $co_borrowers]);
             }
 
-            event(new ContactRegistered($reference));
+            // Created own Welcome Email
+            // event(new ContactRegistered($reference));
+            $user->notify(new RegistrationWelcomeNotificationForSellerApp($reference, $password));
 
             return response()->json([
                 'success' => true,
