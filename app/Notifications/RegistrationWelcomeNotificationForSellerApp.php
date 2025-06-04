@@ -43,6 +43,7 @@ class RegistrationWelcomeNotificationForSellerApp extends Notification
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)
+            ->subject('Welcome to Homeful!')
             ->line('Dear ' . $notifiable->name . ',')
             ->line('We\'re super excited to welcome you to Homeful Shop.')
             ->line('Not only do we have amazing properties and amenities, but our service is all about the little things that make a big difference. We think that even the smallest gestures can really show how much we care.')
