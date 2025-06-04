@@ -353,8 +353,8 @@ class ContactController extends Controller
     }
 
     public function validate_mobile($mobile){
-        $mobile_formatted = '0'.substr($mobile, 2);
-        $contact = Contact::where('mobile', $mobile_formatted)->first();
+        // $mobile_formatted = '0'.substr($mobile, 2);
+        $contact = Contact::where('mobile', $mobile)->first();
         if($contact){
             return response()->json(['success' => true, 'exists' => true], 200);
         }else{
