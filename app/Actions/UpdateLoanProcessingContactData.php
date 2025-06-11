@@ -18,6 +18,7 @@ class UpdateLoanProcessingContactData
                 $response = Http::withToken(config('homeful-contacts.lazarus_api_token'))
                                 ->put(config('homeful-contacts.lazarus_url').'api/admin/contacts/'.$loan_processing_id, $data);
                 if($response->successful()){
+                    Log::error('Success Loan Processing API', ['api'=> config('homeful-contacts.lazarus_url').'api/admin/contacts/'.$loan_processing_id, 'data' => $data]);
                     return true;
                 }else{
                     Log::error('Failed Loan Processing API', ['api'=> config('homeful-contacts.lazarus_url').'api/admin/contacts/'.$loan_processing_id, 'data' => $data]);
@@ -196,7 +197,7 @@ class UpdateLoanProcessingContactData
                             "administrative_area" => $data->co_borrowers[0]['employment'][0]['employer']['address']['administrative_area'] ?? '',
                         ],
                         "industry" => $data->co_borrowers[0]['employment'][0]['employer']['industry'] ?? '',
-                        "contact_no" => $data->co_borrowers[0]['employment'][0]['employer']['contact_no'] ?? '',
+                        "contact_no" => ($data->co_borrowers[0]['employment'][0]['employer']['contact_no']) ? substr($data->co_borrowers[0]['employment'][0]['employer']['contact_no'], 1) : '',
                         "nationality" => self::getMaintenanceDataCode(config('homeful-contacts.lazarus_url').'api/admin/nationalities?per_page=1000', 'description', $data->co_borrowers[0]['employment'][0]['employer']['nationality'] ?? null, 'code') ?? '076',
                         "year_established" => $data->co_borrowers[0]['employment'][0]['employer']['year_established'] ?? '', // Missing
                         "total_number_of_employees" => $data->co_borrowers[0]['employment'][0]['employer']['total_number_of_employees'] ?? null,
@@ -218,9 +219,10 @@ class UpdateLoanProcessingContactData
                     "sex" => $data->co_borrowers[0]['sex'] ?? 'Male',
                     "name" => $data->co_borrowers[0]['name'] ?? '',
                     "email" => $data->co_borrowers[0]['email'] ?? '',
-                    "mobile" => $data->co_borrowers[0]['mobile'] ?? '',
+                    "mobile" => ($data->co_borrowers[0]['mobile']) ? substr($data->co_borrowers[0]['mobile'], 1) : '',
                     "spouse" => [
                         "sex" => $data->co_borrowers[0]['spouse']['sex'] ?? null,
+                        "tin" => $data->co_borrowers[0]['spouse']['employment'][0]['id']['tin'] ?? null,
                         "email" => $data->co_borrowers[0]['spouse']['email'] ?? null,
                         "mobile" => $data->co_borrowers[0]['spouse']['mobile'] ?? null,
                         "landline" => $data->co_borrowers[0]['spouse']['landline'] ?? null,
@@ -252,8 +254,12 @@ class UpdateLoanProcessingContactData
             ];
             
             $param["co_borrowers"] = $co_borrower;
-            $param["addresses"][] = $co_borrower_addresses;
-            $param["employment"][] = $co_borrower_employment;
+            if($co_borrower_addresses){
+                $param["addresses"][] = $co_borrower_addresses;
+            }
+            if($co_borrower_employment){
+                $param["employment"][] = $co_borrower_employment;
+            }
         }
         return $param;
     }
