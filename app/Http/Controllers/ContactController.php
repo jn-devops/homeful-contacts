@@ -321,7 +321,7 @@ class ContactController extends Controller
                     ]);
                 }else{
                     return response()->json([
-                        'success' => true,
+                        'success' => false,
                         'referral_code_exists' => false,
                         'referral_code' => null,
                         'message' => 'Contacts Not Found',
