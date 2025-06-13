@@ -559,7 +559,7 @@ onMounted(() => {
                         :errorMessage="form.errors.employer_year_established"
                     />
                 </div>
-                <div class="col-span-full lg:col-span-3">
+                <!-- <div class="col-span-full lg:col-span-3">
                     <TextInput 
                         v-model="form.employer_total_number_of_employees"
                         label="Total Number of Employees"
@@ -567,7 +567,7 @@ onMounted(() => {
                         type="number"
                         :errorMessage="form.errors.employer_total_number_of_employees"
                     />
-                </div>
+                </div> -->
                 <div v-if="!country_loading" class="col-span-full lg:col-span-3">
                     <SelectInput 
                         v-model="form.employer_address_country"
