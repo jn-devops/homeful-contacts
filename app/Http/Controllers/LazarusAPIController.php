@@ -379,7 +379,7 @@ class LazarusAPIController extends Controller
                 // "name" => $data['order']['aif']['sex'] ?? 'Male',
                 "email" => $data['order']['aif']['email'] ?? null,
                 // "author" => $data['order']['aif']['sex'] ?? 'Male',
-                "mobile" => '0'.$data['order']['aif']['mobile'] ?? '',
+                "mobile" => '0'.$data['order']['aif']['mobile'] ?? '--',
                 "landline" => $data['order']['aif']['landline'] ?? '',
                 "last_name" => $data['order']['aif_attorney_last_name'] ?? '.',
                 "first_name" => $data['order']['aif_attorney_first_name'] ?? '.',
@@ -388,7 +388,7 @@ class LazarusAPIController extends Controller
                 "nationality" => $this->getMaintenanceData(config('homeful-contacts.lazarus_url').'api/admin/nationalities?filter[code]='.($data['order']['aif']['nationality'] ?? '-'), pure_data:true)[0]['description'] ?? 'Filipino',
                 "civil_status" => $this->getMaintenanceData(config('homeful-contacts.lazarus_url').'api/admin/civil-statuses?filter[code]='.($data['order']['aif']['civil_status'] ?? '-'), pure_data:true)[0]['description'] ?? 'Single',
                 "other_mobile" => $data['order']['aif']['other_mobile'] ?? null,
-                "date_of_birth" => $data['order']['aif']['date_of_birth'] ?? null,
+                "date_of_birth" => $data['order']['aif']['date_of_birth'] ?? '--',
                 "relationship_to_buyer" => $data['order']['aif']['relationship_to_buyer'] ?? null,
             ];
         }

@@ -272,6 +272,7 @@ class UpdateLoanProcessingContactData
             $param['order']['aif']['name_suffix'] = $param['order']['aif_attorney_name_suffix'];
             $param['order']['aif']['email'] = $data->aif['email'] ?? '-';
             $param['order']['aif']['mobile'] = substr($data->aif['mobile'] ?? '--', 1);
+            $param['order']['aif']['date_of_birth'] = $data->aif['date_of_birth'] ?? '--';
 
         }
 
