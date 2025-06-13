@@ -371,7 +371,27 @@ class LazarusAPIController extends Controller
                 $counter += 1;
             }
         }
-
+        
+        if(isset($data['order']['aif']) && !empty($data['order']['aif'])){
+            $customer_array['aif'] = [
+                "sex" => $data['order']['aif']['sex'] ?? 'Male',
+                "tin" => $data['order']['aif']['tin'] ?? '',
+                // "name" => $data['order']['aif']['sex'] ?? 'Male',
+                "email" => $data['order']['aif']['email'] ?? null,
+                // "author" => $data['order']['aif']['sex'] ?? 'Male',
+                "mobile" => '0'.$data['order']['aif']['mobile'] ?? '',
+                "landline" => $data['order']['aif']['landline'] ?? '',
+                "last_name" => $data['order']['aif_attorney_last_name'] ?? '.',
+                "first_name" => $data['order']['aif_attorney_first_name'] ?? '.',
+                "middle_name" => $data['order']['aif_attorney_middle_name'] ?? null,
+                "name_suffix" => $this->getMaintenanceData(config('homeful-contacts.lazarus_url').'api/admin/name-suffixes?filter[code]='.($data['order']['aif_attorney_name_suffix'] ?? '-'), pure_data: true)[0]['description'] ?? null,
+                "nationality" => $this->getMaintenanceData(config('homeful-contacts.lazarus_url').'api/admin/nationalities?filter[code]='.($data['order']['aif']['nationality'] ?? '-'), pure_data:true)[0]['description'] ?? 'Filipino',
+                "civil_status" => $this->getMaintenanceData(config('homeful-contacts.lazarus_url').'api/admin/civil-statuses?filter[code]='.($data['order']['aif']['civil_status'] ?? '-'), pure_data:true)[0]['description'] ?? 'Single',
+                "other_mobile" => $data['order']['aif']['other_mobile'] ?? null,
+                "date_of_birth" => $data['order']['aif']['date_of_birth'] ?? null,
+                "relationship_to_buyer" => $data['order']['aif']['relationship_to_buyer'] ?? null,
+            ];
+        }
 
         return $customer_array;
     }

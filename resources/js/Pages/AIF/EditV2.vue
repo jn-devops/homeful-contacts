@@ -8,7 +8,9 @@ import ExitModal from "@/Components/Modals/ExitModal.vue";
 import ConfirmModal from "@/Components/Modals/ConfirmModal.vue";
 
 const props = defineProps({
-    aif: Object
+    aif: Object,
+    lazarus_url: String,
+    lazarus_token: String,
 });
 
 const authChild = ref(null);
@@ -71,6 +73,8 @@ const saveForm = (toSave = false) => {
             <AIFInformationForm
                 :aif = "aif"
                 ref="authChild"
+                :api_token="lazarus_token"
+                :api_url="lazarus_url"
             />
 
         </div>

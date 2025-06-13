@@ -11,10 +11,10 @@ class UpdateLoanProcessingContactData
 {
     public static function updateContact($id){
         try {
-            if($loan_processing_id = self::getLoanProcessingDataID($id)){
+            if($loan_processing_data = self::getLoanProcessingDataID($id)){
+                $loan_processing_id = $loan_processing_data['id'] ?? null;
                 $homeful_contact = Contact::find($id);
-                $data = self::convertContactToLazarus($homeful_contact);
-                // dd($data);
+                $data = self::convertContactToLazarus($homeful_contact, $loan_processing_data['order']);
                 $response = Http::withToken(config('homeful-contacts.lazarus_api_token'))
                                 ->put(config('homeful-contacts.lazarus_url').'api/admin/contacts/'.$loan_processing_id, $data);
                 if($response->successful()){
@@ -36,11 +36,10 @@ class UpdateLoanProcessingContactData
     protected static function getLoanProcessingDataID($contact_id){
         $response = Http::withToken(config('homeful-contacts.lazarus_api_token'))
                         ->get(config('homeful-contacts.lazarus_url').'api/admin/contacts?filter[homeful_contact_id]='.$contact_id);
-
-        return ($response->json()['data']) ? ($response->json()['data'][0]['id'] ?? null) : null;
+        return ($response->json()['data']) ? ($response->json()['data'][0] ?? null) : null;
     }
 
-    protected static function convertContactToLazarus(Contact $data){
+    protected static function convertContactToLazarus(Contact $data, $loan_processing = null){
         $param = [
             "homeful_contact_id" => $data->id,
             // "reference_code" => $data->reference_code,
@@ -127,7 +126,7 @@ class UpdateLoanProcessingContactData
                             "full_address" => collect($data->employment)->where('type', 'Primary')->first()['employer']['address']['short_address'] ?? '',
                             "administrative_area" => collect($data->employment)->where('type', 'Primary')->first()['employer']['address']['administrative_area'] ?? ''
                         ],
-                        "industry" => collect($data->employment)->where('type', 'Primary')->first()['employer']['industry'] ?? '',
+                        "industry" => self::getMaintenanceDataCode(config('homeful-contacts.lazarus_url').'api/admin/work-industries?per_page=1000', 'description', collect($data->employment)->where('type', 'Primary')->first()['employer']['industry'] ?? null, 'code') ?? null,
                         "contact_no" => collect($data->employment)->where('type', 'Primary')->first()['employer']['contact_no'] ?? '',
                         "nationality" => self::getMaintenanceDataCode(
                                                 config('homeful-contacts.lazarus_url').'api/admin/nationalities?per_page=1000',
@@ -138,11 +137,11 @@ class UpdateLoanProcessingContactData
                         "year_established" => collect($data->employment)->where('type', 'Primary')->first()['employer']['year_established'] ?? '',
                         "total_number_of_employees" => null
                     ],
-                    "industry" => collect($data->employment)->where('type', 'Primary')->first()['employer']['industry'] ?? '',
-                    "employment_type" => collect($data->employment)->where('type', 'Primary')->first()['employment_type'] ?? '',
+                    "industry" => self::getMaintenanceDataCode(config('homeful-contacts.lazarus_url').'api/admin/work-industries?per_page=1000', 'description', collect($data->employment)->where('type', 'Primary')->first()['employer']['industry'] ?? null, 'code') ?? null,
+                    "employment_type" => self::getMaintenanceDataCode(config('homeful-contacts.lazarus_url').'api/admin/employment-types?per_page=1000', 'description', collect($data->employment)->where('type', 'Primary')->first()['employment_type'] ?? null, 'code') ?? '001',
                     "current_position" => collect($data->employment)->where('type', 'Primary')->first()['current_position'] ?? '',
                     "years_in_service" => collect($data->employment)->where('type', 'Primary')->first()['years_in_service'] ?? '',
-                    "employment_status" => collect($data->employment)->where('type', 'Primary')->first()['employment_status'] ?? '',
+                    "employment_status" => self::getMaintenanceDataCode(config('homeful-contacts.lazarus_url').'api/admin/employment-statuses?per_page=1000', 'description', collect($data->employment)->where('type', 'Primary')->first()['employment_status'] ?? null, 'code') ?? '002',
                     "character_reference" => [],
                     "monthly_gross_income" => collect($data->employment)->where('type', 'Primary')->first()['monthly_gross_income'] ?? 0
                 ]
@@ -261,6 +260,21 @@ class UpdateLoanProcessingContactData
                 $param["employment"][] = $co_borrower_employment;
             }
         }
+        if($data->aif){
+            $param['order'] = $loan_processing;
+            $param['order']['aif'] = $data->aif;
+            $param['order']['aif_attorney_first_name'] = $data->aif['first_name'] ?? '';
+            $param['order']['aif_attorney_last_name'] = $data->aif['last_name'] ?? '';
+            $param['order']['aif_attorney_middle_name'] = $data->aif['middle_name'] ?? '';
+            $param['order']['aif_attorney_name_suffix'] = self::getMaintenanceDataCode(config('homeful-contacts.lazarus_url').'api/admin/name-suffixes', 'description', $data->aif['name_suffix'] ?? null, 'code') ?? '001';
+            // Special Condition:
+            $param['order']['aif']['middle_name'] = $data->aif['middle_name'] ?? '-';
+            $param['order']['aif']['name_suffix'] = $param['order']['aif_attorney_name_suffix'];
+            $param['order']['aif']['email'] = $data->aif['email'] ?? '-';
+            $param['order']['aif']['mobile'] = substr($data->aif['mobile'] ?? '--', 1);
+
+        }
+
         return $param;
     }
 
