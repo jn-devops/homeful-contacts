@@ -174,7 +174,7 @@ class UpdateLoanProcessingContactData
                 $co_borrower_employment = [
                     "id" => [
                         "sss" => $data->co_borrowers[0]['employment'][0]['id']['sss'] ?? '',
-                        "tin" => $data->co_borrowers[0]['employment'][0]['id']['tin'] ?? '',
+                        "tin" => $data->co_borrowers[0]['employment'][0]['id']['tin'] ?? '--',
                         "gsis" => $data->co_borrowers[0]['employment'][0]['id']['gsis'] ?? '',
                         "pagibig" => $data->co_borrowers[0]['employment'][0]['id']['pagibig'] ?? '',
                     ],
@@ -195,7 +195,7 @@ class UpdateLoanProcessingContactData
                             "full_address" => $data->co_borrowers[0]['employment'][0]['employer']['address']['full_address'] ?? '',
                             "administrative_area" => $data->co_borrowers[0]['employment'][0]['employer']['address']['administrative_area'] ?? '',
                         ],
-                        "industry" => $data->co_borrowers[0]['employment'][0]['employer']['industry'] ?? '',
+                        "industry" => self::getMaintenanceDataCode(config('homeful-contacts.lazarus_url').'api/admin/work-industries?per_page=1000', 'description', $data->co_borrowers[0]['employment'][0]['employer']['industry'] ?? null, 'code') ?? null,
                         "contact_no" => ($data->co_borrowers[0]['employment'][0]['employer']['contact_no']) ? substr($data->co_borrowers[0]['employment'][0]['employer']['contact_no'], 1) : '',
                         "nationality" => self::getMaintenanceDataCode(config('homeful-contacts.lazarus_url').'api/admin/nationalities?per_page=1000', 'description', $data->co_borrowers[0]['employment'][0]['employer']['nationality'] ?? null, 'code') ?? '076',
                         "year_established" => $data->co_borrowers[0]['employment'][0]['employer']['year_established'] ?? '', // Missing

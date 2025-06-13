@@ -271,7 +271,7 @@ class LazarusAPIController extends Controller
                         'year_established' => $employment['employer']['year_established'] ?? null,
                     ],
                     'id' => [
-                        'tin' => $employment['id']['tin'],
+                        'tin' => $employment['id']['tin'] ?? '--',
                         'pagibig' => $employment['id']['pagibig'],
                         'sss' => $employment['id']['sss'],
                         'gsis' => $employment['id']['gsis'],
@@ -328,7 +328,7 @@ class LazarusAPIController extends Controller
                                 "employer" => [
                                     "name" => $employment_co_borrower['employer']['name'] ?? null,
                                     "email" => $employment_co_borrower['employer']['email'] ?? null,
-                                    "industry" => $employment_co_borrower['employer']['industry'] ?? null,
+                                    "industry" => $this->getMaintenanceDataCode(config('homeful-contacts.lazarus_url').'api/admin/work-industries?per_page=1000', 'code', $employment_co_borrower['employer']['industry'] ?? null, 'description') ?? null,
                                     "contact_no" => '0'.$employment_co_borrower['employer']['contact_no'] ?? '',
                                     "nationality" => $this->getMaintenanceDataCode(config('homeful-contacts.lazarus_url').'api/admin/nationalities?per_page=1000', 'code', $employment_co_borrower['employer']['nationality'] ?? null, 'description') ?? null,
                                     "year_established" => $employment_co_borrower['employer']['year_established'] ?? null,
@@ -346,9 +346,12 @@ class LazarusAPIController extends Controller
                                 ],
                             ],
                         ],
-                        "spouse"=> [
+                    ];
+                    // If Co-borrower is Married
+                    if($customer_array['co_borrowers'][0]['civil_status'] == 'Married'){
+                        $customer_array['co_borrowers'][0]['spouse'] = [
                             "sex" => ($co_borrower['sex'] == 'Male') ? 'Female' : 'Male',
-                            'name_suffix' => $this->getMaintenanceData(config('homeful-contacts.lazarus_url').'api/admin/name-suffixes?filter[code]='.($co_borrower['spouse']['name_suffix'] ?? '-'), pure_data: true)[0]['description'] ?? null,
+                            'name_suffix' => ($co_borrower['spouse']['name_suffix'] != '001') ? (($co_borrower['spouse']['name_suffix'] != '001') ? ($this->getMaintenanceData(config('homeful-contacts.lazarus_url').'api/admin/name-suffixes?filter[code]='.($co_borrower['spouse']['name_suffix'] ?? '-'), pure_data: true)[0]['description'] ?? null) : '') : null ,
                             "first_name" => $co_borrower['spouse']['first_name'],
                             "middle_name" => $co_borrower['spouse']['middle_name'],
                             "last_name" => $co_borrower['spouse']['last_name'],
@@ -358,15 +361,15 @@ class LazarusAPIController extends Controller
                             "employment" => [
                                 [
                                     "id" => [
-                                        "tin" => $co_borrower['spouse']['tin'],
+                                        "tin" => $co_borrower['spouse']['tin'] ?? '--',
                                     ],
                                     "type" => "Primary",
                                     "employment_status" => "Regular",
                                     "monthly_gross_income" => 10000
                                 ]
                             ],
-                        ],
-                    ];
+                        ];
+                    }
                 }
                 $counter += 1;
             }

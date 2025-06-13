@@ -37,7 +37,7 @@ class CoBorrowerEmploymentUpdateRequest extends FormRequest
             'employer_address_locality' => ['required_with:employer_address_type', 'string', 'max:100'],
             'employer_address_sublocality' => ['required_with:employer_address_type', 'string', 'max:100'],
             'employer_address_administrative_area' => ['required_with:employer_address_type', 'string', 'max:100'],
-            'employer_address_postal_code' => ['required_with:employer_address_type', 'string', 'max:25'],
+            'employer_address_postal_code' => ['nullable', 'string', 'max:25'],
             'employer_address_region' => ['required_with:employer_address_type', 'string', 'max:100'],
             'employer_address_country' => ['required_with:employer_address_type', 'string', 'max:100'],
 

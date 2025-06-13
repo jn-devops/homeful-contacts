@@ -92,7 +92,7 @@ const form = useForm({
     employer_address_locality: employment_record()?.employer?.address?.locality,
     employer_address_sublocality: employment_record()?.employer?.address?.sublocality,
     employer_address_administrative_area: employment_record()?.employer?.address?.administrative_area,
-    employer_address_postal_code: employment_record()?.employer?.address?.postal_code,
+    // employer_address_postal_code: employment_record()?.employer?.address?.postal_code,
     employer_address_region: employment_record()?.employer?.address?.region,
     employer_address_country: employment_record()?.employer?.address?.country ?? 'PH',
 
@@ -656,14 +656,14 @@ onMounted(() => {
                         :errorMessage="form.errors.employer_address_address1"
                     />
                 </div>
-                <div class="col-span-full lg:col-span-2">
+                <!-- <div class="col-span-full lg:col-span-2">
                     <TextInput 
                         v-model="form.employer_address_postal_code"
                         label="ZIP Code"
                         placeholder="Enter Employer ZIP Code"
                         :errorMessage="form.errors.employer_address_postal_code"
                     />
-                </div>
+                </div> -->
                 <div class="col-span-full lg:col-span-3">
                     <TextInput 
                         v-model="form.tin"

@@ -67,8 +67,8 @@ class CoBorrowerEmploymentController extends Controller
             Arr::set($data, 'employer.address.locality', $employer_address_locality);
             $employer_address_administrative_area = Arr::pull($data, 'employer_address_administrative_area');
             Arr::set($data, 'employer.address.administrative_area', $employer_address_administrative_area);
-            $employer_address_postal_code = Arr::pull($data, 'employer_address_postal_code');
-            Arr::set($data, 'employer.address.postal_code', $employer_address_postal_code);
+            // $employer_address_postal_code = Arr::pull($data, 'employer_address_postal_code');
+            // Arr::set($data, 'employer.address.postal_code', $employer_address_postal_code);
             $employer_address_region = Arr::pull($data, 'employer_address_region');
             Arr::set($data, 'employer.address.region', $employer_address_region);
             $employer_address_country = Arr::pull($data, 'employer_address_country');
