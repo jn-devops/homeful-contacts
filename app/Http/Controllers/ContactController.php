@@ -310,8 +310,8 @@ class ContactController extends Controller
                 
                 if (
                     isset($contact->order) &&
-                    is_array($contact->order) &&
-                    array_key_exists('referral_code', $contact->order)
+                    is_array($contact->order)
+                    // array_key_exists('referral_code', $contact->order)
                 ){
                     return response()->json([
                         'success' => true,
