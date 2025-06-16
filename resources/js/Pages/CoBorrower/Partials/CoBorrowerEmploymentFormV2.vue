@@ -518,14 +518,14 @@ onMounted(() => {
                         :errorMessage="form.errors.employer_contact_no"
                     />
                 </div>
-                <div class="col-span-full lg:col-span-3">
+                <!-- <div class="col-span-full lg:col-span-3">
                     <SelectInput 
                         v-model="form.employer_nationality"
                         label="Nationality"
                         :options="employerNationalityList"
                         :errorMessage="form.errors.employer_nationality"
                     />
-                </div>
+                </div> -->
                 <div class="col-span-full lg:col-span-3">
                     <SelectInput 
                         v-model="form.employer_industry"
