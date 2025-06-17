@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use App\Actions\RegisterContact;
 use App\Events\ContactRegistered;
+use App\Helper\WelcomeSMS;
 use App\Models\Contact;
 use App\Models\User;
 use App\Notifications\RegistrationWelcomeNotificationForSellerApp;
@@ -206,6 +207,7 @@ class RegisteredUserController extends Controller
             // Created own Welcome Email
             // event(new ContactRegistered($reference));
             $user->notify(new RegistrationWelcomeNotificationForSellerApp($reference, $password));
+            WelcomeSMS::send($reference, $password);
 
             return response()->json([
                 'success' => true,

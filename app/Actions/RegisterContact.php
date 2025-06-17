@@ -18,6 +18,8 @@ use Homeful\Contacts\Classes\Dummy;
 use App\Events\ContactRegistered;
 use Illuminate\Support\Arr;
 use App\Data\UserData;
+use App\Helper\WelcomeSMS;
+use App\Notifications\RegistrationWelcomeNotificationForSellerApp;
 
 class RegisterContact
 {
@@ -130,7 +132,8 @@ class RegisterContact
         $reference = References::withOwner($user)->create();
         $reference->addEntities($contact);
 
-        event(new ContactRegistered($reference));
+        $user->notify(new RegistrationWelcomeNotificationForSellerApp($reference, context('password')));
+        WelcomeSMS::send($reference, context('password'));
 
         //set the reference context
         //just like a session
