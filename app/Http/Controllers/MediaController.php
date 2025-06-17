@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Helper\GetAttachmentRequirement;
 use Illuminate\Http\{RedirectResponse, Request};
 use App\Http\Requests\MediaUpdateRequest;
+use App\Models\Contact;
 use Homeful\Contacts\Models\Customer;
 use Illuminate\Container\Attributes\Auth;
 use RahulHaque\Filepond\Facades\Filepond;
@@ -170,6 +171,16 @@ class MediaController extends Controller
             'file' => 'Something went wrong in uploading',
         ]);
         
+    }
+
+    public function getNumberOfAttachments(){
+        $contact = Contact::find(auth()->user()->contact->id);
+        $matrix = $this->getMediaMatrix($contact);
+        $count = count(array_filter($matrix, function ($item) {
+            return !empty($item['url']);
+        }));
+        return response()->json(['total' => count($matrix), 'uploaded' => $count]);
+
     }
     
 }

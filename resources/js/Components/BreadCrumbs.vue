@@ -1,6 +1,6 @@
 <script setup>
     import { HomeIcon } from '@heroicons/vue/20/solid'
-import { Link, router } from '@inertiajs/vue3';
+import { Link, router, useForm } from '@inertiajs/vue3';
 import { onMounted, ref } from 'vue';
 
     const props = defineProps({
@@ -8,8 +8,22 @@ import { onMounted, ref } from 'vue';
     });
 
     const divRefs = ref([]);
+    const total = ref(0);
+    const totalAccomplished = ref(0);
 
     onMounted(() => {
+        console.log('Component mounted');
+        axios.get(route('media.get_number_of_attachments'))
+        .then(response => {
+            console.log('Number of attachments response:');
+            total.value = response.data.total;
+            totalAccomplished.value = response.data.uploaded;
+        })
+        .catch(error => {
+            console.error('Failed to get number of attachments:', error);
+        });
+
+
         for (let index = 0; index < props.pages.length; index++) {
             if(route().current(props.pages[index].route_name)){
                 const currentDiv = divRefs.value[props.pages[index].name];
@@ -24,6 +38,7 @@ import { onMounted, ref } from 'vue';
                 
             }
         }
+        
     })
 
     const emit = defineEmits(['navigate-page'])
@@ -47,13 +62,16 @@ import { onMounted, ref } from 'vue';
                 >
                     <div class="text-sm hover:font-semibold z-30 whitespace-nowrap leading-none">
                         {{ page.name }}
+                        <template v-if="page.name == 'Docs Requirements'">
+                            <span class="text-xs">({{ totalAccomplished }}/{{ total }})</span>
+                        </template>
                         <br>
                         <!-- <template v-if="page.name == 'Docs Requirements'">
                             <span class="text-xs ">{{ totalAccomplished }}/{{ totalNumber }}</span>
                         </template> -->
                     </div>
                     <div
-                        class="absolute z-20 border-t border-r border-r-gray-200 border-t-gray-200 right-[-16px] w-[50px] h-[50px] rotate-45"
+                        class="absolute z-20 border-t border-r border-r-gray-200 border-t-gray-200 right-[-17px] w-[36px] h-[36px] rotate-45"
                         :class="page.current ? 'bg-[#006FFD]' : 'bg-white'"
                         
                     ></div>
