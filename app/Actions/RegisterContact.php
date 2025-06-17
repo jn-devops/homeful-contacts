@@ -41,7 +41,7 @@ class RegisterContact
         //but will be used later in the employment
         $gmi = (float) Arr::pull($validated, 'monthly_gross_income');
         $cobo_gmi = (float) Arr::pull($validated, 'cobo_monthly_gross_income');
-        $cobo_date_of_birth = Carbon::parse(Arr::pull($validated, 'cobo_date_of_birth'));
+        $cobo_date_of_birth = Carbon::parse(Arr::pull($validated, 'cobo_date_of_birth'))->format('Y-m-d');
 
         if (!Arr::get($validated, 'name')) {
             Arr::set($validated, 'name', $validated['first_name'] . ' ' . $validated['last_name']);
