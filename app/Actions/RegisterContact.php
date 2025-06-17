@@ -79,12 +79,42 @@ class RegisterContact
                 'sex'=> Sex::MALE,
                 'nationality'=> Nationality::default(),
                 'date_of_birth' => $cobo_date_of_birth,
-                'employement'=>[
-                    'type' => Employment::default(),
-                    'monthly_gross_income' => $cobo_gmi,
-                    'employment_status' => EmploymentStatus::default(),
-                    'id' => [
-                        'tin' => Dummy::TIN
+                "nationality" => "Filipino",
+                "civil_status" => "Single", 
+                'employment'=>[
+                    [
+                        'type' => Employment::default(),
+                        "rank" => null,
+                        'monthly_gross_income' => $cobo_gmi,
+                        'employment_status' => EmploymentStatus::default(),
+                        'id' => [
+                            'tin' => Dummy::TIN,
+                            "sss" => null,
+                            "gsis" => null,
+                            "pagibig" => null
+                        ],
+                        "employer" => [
+                            "name" => "---",
+                            "email" => null,
+                            "address" => [
+                                "type" => "Work",
+                                "region" => null,
+                                "country" => "PH",
+                                "address1" => null,
+                                "locality" => null,
+                                "ownership" => null,
+                                "sublocality" => null,
+                                "administrative_area" => null
+                            ],
+                            "industry" => null,
+                            "contact_no" => null,
+                            "nationality" => null,
+                            "year_established" => null,
+                            "total_number_of_employees" => null
+                        ],
+                        "employment_type" => null,
+                        "current_position" => null,
+                        "years_in_service" => null,
                     ]
                 ]
             ];
