@@ -102,7 +102,7 @@ class RegisteredUserController extends Controller
             $gmi = (float) Arr::pull($validated, 'gross_monthly_income');
             $cobo_gmi = (float) Arr::pull($validated, 'cobo_gross_monthly_income');
             $cobo_date_of_birth = Carbon::parse(Arr::pull($validated, 'cobo_date_of_birth'))->format('Y-m-d');
-            $password = $validated['password'] ?? Str::uuid();
+            $password = $validated['password'] ?? Str::random(8);
             $validated['password'] = Hash::make($password);
 
             $contact = Contact::where('last_name', $validated['last_name'])
