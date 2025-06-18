@@ -91,9 +91,10 @@ onMounted(() => {
                                 </span>
                             </li>
                         </ul>
+                        <br></br>
                         <button
                             @click="close"
-                            class="w-full mt-6 py-2 bg-gray-900 text-white rounded hover:bg-gray-800 font-semibold"
+                            class="bg-black text-white w-full px-6 py-3 font-bold border-spacing-0"
                         >
                             Okay
                         </button>
