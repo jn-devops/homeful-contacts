@@ -168,7 +168,7 @@ const viewAgreements = () => {
                             :error="form.errors.monthly_gross_income"
                         />
                     </div>
-                    <div class="mt-1">
+                    <!-- <div class="mt-1">
                         <div class="flex flex-row items-center gap-2">
                             <input type="checkbox" v-model="showCoBorrowerGMI" id="add_coborrower" class="rounded text-black border-black focus:ring-0">
                             <label for="add_coborrower" class="text-sm"> Add Co-borrower</label>
@@ -200,7 +200,7 @@ const viewAgreements = () => {
                                 />
                             </div>
                         </div>
-                    </Transition>
+                    </Transition> -->
                 </div>
                 <div class="mt-10 px-2">
                     <div class="flex items-center mb-4 gap-2" @click="viewAgreements">
