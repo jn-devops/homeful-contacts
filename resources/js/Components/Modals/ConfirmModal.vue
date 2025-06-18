@@ -58,7 +58,7 @@ onMounted(() => {
         >
             <div 
                 v-if="show" 
-                class="bg-white w-full max-w-[450px] rounded-xl shadow-lg p-4 relative mt-20 mx-5"
+                class="bg-white w-full max-w-[450px] shadow-lg p-4 relative mt-20 mx-5"
                 @click.stop
             >
                 <div class="absolute top-3 right-3">
@@ -73,9 +73,17 @@ onMounted(() => {
                         <p class="text-lg">{{ title }} </p>
                         <p class="font-normal text-sm">{{ description }}</p>
                     </div>
-                    <div class="flex gap-1 mt-6 items-center justify-center pb-5">
-                        <button @click="handleSave" class="bg-green-500 px-2 text-white rounded text-sm font-semibold shadow">{{ trueLabel }}</button>
-                        <button @click="close" class="bg-red-500 px-2 text-white rounded text-sm font-semibold shadow">{{ falseLabel }}</button>
+                    <div class="flex flex-col sm:flex-row gap-2 mt-6 items-center justify-center pb-5 w-full">
+                        <button @click="close"
+                            class="bg-white text-black w-full sm:w-auto px-6 py-3 font-bold border border-black rounded">
+                            {{ falseLabel }}
+                        </button>
+
+                        <button @click="handleSave"
+                            class="bg-black text-white w-full sm:w-auto px-6 py-3 font-bold rounded">
+                            {{ trueLabel }}
+                        </button>
+  
                     </div>
                 </div>
             </div>
