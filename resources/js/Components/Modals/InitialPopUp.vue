@@ -1,5 +1,6 @@
 <script setup>
 import { onMounted, ref } from 'vue';
+import PrimaryButton from '../Buttons/PrimaryButton.vue';
 
 const emit = defineEmits(['close']);
 const close = (val) => {
@@ -92,12 +93,11 @@ onMounted(() => {
                             </li>
                         </ul>
                         <br></br>
-                        <button
+                        <PrimaryButton
                             @click="close"
-                            class="bg-black text-white w-full px-6 py-3 font-bold border-spacing-0"
                         >
                             Okay
-                        </button>
+                        </PrimaryButton>
                     </div>
                 </div>
             </div>

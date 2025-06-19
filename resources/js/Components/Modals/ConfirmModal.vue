@@ -1,5 +1,7 @@
 <script setup>
 import { onMounted, ref } from 'vue';
+import PrimaryButton from '../Buttons/PrimaryButton.vue';
+import SecondaryButton from '../Buttons/SecondaryButton.vue';
 
 const props = defineProps({
     title: {
@@ -74,15 +76,15 @@ onMounted(() => {
                         <p class="font-normal text-sm">{{ description }}</p>
                     </div>
                     <div class="flex flex-col sm:flex-row gap-2 mt-6 items-center justify-center pb-5 w-full">
-                        <button @click="close"
-                            class="bg-white text-black w-full sm:w-auto px-6 py-3 font-bold border border-black rounded">
+                        <SecondaryButton @click="close"
+                            class="">
                             {{ falseLabel }}
-                        </button>
+                        </SecondaryButton>
 
-                        <button @click="handleSave"
-                            class="bg-black text-white w-full sm:w-auto px-6 py-3 font-bold rounded">
+                        <PrimaryButton @click="handleSave"
+                            class=" ">
                             {{ trueLabel }}
-                        </button>
+                        </PrimaryButton>
   
                     </div>
                 </div>
