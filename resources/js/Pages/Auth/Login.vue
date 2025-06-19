@@ -31,8 +31,10 @@ const submit = () => {
     <GuestLayoutV2>
         <div class="flex flex-col">
             <div class="flex flex-col items-start w-full">
+
+                <!-- Image -->
                 <div class="relative w-full">
-                    <div class="w-full h-[400px]">
+                    <div class="w-full h-[300px]">
                         <img 
                             src="https://jn-img.enclaves.ph/Agapeya/Facade/ModelUnitWalkthrough.gif" alt="IMG"
                             class="w-full h-full object-cover"
@@ -41,7 +43,10 @@ const submit = () => {
                     <div class="z-20 absolute top-0 left-0 w-full h-[100px] bg-gradient-to-t from-transparent to-black">
                     </div>
                 </div>
-                <div class="p-10 w-full">
+                <!-- Image -->
+                
+
+                <div class="p-7 w-full">
                     <form @submit.prevent="submit">
                         <h2 class="text-2xl font-extrabold">Buyer Log In</h2>
                         <div class="w-full mt-5">
