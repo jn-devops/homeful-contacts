@@ -86,7 +86,7 @@ const navigateTo = (link) => {
 
                     <template v-if="page.name === 'Docs Requirements'">
                         <span
-                            class="text-xs ml-1 opacity-80"
+                            class="text-base ml-1 opacity-80"
                             :class="page.current ? 'text-white' : 'text-gray-500'"
                         >
                             ({{ totalAccomplished }}/{{ total }})
