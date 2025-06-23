@@ -140,6 +140,9 @@ class LazarusAPIController extends Controller
                     'order' => $response->json()['data']['order'],
                 ];
                 $lazarus_data['order']['homeful_id'] = $homeful_id;
+                if($validated['project_code']){
+                    $lazarus_data['order']['project_code'] = $validated['project_code'];
+                }
                 $lazarus_api_contact_update = Http::withToken(config('homeful-contacts.lazarus_api_token'))
                                 ->put(config('homeful-contacts.lazarus_url').'api/admin/contacts/'.$lazarus_id, $lazarus_data);
                 return response()->json([
@@ -529,48 +532,7 @@ class LazarusAPIController extends Controller
                     "monthly_gross_income" => collect($data->employment)->where('type', 'Primary')->first()['monthly_gross_income'] ?? 0
                 ]
             ],
-            'order' => [
-                'project_code' => $project_code,
-            ]
-            // "co_borrowers" => [
-            //     [
-            //         "sex" => "Female",
-            //         "name" => "CACABILOS MARJORIE  DE GUIA",
-            //         "email" => "majocacabilos260@gmail.com",
-            //         "mobile" => "9331141290",
-            //         "spouse" => [
-            //             "sex" => null,
-            //             "tin" => null,
-            //             "email" => null,
-            //             "mobile" => null,
-            //             "landline" => null,
-            //             "last_name" => null,
-            //             "first_name" => null,
-            //             "middle_name" => null,
-            //             "name_suffix" => null,
-            //             "nationality" => null,
-            //             "civil_status" => null,
-            //             "date_of_birth" => null,
-            //             "mothers_maiden_name" => null
-            //         ],
-            //         "passport" => "",
-            //         "last_name" => "DE GUIA",
-            //         "first_name" => "CACABILOS",
-            //         "date_issued" => null,
-            //         "help_number" => "WeiHYdFAOF",
-            //         "middle_name" => "MARJORIE ",
-            //         "name_suffix" => "001",
-            //         "nationality" => "076",
-            //         "civil_status" => "001",
-            //         "other_mobile" => null,
-            //         "place_issued" => "",
-            //         "date_of_birth" => "2000-02-06",
-            //         "mothers_maiden_name" => "REA B. DE GUIA ",
-            //         "relationship_to_buyer" => ""
-            //     ]
-            // ],
         ];
-        // dd($data->employment);
         return $param;
     }
 
