@@ -122,6 +122,8 @@ class LazarusAPIController extends Controller
                 'seller_voucher_code' => 'nullable|string',
                 'campaign_author' => 'nullable|string',
                 'referral_code' => 'nullable|string',
+                'seller_code' => 'nullable|string',
+                'seller_name' => 'nullable|string',
             ]);
 
             $data = Customer::find($validated['contact_id']);
@@ -162,6 +164,12 @@ class LazarusAPIController extends Controller
                 }
                 if($validated['referral_code']){
                     $lazarus_data['order']['referral_code'] = $validated['referral_code'];
+                }
+                if($validated['seller_code']){
+                    $lazarus_data['order']['seller']['id'] = $validated['seller_code'];
+                }
+                if($validated['seller_name']){
+                    $lazarus_data['order']['seller']['name'] = $validated['seller_name'];
                 }
                 $lazarus_api_contact_update = Http::withToken(config('homeful-contacts.lazarus_api_token'))
                                 ->put(config('homeful-contacts.lazarus_url').'api/admin/contacts/'.$lazarus_id, $lazarus_data);
