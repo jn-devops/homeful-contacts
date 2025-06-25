@@ -10,6 +10,18 @@ import GradientStyleDateInput from '@/Components/Inputs/GradientStyleDateInput.v
 import Agreements from '@/Components/Agreements.vue';
 import TermAndCondition from '@/Components/TermAndCondition.vue';
 
+
+function capitalizeWords(value) {
+  if (!value) return '';
+  return value
+    .replace(/\s+/g, ' ') // normalize spaces
+    .split(' ')
+    .map(word =>
+      word ? word[0].toUpperCase() + word.slice(1).toLowerCase() : ''
+    )
+    .join(' ');
+}
+
 const props = defineProps({
     callback: String,
     showExtra: {
@@ -103,11 +115,12 @@ const viewAgreements = () => {
             <form @submit.prevent="submit">
                 <div class="mt-10">
                     <GradientStyleInput
-                        label="Name"
-                        placeholder="Enter Name"
+                        label="Full Name"
+                        placeholder="Enter Full Name"
                         required
                         v-model="form.name"
-                        :error="form.errors.name"
+                        @update:modelValue="val => form.name = capitalizeWords(val)"
+                        :error="form.errors.name"    
                     />
                 </div>
                 <div class="mt-5">
