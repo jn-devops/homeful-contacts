@@ -99,7 +99,7 @@ const hasAvatar = computed(() => {
                 </div>
             </div>
 
-            <main class="pt-32 pb-8 z-20"> 
+            <main class="pt-40 pb-8 z-20"> 
                 <slot />
             </main>
         </div>
