@@ -26,6 +26,7 @@ use Homeful\Contacts\Enums\Suffix;
 use Homeful\References\Facades\References;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Inertia\{Inertia, Response};
 use Illuminate\Support\Str;
@@ -44,6 +45,14 @@ class RegisteredUserController extends Controller
         $hidePassword = config('homeful-contacts.hide_password') || $request->get('hidePassword');
         $autoPassword = $hidePassword ? config('homeful-contacts.default_password') : '';
 
+        $projects = $this->getProperties()['projects'];
+        $filtered_projects = collect($projects)->map(function ($item) {
+            return [
+                'id' => $item['code'],
+                'description' => $item['name'],
+            ];
+        })->sortBy('description')
+        ->values();
         return Inertia::render(self::REGISTER_VIEW, [
             'callback' => $callback,
             'showExtra' => $showExtra,
@@ -51,6 +60,8 @@ class RegisteredUserController extends Controller
             'name' => $request->get('name',''),
             'email' => $request->get('email',''),
             'mobile' => $request->get('mobile',''),
+            'project_code' => $request->project_code,
+            'projects' => $filtered_projects,
         ]);
     }
 
@@ -66,7 +77,7 @@ class RegisteredUserController extends Controller
         Auth::login($user);
 
         return session('callback')
-            ? Inertia::location($this->getCallbackWithQueryParamsFromSession(context('reference')))
+            ? Inertia::location($this->getCallbackWithQueryParamsFromSession(context('reference'), $request->get('project_code', '')))
             : redirect(route('dashboard', absolute: false));
     }
 
@@ -77,11 +88,15 @@ class RegisteredUserController extends Controller
         return $this;
     }
 
-    protected function getCallbackWithQueryParamsFromSession(Reference $reference): string
+    protected function getCallbackWithQueryParamsFromSession(Reference $reference, $project_code = null): string
     {
         $url = Url::fromString(session('callback'));
-
-        return $url->withQueryParameters(['contact_reference_code' => $reference->code]);
+        if($project_code){
+            $full_url = $url->withQueryParameters(['contact_reference_code' => $reference->code, 'project_code' => $project_code]);
+        }else{
+            $full_url = $url->withQueryParameters(['contact_reference_code' => $reference->code]);
+        }
+        return $full_url;
     }
 
     public function createContactForSellerApp(Request $request): JsonResponse
@@ -228,5 +243,10 @@ class RegisteredUserController extends Controller
                 'message' =>  $e->getMessage(),
             ], HttpResponse::HTTP_INTERNAL_SERVER_ERROR);
         }
+    }
+
+    private function getProperties(){
+        $request = Http::get(config('properties.url').'/fetch-projects');
+        return $request->json();
     }
 }

@@ -9,6 +9,19 @@ import { computed, ref } from "vue";
 import GradientStyleDateInput from '@/Components/Inputs/GradientStyleDateInput.vue';
 import Agreements from '@/Components/Agreements.vue';
 import TermAndCondition from '@/Components/TermAndCondition.vue';
+import GradientStyleSelect from '@/Components/Inputs/GradientStyleSelect.vue';
+
+
+function capitalizeWords(value) {
+  if (!value) return '';
+  return value
+    .replace(/\s+/g, ' ') // normalize spaces
+    .split(' ')
+    .map(word =>
+      word ? word[0].toUpperCase() + word.slice(1).toLowerCase() : ''
+    )
+    .join(' ');
+}
 
 const props = defineProps({
     callback: String,
@@ -32,6 +45,14 @@ const props = defineProps({
         type: String,
         default: ''
     },
+    project_code: {
+        type: String,
+        default: ''
+    },
+    projects: {
+        type: Array,
+        default: []
+    },
 });
 
 const showTC = ref(false)
@@ -46,6 +67,8 @@ const togglePP = () => {
     showAgreementPage.value = !showAgreementPage.value
 }
 
+const options = props.projects ?? [];
+
 const form = useForm({
     name: props.name,
     email: props.email,
@@ -56,6 +79,7 @@ const form = useForm({
     monthly_gross_income: null,
     cobo_monthly_gross_income: null,
     cobo_date_of_birth: '',
+    project_code: props.project_code,
 });
 
 const submit = () => {
@@ -103,11 +127,12 @@ const viewAgreements = () => {
             <form @submit.prevent="submit">
                 <div class="mt-10">
                     <GradientStyleInput
-                        label="Name"
-                        placeholder="Enter Name"
+                        label="Full Name"
+                        placeholder="Enter Full Name"
                         required
                         v-model="form.name"
-                        :error="form.errors.name"
+                        @update:modelValue="val => form.name = capitalizeWords(val)"
+                        :error="form.errors.name"    
                     />
                 </div>
                 <div class="mt-5">
@@ -166,6 +191,14 @@ const viewAgreements = () => {
                             required
                             v-model="form.monthly_gross_income"
                             :error="form.errors.monthly_gross_income"
+                        />
+                    </div>
+                    <div class="mt-5">
+                        <GradientStyleSelect
+                            label="Project"
+                            :options="options"
+                            v-model="form.project_code"
+                            :error="form.errors.project_code"
                         />
                     </div>
                     <!-- <div class="mt-1">
