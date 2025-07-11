@@ -18,6 +18,8 @@ use Homeful\Contacts\Classes\Dummy;
 use App\Events\ContactRegistered;
 use Illuminate\Support\Arr;
 use App\Data\UserData;
+use App\Helper\WelcomeSMS;
+use App\Notifications\RegistrationWelcomeNotificationForSellerApp;
 
 class RegisterContact
 {
@@ -41,7 +43,7 @@ class RegisterContact
         //but will be used later in the employment
         $gmi = (float) Arr::pull($validated, 'monthly_gross_income');
         $cobo_gmi = (float) Arr::pull($validated, 'cobo_monthly_gross_income');
-        $cobo_date_of_birth = Carbon::parse(Arr::pull($validated, 'cobo_date_of_birth'));
+        $cobo_date_of_birth = Carbon::parse(Arr::pull($validated, 'cobo_date_of_birth'))->format('Y-m-d');
 
         if (!Arr::get($validated, 'name')) {
             Arr::set($validated, 'name', $validated['first_name'] . ' ' . $validated['last_name']);
@@ -79,12 +81,42 @@ class RegisterContact
                 'sex'=> Sex::MALE,
                 'nationality'=> Nationality::default(),
                 'date_of_birth' => $cobo_date_of_birth,
-                'employement'=>[
-                    'type' => Employment::default(),
-                    'monthly_gross_income' => $cobo_gmi,
-                    'employment_status' => EmploymentStatus::default(),
-                    'id' => [
-                        'tin' => Dummy::TIN
+                "nationality" => "Filipino",
+                "civil_status" => "Single", 
+                'employment'=>[
+                    [
+                        'type' => Employment::default(),
+                        "rank" => null,
+                        'monthly_gross_income' => $cobo_gmi,
+                        'employment_status' => EmploymentStatus::default(),
+                        'id' => [
+                            'tin' => Dummy::TIN,
+                            "sss" => null,
+                            "gsis" => null,
+                            "pagibig" => null
+                        ],
+                        "employer" => [
+                            "name" => "---",
+                            "email" => null,
+                            "address" => [
+                                "type" => "Work",
+                                "region" => null,
+                                "country" => "PH",
+                                "address1" => null,
+                                "locality" => null,
+                                "ownership" => null,
+                                "sublocality" => null,
+                                "administrative_area" => null
+                            ],
+                            "industry" => null,
+                            "contact_no" => null,
+                            "nationality" => null,
+                            "year_established" => null,
+                            "total_number_of_employees" => null
+                        ],
+                        "employment_type" => null,
+                        "current_position" => null,
+                        "years_in_service" => null,
                     ]
                 ]
             ];
@@ -100,7 +132,8 @@ class RegisterContact
         $reference = References::withOwner($user)->create();
         $reference->addEntities($contact);
 
-        event(new ContactRegistered($reference));
+        $user->notify(new RegistrationWelcomeNotificationForSellerApp($reference, context('password')));
+        WelcomeSMS::send($reference, context('password'));
 
         //set the reference context
         //just like a session

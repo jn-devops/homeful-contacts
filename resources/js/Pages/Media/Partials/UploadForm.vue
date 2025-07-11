@@ -1,22 +1,10 @@
 <script setup>
-import SecondaryButton from '@/Components/Buttons/SecondaryButton.vue';
-import DangerButton from '@/Components/Buttons/DangerButton.vue';
-import { router, useForm, usePage } from '@inertiajs/vue3';
-import InputLabel from '@/Components/InputLabel.vue';
-import {computed, onMounted, ref, unref} from "vue";
-
-// Import filepond
-import vueFilePond, { setOptions } from 'vue-filepond';
-
-// Import filepond plugins
-import FilePondPluginFileValidateType from 'filepond-plugin-file-validate-type/dist/filepond-plugin-file-validate-type.esm.js';
-import FilePondPluginImagePreview from 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.esm.js';
-
-// Import filepond styles
-import 'filepond/dist/filepond.min.css';
-import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.css';
-import InputError from "@/Components/InputError.vue";
+import ConfirmModal from '@/Components/Modals/ConfirmModal.vue';
+import ViewAttachment from '@/Components/Modals/ViewAttachment.vue';
 import SuccessToast from '@/Components/Notification/SuccessToast.vue';
+import { useForm, usePage } from '@inertiajs/vue3';
+import { ref } from 'vue';
+
 
 const props = defineProps({
     csrf_token: String,
@@ -25,27 +13,46 @@ const props = defineProps({
     label: String,
     previewUrl: String,
     fileType: String,
+    counter: Number,
 });
 
-const filepondAvatarInput = ref(null); // Reference the input to clear the files later
-const sucessMessage = ref('')
-const url = ref(props.previewUrl)
 
 const form = useForm({
+    file: null,
+    file_type: props.name,
     name: props.name,
-    file: null
-});
+})
 
-const uploadMedia = () => {
-    form.patch(route('media.update'), {
-            onSuccess: () => {
-                sucessMessage.value = "Successfully uploaded the file"
-            },
-        });
-};
+const showDeleteConfirmation = ref(false)
+
+const showAttachment = ref(false)
+const toggleAttachment = () => {
+    showAttachment.value = !showAttachment.value
+}
+
+const handleFileChange = (event) => {
+    const file = event.target.files[0]
+    if (file) {
+        form.file = file
+        runAfterFileAdded(file)
+    }
+}
+
+const sucessMessage = ref('')
+
+const runAfterFileAdded = (file) => {
+    console.log('Running function after file added:', file.name)
+    form.post(route('filepond-upload-file'),  {
+        preserveScroll: true,
+        onSuccess: () => {
+            console.log('File uploaded successfully!', usePage().props.flash.data);
+            sucessMessage.value = "Successfully uploaded a file"
+        }
+    })
+
+}
 
 const removeMedia = () => {
-    url.value = null
     form.delete(route('media.destroy'), {
         errorBag: 'removeMedia',
         preserveScroll: true,
@@ -54,83 +61,6 @@ const removeMedia = () => {
         },
     });
 };
-
-const checkFormDirty = () => {
-    return form.isDirty
-};
-const saveThisForm = () => {
-    uploadMedia()
-};
-
-defineExpose({
-    checkFormDirty,
-    saveThisForm
-});
-
-// Create FilePond component
-const FilePond = vueFilePond(FilePondPluginFileValidateType, FilePondPluginImagePreview);
-
-const filePondServer = {
-  process: (fieldName, file, metadata, load, error, progress, abort) => {
-    const formData = new FormData();
-    formData.append(fieldName, file);
-    formData.append('file_type', props.name);
-    console.log(fieldName, file, props.name);
-    
-
-    const controller = new AbortController();
-
-    fetch('/upload-file', {
-      method: 'POST',
-      body: formData,
-      signal: controller.signal,
-      headers: {
-        Accept: 'application/json',
-        'X-CSRF-TOKEN': props.csrf_token,
-      },
-    })
-      .then(res => res.json())
-      .then(data => {
-        load(data.path); // Pass the uploaded file path back to FilePond
-      })
-      .catch(err => {
-        error('Upload failed');
-      });
-
-    // Handle progress if needed
-    // FilePond expects you to return an object with an `abort` method
-    return {
-      abort: () => {
-        controller.abort();
-        abort();
-      }
-    };
-    
-  },
-
-  revert: (uniqueFileId, load, error) => {
-    removeMedia()
-  }
-};
-
-// Set the server id from response
-const handleFilePondAvatarProcess = (error, file) => {
-    form.file = file.serverId;
-    console.log('onprocess');
-};
-// Remove the server id on file remove
-const handleFilePondAvatarRemoveFile = (error, file) => {
-    form.file = null;
-};
-
-const label = computed(() => props.label ?? props.name);
-const filename = computed(() => props.contact[props.name]?.file_name);
-// const url = computed(() => props.contact[props.name]?.preview_url);
-const uploadedFiles = ref([]);
-
-onMounted(() => {
-    
-});
 
 </script>
 
@@ -147,57 +77,71 @@ onMounted(() => {
                 :message="sucessMessage"
             />
         </Transition>
-        <form
-            @submit.prevent="uploadMedia"
-            class="space-y-6"
+        <div 
+            class="flex flex-row w-full py-4 rounded-xl shadow-lg px-3"
+            :class="{'bg-[#84A2FC]' : previewUrl, 'bg-white' : !previewUrl, }"
         >
-            <div class="mt-4">
-                <InputLabel for="file" :value=label />
+            <div class="basis-1/12 flex justify-center items-center relative">
+                <div class="absolute inset-0 flex justify-center items-center pointer-events-none text-sm font-semibold">
+                    {{ counter }}
+                </div>
+                <img class="w-[50px]" :src="usePage().props.data.appURL + '/images/docicon.svg'" alt="">
             </div>
-            <template v-if="url">
-                <template v-if="fileType == 'application/pdf'">
-                    <div class="w-full h-[300px] flex flex-col items-center justify-center bg-gray-300 rounded-xl shadow-xl">
-                        <embed :src="url" type="application/pdf" width="100%" height="100%" class="rounded-xl" />
+            <div 
+                class="basis-8/12 flex flex-col justify-center px-2"
+                :class="{previewUrl : 'basis-7/12'}"
+            >
+                <h2 
+                    class="font-bold"
+                    :class="{'text-white' : previewUrl}"
+                >{{ label }}</h2>
+                <span class="text-sm"></span>
+            </div>
+
+            <!-- Condition for File Upload -->
+            <div  v-if="previewUrl" class="flex flex-row justify-end items-center basis-3/12 gap-2">
+                <div class="flex justify-center items-center cursor-pointer" @click="showAttachment = true">
+                    <div class="bg-white rounded-full p-3 shadow-lg">
+                        <svg class="w-6 h-6 text-[#0024F2]" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                            <path fill-rule="evenodd" d="M4.998 7.78C6.729 6.345 9.198 5 12 5c2.802 0 5.27 1.345 7.002 2.78a12.713 12.713 0 0 1 2.096 2.183c.253.344.465.682.618.997.14.286.284.658.284 1.04s-.145.754-.284 1.04a6.6 6.6 0 0 1-.618.997 12.712 12.712 0 0 1-2.096 2.183C17.271 17.655 14.802 19 12 19c-2.802 0-5.27-1.345-7.002-2.78a12.712 12.712 0 0 1-2.096-2.183 6.6 6.6 0 0 1-.618-.997C2.144 12.754 2 12.382 2 12s.145-.754.284-1.04c.153-.315.365-.653.618-.997A12.714 12.714 0 0 1 4.998 7.78ZM12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z" clip-rule="evenodd"/>
+                        </svg>
                     </div>
-                </template>
-                <template v-else>
-                    <div class="w-full h-[300px]">
-                        <img class="h-full w-full object-cover rounded-lg shadow-xl" :src="url"/>
-                    </div>
-                </template>
-                <DangerButton :disabled="form.processing" @click.prevent="removeMedia">
-                    <div class="flex flex-row items-center gap-1">
-                        <svg class="w-4 h-4 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                </div>
+                <div @click="showDeleteConfirmation = true" class="flex justify-center items-center cursor-pointer">
+                    <div class="bg-white rounded-full p-3 shadow-lg">
+                        <svg class="w-6 h-6 text-red-800" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
                             <path fill-rule="evenodd" d="M8.586 2.586A2 2 0 0 1 10 2h4a2 2 0 0 1 2 2v2h3a1 1 0 1 1 0 2v12a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V8a1 1 0 0 1 0-2h3V4a2 2 0 0 1 .586-1.414ZM10 6h4V4h-4v2Zm1 4a1 1 0 1 0-2 0v8a1 1 0 1 0 2 0v-8Zm4 0a1 1 0 1 0-2 0v8a1 1 0 1 0 2 0v-8Z" clip-rule="evenodd"/>
                         </svg>
-                        <p class="text-white font-bold text-center">
-                            Remove {{ label }}
-                        </p>
+
                     </div>
-                </DangerButton>
-            </template>
+                </div>
+            </div>
             <template v-else>
-                <FilePond
-                    name="file"
-                    ref="filepondAvatarInput"
-                    class-name="my-pond"
-                    allow-multiple="false"
-                    accepted-file-types="image/*, application/pdf"
-                    :server="filePondServer"
-                />
-                <!-- <InputError class="mt-2" :message="form.errors.file" />
-                <SecondaryButton :disabled="form.processing" type="submit" customClass="w-auto">
-                    <div class="flex flex-row items-center gap-1">
-                        <svg class="w-4 h-4 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
-                            <path fill-rule="evenodd" d="M5 3a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V7.414A2 2 0 0 0 20.414 6L18 3.586A2 2 0 0 0 16.586 3H5Zm3 11a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v6H8v-6Zm1-7V5h6v2a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1Z" clip-rule="evenodd"/>
-                            <path fill-rule="evenodd" d="M14 17h-4v-2h4v2Z" clip-rule="evenodd"/>
+                <label :for="name" class="basis-3/12 flex justify-end items-center cursor-pointer">
+                    <div class="bg-white rounded-full p-3 shadow-lg border-2 border-[#FCB115]">
+                        <svg class="w-full h-full text-[#FCB115] " aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                            <path fill-rule="evenodd" d="M12 3a1 1 0 0 1 .78.375l4 5a1 1 0 1 1-1.56 1.25L13 6.85V14a1 1 0 1 1-2 0V6.85L8.78 9.626a1 1 0 1 1-1.56-1.25l4-5A1 1 0 0 1 12 3ZM9 14v-1H5a2 2 0 0 0-2 2v4a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-4a2 2 0 0 0-2-2h-4v1a3 3 0 1 1-6 0Zm8 2a1 1 0 1 0 0 2h.01a1 1 0 1 0 0-2H17Z" clip-rule="evenodd"/>
                         </svg>
-                        <p class="text-white font-bold text-center">
-                            Upload File
-                        </p>
                     </div>
-                </SecondaryButton> -->
+                </label>
             </template>
-        </form>
+
+        </div>
+        <input type="file" class="hidden" :id="name" @change="handleFileChange">
+
+        <ViewAttachment 
+            v-if="showAttachment"
+            :name="label"
+            :file="previewUrl"
+            :type="fileType"
+            @close="toggleAttachment"
+        />
+        <ConfirmModal
+            v-if="showDeleteConfirmation"
+            title="Are you sure you want to delete this?"
+            description="You can't revert this back if you do."
+            @close="showDeleteConfirmation = false"
+            @handle-true="removeMedia"
+        />
     </section>
 </template>

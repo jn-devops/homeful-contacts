@@ -13,7 +13,7 @@
 </script>
 <template>
     <button 
-        :class="`text-white text-xs bg-black text-center bg-[length:200%_200%] transition-all duration-500 hover:bg-[position:100%_0] hover:text-sm shadow-lg font-medium rounded-full px-4 py-2 me-2 mb-2 ${customClass}`"
+        :class="`bg-white text-black w-full sm:w-auto px-6 py-3 font-bold border border-black rounded`"
         :type="type"
     >
         <slot />

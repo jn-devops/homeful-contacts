@@ -1,5 +1,7 @@
 <script setup>
 import { onMounted, ref } from 'vue';
+import PrimaryButton from '../Buttons/PrimaryButton.vue';
+import SecondaryButton from '../Buttons/SecondaryButton.vue';
 
 const props = defineProps({
     title: {
@@ -58,7 +60,7 @@ onMounted(() => {
         >
             <div 
                 v-if="show" 
-                class="bg-white w-full max-w-[450px] rounded-xl shadow-lg p-4 relative mt-20 mx-5"
+                class="bg-white w-full max-w-[450px] shadow-lg p-4 relative mt-20 mx-5"
                 @click.stop
             >
                 <div class="absolute top-3 right-3">
@@ -73,9 +75,17 @@ onMounted(() => {
                         <p class="text-lg">{{ title }} </p>
                         <p class="font-normal text-sm">{{ description }}</p>
                     </div>
-                    <div class="flex gap-1 mt-6 items-center justify-center pb-5">
-                        <button @click="handleSave" class="bg-green-500 px-2 text-white rounded text-sm font-semibold shadow">{{ trueLabel }}</button>
-                        <button @click="close" class="bg-red-500 px-2 text-white rounded text-sm font-semibold shadow">{{ falseLabel }}</button>
+                    <div class="flex flex-col sm:flex-row gap-2 mt-6 items-center justify-center pb-5 w-full">
+                        <SecondaryButton @click="close"
+                            class="">
+                            {{ falseLabel }}
+                        </SecondaryButton>
+
+                        <PrimaryButton @click="handleSave"
+                            class=" ">
+                            {{ trueLabel }}
+                        </PrimaryButton>
+  
                     </div>
                 </div>
             </div>

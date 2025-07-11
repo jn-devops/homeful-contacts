@@ -65,7 +65,7 @@ const submit = () => {
 
                         <div class="mt-5">
                             <PlainBlackButton type="submit">
-                                <span class="font-semibold">Login</span>
+                                <span class="font-semibold">Submit</span>
                             </PlainBlackButton>
                         </div>
 

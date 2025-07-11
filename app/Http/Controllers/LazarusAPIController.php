@@ -5,9 +5,11 @@ namespace App\Http\Controllers;
 use App\Events\ContactRegistered;
 use App\Helper\GetAttachmentRequirement;
 use App\Models\User;
+use App\Notifications\SendContactReferenceCodeNotification;
 use Homeful\Contacts\Classes\ContactMetaData;
 use Carbon\Carbon;
 use Exception;
+use FrittenKeeZ\Vouchers\Models\VoucherEntity;
 use Homeful\Contacts\Models\Contact;
 use Homeful\Contacts\Models\Customer;
 use Homeful\References\Facades\References;
@@ -28,9 +30,12 @@ class LazarusAPIController extends Controller
                 'password' => 'required',
             ]);
 
+
             $user = User::where('email', $request->email)->first();
+
             if($user instanceof User){
                 if (!$user || !Hash::check($request->password, $user->password)) {
+
                     return response()->json(['message' => 'Invalid credentials'], 401);
                 }
 
@@ -75,6 +80,7 @@ class LazarusAPIController extends Controller
             ]);
 
             $data = $this->convertLazarusToContactData($validated['data']);
+            // dd($data);
             $contact = Contact::where('id', $validated['id'])->update($data);
             if($contact){
                 return response()->json([
@@ -111,6 +117,13 @@ class LazarusAPIController extends Controller
                 'contact_id' => 'required|string',
                 'reference_code' => 'required|string',
                 'project_code' => 'nullable|string',
+                'source_of_sale' => 'nullable|string',
+                'preferred_project' => 'nullable|string',
+                'seller_voucher_code' => 'nullable|string',
+                'campaign_author' => 'nullable|string',
+                'referral_code' => 'nullable|string',
+                'seller_code' => 'nullable|string',
+                'seller_name' => 'nullable|string',
             ]);
 
             $data = Customer::find($validated['contact_id']);
@@ -122,11 +135,47 @@ class LazarusAPIController extends Controller
                     'data' => [],
                 ], 404);
             }
-            $params = $this->convertContactToLazarus($data, $validated['reference_code'], $validated['project_code']);
-
+            $homeful_id = VoucherEntity::where('entity_id', $validated['contact_id'])->first()->voucher->code ?? null;
+            $params = $this->convertContactToLazarus($data, $validated['reference_code'], $validated['project_code'] ?? null);
             $response = Http::withToken(config('homeful-contacts.lazarus_api_token'))
                             ->post(config('homeful-contacts.lazarus_url').'api/admin/contacts', $params);
+            // dd(config('homeful-contacts.lazarus_api_token'), config('homeful-contacts.lazarus_url').'api/admin/contacts', $params);
             if($response->successful()){
+                // Update the Lazarus Data with homeful_id
+                $lazarus_id = $response->json()['data']['id'];
+                $lazarus_data = [
+                    'order' => $response->json()['data']['order'],
+                ];
+                $lazarus_data['order']['homeful_id'] = $homeful_id;
+                if($validated['project_code']){
+                    $lazarus_data['order']['project_code'] = $validated['project_code'];
+                }
+                if($validated['source_of_sale']){
+                    $lazarus_data['order']['source_of_sale'] = $validated['source_of_sale'];
+                }
+                if($validated['preferred_project']){
+                    $lazarus_data['order']['preferred_project'] = $validated['preferred_project'];
+                }
+                if($validated['seller_voucher_code']){
+                    $lazarus_data['order']['seller_voucher_code'] = $validated['seller_voucher_code'];
+                }
+                if($validated['campaign_author']){
+                    $lazarus_data['order']['campaign_author'] = $validated['campaign_author'];
+                }
+                if($validated['referral_code']){
+                    $lazarus_data['order']['referral_code'] = $validated['referral_code'];
+                }
+                if($validated['seller_code']){
+                    $lazarus_data['order']['seller']['id'] = $validated['seller_code'];
+                    $lazarus_data['order']['seller']['name'] = $validated['seller_name'];
+                    $lazarus_data['order']['seller']['unit'] = null;
+                    $lazarus_data['order']['seller']['superior'] = null;
+                    $lazarus_data['order']['seller']['team_head'] = null;
+                    $lazarus_data['order']['seller']['chief_seller_officer'] = null;
+                }
+                $lazarus_api_contact_update = Http::withToken(config('homeful-contacts.lazarus_api_token'))
+                                ->put(config('homeful-contacts.lazarus_url').'api/admin/contacts/'.$lazarus_id, $lazarus_data);
+                logger('Set Lazarus Status: '. $lazarus_api_contact_update->successful());
                 return response()->json([
                     'success' => true,
                     'message' => 'Successfully Created Lazarus Data',
@@ -152,10 +201,11 @@ class LazarusAPIController extends Controller
         $address_primary = collect($data['addresses'] ?? [])->where('type', 'primary')->first() ?? [];
         $address_present = collect($data['addresses'] ?? [])->where('type', 'present')->first() ?? [];
         $address_permanent = collect($data['addresses'] ?? [])->where('type', 'permanent')->first() ?? [];
-        $address_work = collect($data['addresses'] ?? [])->where('type', 'work')->first() ?? [];
+        $address_co_borrower = collect($data['addresses'] ?? [])->where('type', 'co_borrower')->first() ?? [];
         $address_secondary = collect($data['addresses'] ?? [])->where('type', 'secondary')->first() ?? [];
 
         $employment = collect($data['employment'] ?? [])->where('type', 'buyer')->first() ?? [];
+        $employment_co_borrower = collect($data['employment'] ?? [])->where('type', 'co_borrower')->first() ?? [];
 
         // Special Case for Employment
         if(is_numeric($employment['employer']['industry'] ?? '')){
@@ -255,43 +305,130 @@ class LazarusAPIController extends Controller
                         'year_established' => $employment['employer']['year_established'] ?? null,
                     ],
                     'id' => [
-                        'tin' => $employment['id']['tin'],
+                        'tin' => $employment['id']['tin'] ?? '--',
                         'pagibig' => $employment['id']['pagibig'],
                         'sss' => $employment['id']['sss'],
                         'gsis' => $employment['id']['gsis'],
                     ],
                 ],
-                // [
-                //     'type' => Employment::SIDELINE->value,
-                //     'employment_status' => EmploymentStatus::CONTRACTUAL->value,
-                //     'monthly_gross_income' => (string) ($this->faker->numberBetween(12000, 25000) * 100),
-                //     'current_position' => $this->faker->word(),
-                //     'employment_type' => EmploymentType::LOCALLY_EMPLOYED->value,
-                //     'employer' => [
-                //         'name' => $this->faker->word(),
-                //         'industry' => Industry::random()->value,
-                //         'nationality' => Nationality::random()->value,
-                //         'address' => [
-                //             'type' => AddressType::PRIMARY->value,
-                //             'ownership' => Ownership::random()->value,
-                //             'address1' => $this->faker->address(),
-                //             'sublocality' => $this->faker->city(),
-                //             'locality' => $this->faker->city(),
-                //             'postal_code' => $this->faker->postcode(),
-                //             'region' => 'NCR',
-                //             'country' => 'PH',
-                //         ],
-                //         'contact_no' => $this->faker->word(),
-                //     ],
-                //     'id' => [
-                //         'tin' => $this->faker->word(),
-                //         'pagibig' => $this->faker->word(),
-                //         'sss' => $this->faker->word(),
-                //         'gsis' => $this->faker->word(),
-                //     ],
-                // ],
             ],
         ];
+        if(isset($data['co_borrowers']) && !empty($data['co_borrowers'])){
+            $counter = 1;
+            foreach($data['co_borrowers'] as $co_borrower){
+                if($counter == 1){ // For Primary Co-Borrower Only
+                    $customer_array['co_borrowers'][] = [
+                        "sex" => $co_borrower['sex'],
+                        "name" => $co_borrower['name'],
+                        "type" => ($counter == 1) ? "Primary" : "Secondary",
+                        "email" => $co_borrower['email'],
+                        "mobile" => '0'.$co_borrower['mobile'],
+                        "relation" => $this->getMaintenanceData(config('homeful-contacts.lazarus_url').'api/admin/relationships?filter[code]='.($co_borrower['relationship_to_buyer'] ?? '-'), pure_data: true)[0]['description'] ?? '',
+                        "last_name" => $co_borrower['last_name'],
+                        "middle_name" => $co_borrower['middle_name'] ?? null,
+                        "first_name" => $co_borrower['first_name'],
+                        "nationality" => $this->getMaintenanceData(config('homeful-contacts.lazarus_url').'api/admin/nationalities?filter[code]='.($co_borrower['nationality'] ?? '-'), pure_data:true)[0]['description'] ?? '076',
+                        "civil_status" => $this->getMaintenanceData(config('homeful-contacts.lazarus_url').'api/admin/civil-statuses?filter[code]='.($co_borrower['civil_status'] ?? '-'), pure_data:true)[0]['description'] ?? '001',
+                        "date_of_birth" => $co_borrower['date_of_birth'],
+                        "mothers_maiden_name" => $co_borrower['mothers_maiden_name'],
+                        "addresses" => [
+                            [
+                                "type" => "Primary",
+                                "region" => $address_co_borrower['region'] ?? '',
+                                "country" => $address_co_borrower['country'] ?? "PH",
+                                "address1" => $address_co_borrower['address1'] ?? '',
+                                "locality" => $address_co_borrower['locality'] ?? '',
+                                "ownership" => $this->getMaintenanceData(config('homeful-contacts.lazarus_url').'api/admin/home-ownerships?filter[code]='.($address_co_borrower['ownership'] ?? '-'), pure_data: true)[0]['description'] ?? 'Unknown',
+                                "postal_code" => $address_co_borrower['postal_code'] ?? '',
+                                "sublocality" => $address_co_borrower['sublocality'] ?? '',
+                                "administrative_area" => $address_co_borrower['administrative_area'] ?? ''
+                            ],
+                        ],
+                        "employment" => [
+                            [
+                                "id" => [
+                                    "tin" => $employment_co_borrower['id']['tin'] ?? '---',
+                                    "pagibig" => $employment_co_borrower['id']['pagibig'] ?? null,
+                                    "sss" => $employment_co_borrower['id']['sss'] ?? null,
+                                    "gsis" => $employment_co_borrower['id']['gsis'] ?? null,
+                                ],
+                                "rank" => $employment_co_borrower['rank'] ?? '',
+                                "type" => "Primary",
+                                "employment_type" => $this->getMaintenanceData(config('homeful-contacts.lazarus_url').'api/admin/employment-types?filter[code]='.($employment_co_borrower['employment_type'] ?? '-'), pure_data: true)[0]['description'] ?? '001',
+                                "current_position" => $employment_co_borrower['current_position'] ?? null,
+                                "years_in_service" => $employment_co_borrower['years_in_service'] ?? null,
+                                "employment_status" => $this->getMaintenanceData(config('homeful-contacts.lazarus_url').'api/admin/employment-statuses?filter[code]='.($employment_co_borrower['employment_status'] ?? '-'), pure_data: true)[0]['description'] ?? '001',
+                                "monthly_gross_income" => $employment_co_borrower['monthly_gross_income'] ?? null,
+                                "employer" => [
+                                    "name" => $employment_co_borrower['employer']['name'] ?? null,
+                                    "email" => $employment_co_borrower['employer']['email'] ?? null,
+                                    "industry" => $this->getMaintenanceDataCode(config('homeful-contacts.lazarus_url').'api/admin/work-industries?per_page=1000', 'code', $employment_co_borrower['employer']['industry'] ?? null, 'description') ?? null,
+                                    "contact_no" => '0'.$employment_co_borrower['employer']['contact_no'] ?? '',
+                                    "nationality" => $this->getMaintenanceDataCode(config('homeful-contacts.lazarus_url').'api/admin/nationalities?per_page=1000', 'code', $employment_co_borrower['employer']['nationality'] ?? null, 'description') ?? null,
+                                    "year_established" => $employment_co_borrower['employer']['year_established'] ?? null,
+                                    "total_number_of_employees" => $employment_co_borrower['employer']['total_number_of_employees'] ?? null,
+                                    "address" => [
+                                        "type" => "Work",
+                                        "region" => $employment_co_borrower['employer']['address']['region'],
+                                        "country" => $employment_co_borrower['employer']['address']['country'],
+                                        "address1" => $employment_co_borrower['employer']['address']['address1'] ?? '',
+                                        "locality" => $employment_co_borrower['employer']['address']['locality'] ?? '',
+                                        "ownership" => 'Unknown',
+                                        "sublocality" => $employment_co_borrower['employer']['address']['sublocality'] ?? '',
+                                        "administrative_area" => $employment_co_borrower['employer']['address']['administrative_area'] ?? '',
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ];
+                    // If Co-borrower is Married
+                    if($customer_array['co_borrowers'][0]['civil_status'] == 'Married'){
+                        $customer_array['co_borrowers'][0]['spouse'] = [
+                            "sex" => ($co_borrower['sex'] == 'Male') ? 'Female' : 'Male',
+                            'name_suffix' => ($co_borrower['spouse']['name_suffix'] != '001') ? (($co_borrower['spouse']['name_suffix'] != '001') ? ($this->getMaintenanceData(config('homeful-contacts.lazarus_url').'api/admin/name-suffixes?filter[code]='.($co_borrower['spouse']['name_suffix'] ?? '-'), pure_data: true)[0]['description'] ?? null) : '') : null ,
+                            "first_name" => $co_borrower['spouse']['first_name'],
+                            "middle_name" => $co_borrower['spouse']['middle_name'],
+                            "last_name" => $co_borrower['spouse']['last_name'],
+                            "nationality" => "Filipino",
+                            "civil_status" => "Married",
+                            "date_of_birth" => null,
+                            "employment" => [
+                                [
+                                    "id" => [
+                                        "tin" => $co_borrower['spouse']['tin'] ?? '--',
+                                    ],
+                                    "type" => "Primary",
+                                    "employment_status" => "Regular",
+                                    "monthly_gross_income" => 10000
+                                ]
+                            ],
+                        ];
+                    }
+                }
+                $counter += 1;
+            }
+        }
+        
+        if(isset($data['order']['aif']) && !empty($data['order']['aif'])){
+            $customer_array['aif'] = [
+                "sex" => $data['order']['aif']['sex'] ?? 'Male',
+                "tin" => $data['order']['aif']['tin'] ?? '',
+                // "name" => $data['order']['aif']['sex'] ?? 'Male',
+                "email" => $data['order']['aif']['email'] ?? null,
+                // "author" => $data['order']['aif']['sex'] ?? 'Male',
+                "mobile" => '0'.$data['order']['aif']['mobile'] ?? '--',
+                "landline" => $data['order']['aif']['landline'] ?? '',
+                "last_name" => $data['order']['aif_attorney_last_name'] ?? '.',
+                "first_name" => $data['order']['aif_attorney_first_name'] ?? '.',
+                "middle_name" => $data['order']['aif_attorney_middle_name'] ?? null,
+                "name_suffix" => $this->getMaintenanceData(config('homeful-contacts.lazarus_url').'api/admin/name-suffixes?filter[code]='.($data['order']['aif_attorney_name_suffix'] ?? '-'), pure_data: true)[0]['description'] ?? null,
+                "nationality" => $this->getMaintenanceData(config('homeful-contacts.lazarus_url').'api/admin/nationalities?filter[code]='.($data['order']['aif']['nationality'] ?? '-'), pure_data:true)[0]['description'] ?? 'Filipino',
+                "civil_status" => $this->getMaintenanceData(config('homeful-contacts.lazarus_url').'api/admin/civil-statuses?filter[code]='.($data['order']['aif']['civil_status'] ?? '-'), pure_data:true)[0]['description'] ?? 'Single',
+                "other_mobile" => $data['order']['aif']['other_mobile'] ?? null,
+                "date_of_birth" => $data['order']['aif']['date_of_birth'] ?? '--',
+                "relationship_to_buyer" => $data['order']['aif']['relationship_to_buyer'] ?? null,
+            ];
+        }
 
         return $customer_array;
     }
@@ -426,48 +563,7 @@ class LazarusAPIController extends Controller
                     "monthly_gross_income" => collect($data->employment)->where('type', 'Primary')->first()['monthly_gross_income'] ?? 0
                 ]
             ],
-            'order' => [
-                'project_code' => $project_code,
-            ]
-            // "co_borrowers" => [
-            //     [
-            //         "sex" => "Female",
-            //         "name" => "CACABILOS MARJORIE  DE GUIA",
-            //         "email" => "majocacabilos260@gmail.com",
-            //         "mobile" => "9331141290",
-            //         "spouse" => [
-            //             "sex" => null,
-            //             "tin" => null,
-            //             "email" => null,
-            //             "mobile" => null,
-            //             "landline" => null,
-            //             "last_name" => null,
-            //             "first_name" => null,
-            //             "middle_name" => null,
-            //             "name_suffix" => null,
-            //             "nationality" => null,
-            //             "civil_status" => null,
-            //             "date_of_birth" => null,
-            //             "mothers_maiden_name" => null
-            //         ],
-            //         "passport" => "",
-            //         "last_name" => "DE GUIA",
-            //         "first_name" => "CACABILOS",
-            //         "date_issued" => null,
-            //         "help_number" => "WeiHYdFAOF",
-            //         "middle_name" => "MARJORIE ",
-            //         "name_suffix" => "001",
-            //         "nationality" => "076",
-            //         "civil_status" => "001",
-            //         "other_mobile" => null,
-            //         "place_issued" => "",
-            //         "date_of_birth" => "2000-02-06",
-            //         "mothers_maiden_name" => "REA B. DE GUIA ",
-            //         "relationship_to_buyer" => ""
-            //     ]
-            // ],
         ];
-        // dd($data->employment);
         return $param;
     }
 
@@ -534,13 +630,13 @@ class LazarusAPIController extends Controller
         $reference = Reference::where('code',$request->code)->first();
         $contact_id = $reference->voucherEntities()->where('entity_type','App\Models\Contact')->first()->entity_id;
         $contact =  Customer::findOrFail($contact_id);
-          $contact=  $this->convertContactToLazarus($contact, $request->code);
+
+        $contact=  $this->convertContactToLazarus($contact, $request->code, null, null);
         return response()->json([
             'success' => true,
             'data' =>$contact,
         ], 200);
     }
-
     public function createContact(Request $request){
         $data = $request->contact_data;
 
@@ -548,26 +644,42 @@ class LazarusAPIController extends Controller
             ->where('first_name',$data['first_name'])
             ->where('date_of_birth',$data['date_of_birth']);
         if($contact->exists()){
-            return;
+            return response()->json([
+                'success' => true,
+                'message' => 'Contact already exists.',
+                'data' => $contact,
+            ], 200);
         }else{
             $user = app(User::class)->create([
                 'name' => $data['first_name'].' '.$data['last_name'],
                 'email' => $data['email'],
-                'password'=>Hash::make(Str::uuid())
+                'mobile' => $data['mobile'],
+                'password'=>Hash::make(config('homeful-contacts.default_password'))
             ]);
             $converted = $this->convertLazarusToContactData($data);
             $contact = app(\App\Models\Contact::class)->create($converted);
             $user->contact()->associate($contact);
+
+            $user->contact_id = $contact->id;
+            $user->mobile = $data['mobile'];
+            $user->save();
 
             $reference = References::withOwner($user)->create();
             $reference->addEntities($contact);
 
             $order = $contact->order;
             $order['homeful_id']=$reference->code;
+            $contact->reference_code = $reference->code;
             $contact->order = $order;
             $contact->save();
 
+            // $user->notify(new SendContactReferenceCodeNotification($contact->reference_code));
+
             event(new ContactRegistered($reference));
+            return response()->json([
+                'success' => true,
+                'data' => $contact,
+            ], 200);
         }
     }
 }

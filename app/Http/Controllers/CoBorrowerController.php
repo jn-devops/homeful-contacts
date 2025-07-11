@@ -73,7 +73,11 @@ class CoBorrowerController extends Controller
             $records[$type]['employment'][0]['monthly_gross_income'] = $employment[0]['monthly_gross_income'] ?? null;
             $records[$type]['employment'][0]['current_position'] = $employment[0]['current_position'] ?? null;
             $records[$type]['employment'][0]['employment_type'] = $employment[0]['employment_type'] ?? null;
+            $records[$type]['employment'][0]['rank'] = $employment[0]['rank'] ?? null;
+            $records[$type]['employment'][0]['years_in_service'] = $employment[0]['years_in_service'] ?? null;
             $records[$type]['employment'][0]['employer']['name'] = $employment[0]['employer']['name'] ?? null;
+            $records[$type]['employment'][0]['employer']['total_number_of_employees'] = $employment[0]['employer']['total_number_of_employees'] ?? null;
+            $records[$type]['employment'][0]['employer']['year_established'] = $employment[0]['employer']['year_established'] ?? null;
             $records[$type]['employment'][0]['employer']['email'] = $employment[0]['employer']['email'] ?? null;
             $records[$type]['employment'][0]['employer']['contact_no'] = $employment[0]['employer']['contact_no'] ?? null;
             $records[$type]['employment'][0]['employer']['nationality'] = $employment[0]['employer']['nationality'] ?? null;
@@ -82,6 +86,7 @@ class CoBorrowerController extends Controller
             $records[$type]['employment'][0]['employer']['address']['ownership'] = $employment[0]['employer']['address']['ownership'] ?? null;
             $records[$type]['employment'][0]['employer']['address']['address1'] = $employment[0]['employer']['address']['address1'] ?? null;
             $records[$type]['employment'][0]['employer']['address']['locality'] = $employment[0]['employer']['address']['locality'] ?? null;
+            $records[$type]['employment'][0]['employer']['address']['sublocality'] = $employment[0]['employer']['address']['sublocality'] ?? null;
             $records[$type]['employment'][0]['employer']['address']['administrative_area'] = $employment[0]['employer']['address']['administrative_area'] ?? null;
             $records[$type]['employment'][0]['employer']['address']['postal_code'] = $employment[0]['employer']['address']['postal_code'] ?? null;
             $records[$type]['employment'][0]['employer']['address']['region'] = $employment[0]['employer']['address']['region'] ?? null;

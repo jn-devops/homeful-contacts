@@ -5,10 +5,15 @@ namespace App\Http\Controllers;
 use App\Actions\RegisterContact;
 use Illuminate\Http\Request;
 use App\Models\Contact;
+use App\Models\Reference;
 use App\Models\User;
+use FrittenKeeZ\Vouchers\Models\Voucher;
 use Homeful\Contacts\Models\Contact as ModelsContact;
 use Homeful\Contacts\Models\Customer;
 use Homeful\Contracts\Models\Contact as ContractsModelsContact;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\ValidationException;
+use Inertia\Inertia;
 
 class ContactController extends Controller
 {
@@ -250,5 +255,110 @@ class ContactController extends Controller
         $customer = Customer::find($contact->id);
         $customer->update(['aif' => $data]);
         $customer->save();
+    }
+
+    // This is intended for order column only. Can update this to cater all field in the future.
+    public function updateContactByHomefulId(Request $request){ 
+        try {
+            $validated = $request->validate([
+                'homeful_id' => 'required',
+                'data' => 'required|array',
+                'data.order' => 'required|array',
+            ]);
+    
+            $reference = Reference::where('code', $validated['homeful_id'])->first();
+    
+            if (!$reference) {
+                throw new \Exception('Reference not found.');
+            }
+    
+            $contact = $reference->getContact();
+    
+            if (!$contact) {
+                throw new \Exception('Contact not found.');
+            }
+    
+            $order = $contact->order ?? [];
+            $order = array_merge($order, $validated['data']['order']);
+    
+            $contact->update(['order' => $order]);
+    
+            return response()->json([
+                'success' => true,
+                'message' => 'Successfully updated the contact data',
+                'data' => $contact
+            ], 200);
+        } catch (ValidationException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Validation error',
+                'errors' => $e->errors(),
+            ], 422);
+        } catch (\Exception $e) {
+            Log::error('Error updating contact data: ' . $e->getMessage());
+    
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], 500);
+        }
+    }
+    public function checkReferralContact($homeful_id){
+        try {
+            $reference = Reference::where('code', $homeful_id)->first();
+            if($reference && $contact = $reference->getContact()){
+                
+                if (
+                    isset($contact->order) &&
+                    is_array($contact->order) &&
+                    array_key_exists('referral_code', $contact->order)
+                ){
+                    return response()->json([
+                        'success' => true,
+                        'referral_code_exists' => true,
+                        'referral_code' => $contact->order['referral_code'],
+                        'message' => 'Contacts Not Found',
+                    ]);
+                }else{
+                    return response()->json([
+                        'success' => false,
+                        'referral_code_exists' => false,
+                        'referral_code' => null,
+                        'message' => 'Contacts Not Found',
+                    ]);
+                }
+            }else{
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Contacts Not Found',
+                    'referral_code_exists' => false,
+                ]);
+            }
+        } catch (\Throwable $th) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Something Went Wrong with the data',
+                'referral_code_exists' => false,
+            ]);
+        }
+    }
+
+    public function validate_email($email){
+        $contact = Contact::where('email', $email)->first();
+        if($contact){
+            return response()->json(['success' => true, 'exists' => true], 200);
+        }else{
+            return response()->json(['success' => true, 'exists' => false], 200);
+        }
+    }
+
+    public function validate_mobile($mobile){
+        // $mobile_formatted = '0'.substr($mobile, 2);
+        $contact = Contact::where('mobile', $mobile)->first();
+        if($contact){
+            return response()->json(['success' => true, 'exists' => true], 200);
+        }else{
+            return response()->json(['success' => true, 'exists' => false], 200);
+        }
     }
 }

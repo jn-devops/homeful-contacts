@@ -6,11 +6,13 @@ import SelectInput from '@/Components/Inputs/SelectComboboxes.vue';
 import SuccessToast from '@/Components/Notification/SuccessToast.vue';
 import WarningToast from '@/Components/Notification/WarningToast.vue';
 import { useForm, usePage } from '@inertiajs/vue3';
-import { ref, watch } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 import PlainBlackButton from '@/Components/Buttons/PlainBlackButton.vue';
 
 const props = defineProps({
     aif: Object,
+    api_token: String,
+    api_url: String,
 });
 
 const checkFormDirty = () => {
@@ -40,6 +42,7 @@ const form = useForm({
     other_mobile: props.aif?.other_mobile,
     landline: props.aif?.landline,
     tin: props.aif?.tin,
+    relationship_to_buyer: props.aif?.relationship_to_buyer,
 })
 
 const civilStatusList = usePage().props.enums.civil_statuses.map(item => ({
@@ -67,6 +70,37 @@ const updateAIFInformation = async () => {
     });
 };
 
+const api_relation = ref([])
+const relation_loading = ref(true)
+const formatted_relation = ref([])
+const getRelation = async () => {
+    try {
+        
+        const response = await axios.get(props.api_url+'api/admin/maintenance/relationships?per_page=1000', {
+                headers: {
+                    Authorization: `Bearer ${props.api_token}`,
+                },
+            });
+        api_relation.value = response.data
+        
+    } catch (error) {
+        console.error('Error fetching data:', error);
+    }
+}
+
+const formatAPItoComponent = (data, type) => {
+    switch (type) {
+        case 'relation':
+            return data.data.map(list => ({
+              id: list.description,
+              name: list.description
+            }));
+            break;
+        default:
+            break;
+    }
+};
+
 const hasValidationError = ref(false);
 
 function closeToastFunction(){
@@ -76,6 +110,13 @@ function closeToastFunction(){
 watch(form, (newValue, oldValue) => {
     hasValidationError.value = (form.hasErrors) ? true : false;
 });
+
+onMounted(() => {
+    getRelation().then(() => {
+        formatted_relation.value = formatAPItoComponent(api_relation.value, 'relation')
+        relation_loading.value = false
+    })
+})
 
 </script>
 
@@ -222,6 +263,15 @@ watch(form, (newValue, oldValue) => {
                         label="Taxpayer Identification Number"
                         placeholder="Enter TIN"
                         :errorMessage="form.errors.tin"
+                    />
+                </div>
+                <div v-if="!relation_loading" class="col-span-full lg:col-span-3">
+                    <SelectInput 
+                        v-model="form.relationship_to_buyer"
+                        label="Relationship to Buyer"
+                        required
+                        :options="formatted_relation"
+                        :errorMessage="form.errors.relationship_to_buyer"
                     />
                 </div>
             </div>

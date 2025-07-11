@@ -84,6 +84,7 @@ const form = useForm({
     employer_nationality: employment_record()?.employer?.nationality,
     employer_industry: employment_record()?.employer?.industry,
     employer_total_number_of_employees: employment_record()?.employer?.total_number_of_employees,
+    employer_year_established: employment_record()?.employer?.year_established,
 
     employer_address_type: employment_record()?.employer?.address?.type ?? 'Work',
     employer_address_ownership: employment_record()?.employer?.address?.ownership ?? 'Unknown',
@@ -91,7 +92,7 @@ const form = useForm({
     employer_address_locality: employment_record()?.employer?.address?.locality,
     employer_address_sublocality: employment_record()?.employer?.address?.sublocality,
     employer_address_administrative_area: employment_record()?.employer?.address?.administrative_area,
-    employer_address_postal_code: employment_record()?.employer?.address?.postal_code,
+    // employer_address_postal_code: employment_record()?.employer?.address?.postal_code,
     employer_address_region: employment_record()?.employer?.address?.region,
     employer_address_country: employment_record()?.employer?.address?.country ?? 'PH',
 
@@ -517,14 +518,14 @@ onMounted(() => {
                         :errorMessage="form.errors.employer_contact_no"
                     />
                 </div>
-                <div class="col-span-full lg:col-span-3">
+                <!-- <div class="col-span-full lg:col-span-3">
                     <SelectInput 
                         v-model="form.employer_nationality"
                         label="Nationality"
                         :options="employerNationalityList"
                         :errorMessage="form.errors.employer_nationality"
                     />
-                </div>
+                </div> -->
                 <div class="col-span-full lg:col-span-3">
                     <SelectInput 
                         v-model="form.employer_industry"
@@ -551,13 +552,22 @@ onMounted(() => {
                 </div> -->
                 <div class="col-span-full lg:col-span-3">
                     <TextInput 
+                        v-model="form.employer_year_established"
+                        label="Year Established"
+                        placeholder="Enter the year the employer was established"
+                        type="number"
+                        :errorMessage="form.errors.employer_year_established"
+                    />
+                </div>
+                <!-- <div class="col-span-full lg:col-span-3">
+                    <TextInput 
                         v-model="form.employer_total_number_of_employees"
                         label="Total Number of Employees"
                         placeholder="Enter No. of Employees"
                         type="number"
                         :errorMessage="form.errors.employer_total_number_of_employees"
                     />
-                </div>
+                </div> -->
                 <div v-if="!country_loading" class="col-span-full lg:col-span-3">
                     <SelectInput 
                         v-model="form.employer_address_country"
@@ -646,14 +656,14 @@ onMounted(() => {
                         :errorMessage="form.errors.employer_address_address1"
                     />
                 </div>
-                <div class="col-span-full lg:col-span-2">
+                <!-- <div class="col-span-full lg:col-span-2">
                     <TextInput 
                         v-model="form.employer_address_postal_code"
                         label="ZIP Code"
                         placeholder="Enter Employer ZIP Code"
                         :errorMessage="form.errors.employer_address_postal_code"
                     />
-                </div>
+                </div> -->
                 <div class="col-span-full lg:col-span-3">
                     <TextInput 
                         v-model="form.tin"

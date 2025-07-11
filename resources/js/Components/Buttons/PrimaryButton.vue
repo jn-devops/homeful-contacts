@@ -13,9 +13,9 @@
 </script>
 <template>
     <button 
-        :class="`px-4 py-3 text-sm rounded-full bg-gradient-to-r from-[#006FFD] to-[#FCB115] text-center bg-[length:200%_200%] transition-all duration-500 hover:bg-[position:100%_0] hover:text-base shadow-lg ${customClass}`"
+        :class="`bg-black text-white w-full px-6 py-3 font-bold border-spacing-0`"
         :type="type"
     >
         <slot />
-</button>
+    </button>
 </template>

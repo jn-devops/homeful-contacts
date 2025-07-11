@@ -28,6 +28,7 @@ class CoBorrowerEmploymentUpdateRequest extends FormRequest
             'employer_industry' => ['nullable', Rule::enum(Industry::class)],
             'employment_rank' => ['nullable', 'string'],
             'employment_years_in_service' => ['nullable', 'string'],
+            'employer_year_established' => ['nullable', 'string'],
 
             'employer_address_type' => ['nullable', Rule::enum(AddressType::class)],
             'employer_address_ownership' => ['required_with:employer_address_type', Rule::enum(Ownership::class)],
@@ -36,7 +37,7 @@ class CoBorrowerEmploymentUpdateRequest extends FormRequest
             'employer_address_locality' => ['required_with:employer_address_type', 'string', 'max:100'],
             'employer_address_sublocality' => ['required_with:employer_address_type', 'string', 'max:100'],
             'employer_address_administrative_area' => ['required_with:employer_address_type', 'string', 'max:100'],
-            'employer_address_postal_code' => ['required_with:employer_address_type', 'string', 'max:25'],
+            'employer_address_postal_code' => ['nullable', 'string', 'max:25'],
             'employer_address_region' => ['required_with:employer_address_type', 'string', 'max:100'],
             'employer_address_country' => ['required_with:employer_address_type', 'string', 'max:100'],
 

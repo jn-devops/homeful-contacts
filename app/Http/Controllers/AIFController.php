@@ -13,7 +13,9 @@ class AIFController extends Controller
     public function edit(Request $request): Response
     {
         return Inertia::render('AIF/EditV2', [
-            'aif' => $request->user()->contact?->aif
+            'aif' => $request->user()->contact?->aif,
+            'lazarus_url' => config('homeful-contacts.lazarus_url'),
+            'lazarus_token' => config('homeful-contacts.lazarus_api_token'),
         ]);
     }
 

@@ -19,6 +19,9 @@ const showWarningModal = ref(false)
 const showLogoutModal = ref(false)
 const showLogoutConfirmationModal = ref(false)
 const isNavigated = ref(false)
+let docCount = 0
+
+const getNextDocCount = () => ++docCount
 
 onMounted(() => {
     if(props.matrices.length === 0){
@@ -46,7 +49,7 @@ const navigatePage = (link) => {
     <AuthenticatedLayout @trigger-exit="handleTrigger" @navigate-page="navigatePage">
         <div class="mx-auto max-w-7xl px-6 lg:px-8">
             <h3 class="font-bold text-[#006FFD] mt-4 uppercase">Document Information</h3>
-            <div class="grid grid-cols-12 gap-4 pb-10">
+            <div class="grid grid-cols-12 gap-4 pb-10 mt-9">
                 <div v-if="matrices.length === 0" class="col-span-full mt-16">
                     <div class="w-full">
                         <div class="w-full text-center flex items-center justify-center">
@@ -59,7 +62,7 @@ const navigatePage = (link) => {
                         </div>
                     </div>
                 </div>
-                <div v-else class="col-span-full grid grid-cols-12 gap-y-20 gap-4 pb-10">
+                <div v-else class="col-span-full grid grid-cols-12 gap-y-7 gap-4">
                     <!-- New Uploading Version -->
                     <!-- <div class="flex flex-col md:flex-row gap-2 mt-3">
                         <div class="basis-1/4">
@@ -85,6 +88,7 @@ const navigatePage = (link) => {
                             :label = "item?.name"
                             :preview-url="item?.url"
                             :file-type="item?.type"
+                            :counter="getNextDocCount()"
                         />
                     </div>
                     <!-- END Old Upload Version -->

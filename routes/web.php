@@ -58,6 +58,7 @@ Route::post('/upload-file', [MediaController::class, 'file_upload'])->name('file
 Route::get('/signature', function () {
     return Inertia::render('Signature');
 });
+Route::get('/get-number-of-attachments', [MediaController::class, 'getNumberOfAttachments'])->name('media.get_number_of_attachments');
 
 Route::get('/consult-page', [RedirectControllers::class, 'redirect_to_consult'])->name('consult-page');
 Route::resource('unqualified-user', UnqualifiedUser::class)->only(['create', 'store']);

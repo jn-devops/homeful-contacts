@@ -3,6 +3,7 @@
 use App\Http\Controllers\{ContactController, LazarusAPIController, ReferenceController};
 use Illuminate\Support\Facades\Route;
 use App\Actions\RegisterContact;
+use App\Http\Controllers\Auth\RegisteredUserController;
 use Homeful\Contacts\Models\Customer;
 use Illuminate\Http\Request;
 
@@ -25,12 +26,20 @@ Route::post('get-contact-media/{id}', function($id){
     dd($customer->getMedia(), $customer->birthCertificateDocument);
 });
 
+Route::get('/validate/email/{email}', [ContactController::class, 'validate_email']);
+Route::get('/validate/mobile/{mobile}', [ContactController::class, 'validate_mobile']);
+
 Route::post('/auth/login', [LazarusAPIController::class, 'login']);
 Route::middleware(['auth:sanctum'])->group(function () {
+    Route::post('/create-contacts-seller-app', [RegisteredUserController::class, 'createContactForSellerApp']);
+
     Route::get('/contact/{id}', [LazarusAPIController::class, 'getContactByID']);
     Route::put('/update-contact', [LazarusAPIController::class, 'updateContactFromLazarus']);
     Route::post('/set-lazarus-contact', [LazarusAPIController::class, 'setLazarusContact']);
+    Route::post('/set-contact', [LazarusAPIController::class, 'createContact']);
     Route::get('/get-attachment-requirement/{id}', [LazarusAPIController::class, 'getAttachmentRequirementByID']);
     Route::post('/set-attachment-requirement', [LazarusAPIController::class, 'setAttachmentRequirementByID']);
     Route::post('/get-contact-by-homeful-id', [LazarusAPIController::class, 'getContactByVoucherCode']);
+    Route::post('/update-contact-by-homeful-id', [ContactController::class, 'updateContactByHomefulId']);
+    Route::get('/check-contact-if-referral-exists/{homeful_id}', [ContactController::class, 'checkReferralContact']);
 });
