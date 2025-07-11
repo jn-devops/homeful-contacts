@@ -30,9 +30,7 @@ class SendContactReferenceCodeNotification extends Notification implements Shoul
             ->line('Password: ' .'password')
             ->line('Client Code:')
             ->line($this->getContactReferenceCode())
-            ->action('Login', url($this->getUrl($notifiable)))
-            ->line('Cheers,')
-            ->line('Homeful Shop');
+            ->action('Login', url($this->getUrl($notifiable)));
     }
 
     public function getContent($notifiable)

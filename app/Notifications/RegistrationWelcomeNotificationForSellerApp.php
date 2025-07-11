@@ -53,9 +53,7 @@ class RegistrationWelcomeNotificationForSellerApp extends Notification
             ->line('Password: ' .$this->password)
             ->line('Client Code:')
             ->line($this->reference->code)
-            ->action('Login', url($this->getUrl($notifiable)))
-            ->line('Cheers,')
-            ->line('Homeful Shop');
+            ->action('Login', url($this->getUrl($notifiable)));
     }
 
     /**
