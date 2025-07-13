@@ -74,9 +74,9 @@ const submit = () => {
                             </PlainBlackButton>
                         </div>
                     </form>
-                    <div class="text-gray-600 text-center text-sm font-semibold py-3">
+                    <!-- <div class="text-gray-600 text-center text-sm font-semibold py-3">
                         Not a member? <Link :href="route('register')"><span class="text-blue-600">Register Now</span></Link>
-                    </div>
+                    </div> -->
                     <hr class="my-3" />
                     <div class="flex flex-col justify-center items-center">
                         <p class="text-gray-600 text-center text-sm">Or continue with</p>
