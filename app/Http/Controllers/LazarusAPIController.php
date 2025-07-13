@@ -469,7 +469,7 @@ class LazarusAPIController extends Controller
             "nationality" => $this->getMaintenanceDataCode(config('homeful-contacts.lazarus_url').'api/admin/nationalities?per_page=1000', 'description', $data->nationality ?? null, 'code') ?? '076',
             "date_of_birth" => $data->date_of_birth->format('Y-m-d'),
             "email" => $data->email,
-            "mobile" => $data->mobile,
+            "mobile" => substr($data->mobile, 1),
             "other_mobile" => $data->other_mobile,
             "help_number" => $data->help_number,
             "landline" => $data->landline,
