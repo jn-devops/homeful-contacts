@@ -640,46 +640,78 @@ class LazarusAPIController extends Controller
     public function createContact(Request $request){
         $data = $request->contact_data;
 
-        $contact=\App\Models\Contact::where('last_name',$data['last_name'])
-            ->where('first_name',$data['first_name'])
-            ->where('date_of_birth',$data['date_of_birth']);
+        $contact=\App\Models\Contact::where('email', $data['email'])
+            ->where('mobile', '0'.$data['mobile']);
         if($contact->exists()){
-            return response()->json([
-                'success' => true,
-                'message' => 'Contact already exists.',
-                'data' => $contact,
-            ], 200);
+            try {
+                $contact = $contact->first();
+                $user = User::where('contact_id', $contact->id)->first();
+                $reference = Reference::withOwner($user)->first();
+    
+                $order = $contact->order;
+                $order['homeful_id']=$reference->code;
+                $contact->reference_code = $reference->code;
+                $contact->order = $order;
+                $contact->save();
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Retrieved Existing Homeful ID',
+                    'data' => $contact,
+                ], 200);
+            } catch (\Throwable $th) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Cannot generate Homeful ID due to duplicate of data. Please contact support.',
+                    'data' => null,
+                ], 200);
+            }
+            
         }else{
-            $user = app(User::class)->create([
-                'name' => $data['first_name'].' '.$data['last_name'],
-                'email' => $data['email'],
-                'mobile' => $data['mobile'],
-                'password'=>Hash::make(config('homeful-contacts.default_password'))
-            ]);
-            $converted = $this->convertLazarusToContactData($data);
-            $contact = app(\App\Models\Contact::class)->create($converted);
-            $user->contact()->associate($contact);
-
-            $user->contact_id = $contact->id;
-            $user->mobile = $data['mobile'];
-            $user->save();
-
-            $reference = References::withOwner($user)->create();
-            $reference->addEntities($contact);
-
-            $order = $contact->order;
-            $order['homeful_id']=$reference->code;
-            $contact->reference_code = $reference->code;
-            $contact->order = $order;
-            $contact->save();
-
-            // $user->notify(new SendContactReferenceCodeNotification($contact->reference_code));
-
-            event(new ContactRegistered($reference));
-            return response()->json([
-                'success' => true,
-                'data' => $contact,
-            ], 200);
+            try {
+                $user_model = User::where('email', $data['email'])
+                    ->where('mobile', $data['mobile']);
+                if($user_model->exists()){
+                    $user = $user_model->first();
+                }else{
+                    $user = app(User::class)->create([
+                        'name' => $data['first_name'].' '.$data['last_name'],
+                        'email' => $data['email'],
+                        'mobile' => $data['mobile'],
+                        'password'=>Hash::make(config('homeful-contacts.default_password'))
+                    ]);
+                }
+                $converted = $this->convertLazarusToContactData($data);
+                $contact = app(\App\Models\Contact::class)->create($converted);
+                $user->contact()->associate($contact);
+    
+                $user->contact_id = $contact->id;
+                $user->mobile = $data['mobile'];
+                $user->save();
+    
+                $reference = References::withOwner($user)->create();
+                $reference->addEntities($contact);
+    
+                $order = $contact->order;
+                $order['homeful_id']=$reference->code;
+                $contact->reference_code = $reference->code;
+                $contact->order = $order;
+                $contact->save();
+    
+                // $user->notify(new SendContactReferenceCodeNotification($contact->reference_code));
+    
+                event(new ContactRegistered($reference));
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Successfully Created Contact',
+                    'data' => $contact,
+                ], 200);
+            } catch (\Throwable $th) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'There seems to be an error in creating the contact. Data might be incomplete or invalid. Please contact support.',
+                    'data' => null,
+                ]);
+            }
         }
     }
 }
