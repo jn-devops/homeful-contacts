@@ -661,7 +661,7 @@ class LazarusAPIController extends Controller
             } catch (\Throwable $th) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Cannot generate Homeful ID due to duplicate of data. Please contact support.',
+                    'message' => 'Cannot generate Homeful ID due to duplicate of data. Please contact support. '.$th->getMessage(),
                     'data' => null,
                 ], 200);
             }
@@ -706,6 +706,7 @@ class LazarusAPIController extends Controller
                     'data' => $contact,
                 ], 200);
             } catch (\Throwable $th) {
+                throw $th;
                 return response()->json([
                     'success' => false,
                     'message' => 'There seems to be an error in creating the contact. Data might be incomplete or invalid. Please contact support.',
