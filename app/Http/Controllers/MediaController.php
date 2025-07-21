@@ -58,6 +58,8 @@ class MediaController extends Controller
         $media = $customer->getAttribute($name);
         // dd($customer->$name->id);
         $customer->deleteMedia($media);
+        $lazarus = new LazarusAPIController();
+        $lazarus->updateDocumentInLazarus($user->contact->id);
 
         return redirect()->back();
     }
@@ -163,6 +165,8 @@ class MediaController extends Controller
             $customer->$name = $url;
 
             Storage::disk('public')->delete($path);
+            $lazarus = new LazarusAPIController();
+            $lazarus->updateDocumentInLazarus($user->contact->id);
 
             return back()->with('data', ['path' => $path]);
         }

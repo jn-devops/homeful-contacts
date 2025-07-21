@@ -603,6 +603,8 @@ class LazarusAPIController extends Controller
                     $customer->save();
                 }
 
+                $this->updateDocumentInLazarus($customer->id);
+
                 return response()->json([
                     'success' => true,
                     'message' => 'Successfully Saved Data',
@@ -713,6 +715,28 @@ class LazarusAPIController extends Controller
                     'data' => null,
                 ]);
             }
+        }
+    }
+
+    public function updateDocumentInLazarus($contact_id){
+        $response = Http::withToken(config('homeful-contacts.lazarus_api_token'))
+                                ->get(config('homeful-contacts.lazarus_url').'contact/get-by-buyers-id/'.$contact_id);
+        $attachments = $this->getAttachmentRequirementByID($contact_id);
+        if($response->successful()){
+            $lazarus_id = $response->json()['data']['id'];
+            $order = $response->json()['data']['order'] ?? [];
+            $order['attachments'] = $attachments->getData(true)['data'];
+            $lazarus_data = [];
+            $lazarus_data['order'] = $order;
+            $lazarus_api_contact_update = Http::withToken(config('homeful-contacts.lazarus_api_token'))
+                                ->put(config('homeful-contacts.lazarus_url').'api/admin/contacts/'.$lazarus_id, $lazarus_data);
+            if($lazarus_api_contact_update->successful()){
+                return true;
+            }else{
+                return false;
+            }
+        }else{
+            return false;
         }
     }
 }
