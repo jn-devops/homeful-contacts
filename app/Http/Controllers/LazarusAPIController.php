@@ -736,7 +736,7 @@ class LazarusAPIController extends Controller
             $lazarus_data['order'] = $order;
 
             $lazarus_data['order']['aif'] = [
-                "sex" => $order['sex'] ?? '-',
+                "sex" => $order['sex'] ?? 'Male',
                 "email" => $order['email'] ?? '-',
                 "mobile" => $order['mobile'] ?? '-',
                 "landline" => $order['landline'] ?? '-',
