@@ -724,7 +724,8 @@ class LazarusAPIController extends Controller
         $attachments = $this->getAttachmentRequirementByID($contact_id);
         if($response->successful()){
             $lazarus_id = $response->json()['data']['id'];
-            $order = json_decode($response->json()['data']['order'] ?? '[]', true) ?? [];
+            // $order = json_decode($response->json()['data']['order'] ?? '[]', true) ?? [];
+            $order = $response->json()['data']['order'] ?? [];
             $order['attachments'] = $attachments->getData(true)['data'];
             $lazarus_data = [];
             $lazarus_data['order'] = $order;
