@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Events\ContactRegistered;
 use App\Helper\GetAttachmentRequirement;
+use App\Helper\WelcomeSMS;
 use App\Models\User;
+use App\Notifications\RegistrationWelcomeNotificationForSellerApp;
 use App\Notifications\SendContactReferenceCodeNotification;
 use Homeful\Contacts\Classes\ContactMetaData;
 use Carbon\Carbon;
@@ -672,14 +674,16 @@ class LazarusAPIController extends Controller
             try {
                 $user_model = User::where('email', $data['email'])
                     ->where('mobile', $data['mobile']);
+                $password = config('homeful-contacts.default_password');
                 if($user_model->exists()){
                     $user = $user_model->first();
                 }else{
+                    $password = Str::random(8);
                     $user = app(User::class)->create([
                         'name' => $data['first_name'].' '.$data['last_name'],
                         'email' => $data['email'],
                         'mobile' => $data['mobile'],
-                        'password'=>Hash::make(config('homeful-contacts.default_password'))
+                        'password'=> Hash::make($password)
                     ]);
                 }
                 $converted = $this->convertLazarusToContactData($data);
@@ -699,9 +703,10 @@ class LazarusAPIController extends Controller
                 $contact->order = $order;
                 $contact->save();
     
-                // $user->notify(new SendContactReferenceCodeNotification($contact->reference_code));
-    
-                event(new ContactRegistered($reference));
+                // event(new ContactRegistered($reference));
+                $user->notify(new RegistrationWelcomeNotificationForSellerApp($reference, $password));
+                WelcomeSMS::send($reference, $password);
+
                 return response()->json([
                     'success' => true,
                     'message' => 'Successfully Created Contact',
