@@ -724,10 +724,26 @@ class LazarusAPIController extends Controller
         $attachments = $this->getAttachmentRequirementByID($contact_id);
         if($response->successful()){
             $lazarus_id = $response->json()['data']['id'];
-            $order = $response->json()['data']['order'] ?? [];
+            $order = json_decode($response->json()['data']['order'] ?? '[]', true) ?? [];
             $order['attachments'] = $attachments->getData(true)['data'];
             $lazarus_data = [];
             $lazarus_data['order'] = $order;
+
+            $lazarus_data['order']['aif'] = [
+                "sex" => $order['sex'] ?? '-',
+                "email" => $order['email'] ?? '-',
+                "mobile" => $order['mobile'] ?? '-',
+                "landline" => $order['landline'] ?? '-',
+                "last_name" => $order['last_name'] ?? '-',
+                "first_name" => $order['first_name'] ?? '-',
+                "middle_name" => $order['middle_name'] ?? '-',
+                "name_suffix" => $order['name_suffix'] ?? '-',
+                "nationality" => $order['nationality'] ?? '-',
+                "civil_status" => $order['civil_status'] ?? '-',
+                "other_mobile" => $order['other_mobile'] ?? '-',
+                "date_of_birth" => $order['date_of_birth'] ?? '-',
+                "mothers_maiden_name" => $order['mothers_maiden_name'] ?? '-'
+            ];
             $lazarus_api_contact_update = Http::withToken(config('homeful-contacts.lazarus_api_token'))
                                 ->put(config('homeful-contacts.lazarus_url').'api/admin/contacts/'.$lazarus_id, $lazarus_data);
             if($lazarus_api_contact_update->successful()){
