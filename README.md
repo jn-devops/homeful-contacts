@@ -18,7 +18,7 @@ https://contacts.homeful.ph/register?callback=https://google.com&showExtra=true&
 --header 'Content-Type: application/json' \
 --data-raw '{
 "name": "Lester Hurtado",
-"email": "lester@hurtado.ph",
+"email": "devops@joy-nostalg.com",
 "mobile": "09171234567",
 "password": "#Weetypie1",
 "password_confirmation": "#Weetypie1",
