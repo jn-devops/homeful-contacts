@@ -751,7 +751,7 @@ class LazarusAPIController extends Controller
                 "mothers_maiden_name" => $order['mothers_maiden_name'] ?? '-'
             ];
             $lazarus_api_contact_update = Http::withToken(config('homeful-contacts.lazarus_api_token'))
-                                ->put(config('homeful-contacts.lazarus_url').'api/admin/contacts/'.$lazarus_id, $lazarus_data);
+                                ->put(config('homeful-contacts.lazarus_url').'api/contact/update/'.$lazarus_id, ['data' => $lazarus_data]);
             if($lazarus_api_contact_update->successful()){
                 return true;
             }else{
