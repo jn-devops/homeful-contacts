@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\{AddressController, AIFController, CoBorrowerAddressController, CoBorrowerController, CoBorrowerEmploymentController, CoBorrowerSpouseController, EmploymentController, MediaController, PersonalController, ProfileController, RedirectControllers, SpouseController, SpouseEmploymentController};
+use App\Http\Controllers\{AddressController, AIFController, CoBorrowerAddressController, CoBorrowerController, CoBorrowerEmploymentController, CoBorrowerSpouseController, EmploymentController, MediaController, PersonalController, ProfileController, RedirectControllers, SpouseController, SpouseEmploymentController, UnqualifiedUser};
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Route;
@@ -59,6 +59,8 @@ Route::get('/signature', function () {
 });
 
 Route::get('/consult-page', [RedirectControllers::class, 'redirect_to_consult'])->name('consult-page');
+Route::resource('unqualified-user', UnqualifiedUser::class)->only(['create', 'store']);
+
 
 Route::mediaLibrary();
 

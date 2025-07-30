@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\{ContactController, ReferenceController};
+use App\Http\Controllers\{ContactController, LazarusAPICOntroller, ReferenceController};
 use Illuminate\Support\Facades\Route;
 use App\Actions\RegisterContact;
 use Homeful\Contacts\Models\Customer;
@@ -24,4 +24,3 @@ Route::post('get-contact-media/{id}', function($id){
     $customer = Customer::find($id);
     dd($customer->getMedia(), $customer->birthCertificateDocument);
 });
-

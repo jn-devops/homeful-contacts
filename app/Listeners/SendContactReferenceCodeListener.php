@@ -2,12 +2,12 @@
 
 namespace App\Listeners;
 
-use App\Models\User;
 use App\Notifications\SendContactReferenceCodeNotification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use App\Events\ContactRegistered;
 use App\Models\Reference;
+use App\Models\User;
 
 class SendContactReferenceCodeListener
 {

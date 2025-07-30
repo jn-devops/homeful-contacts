@@ -18,7 +18,11 @@ return Application::configure(basePath: dirname(__DIR__))
             \Illuminate\Http\Middleware\AddLinkHeadersForPreloadedAssets::class,
         ]);
 
-        //
+        $middleware->api(append: [
+            'throttle:api',
+            \Illuminate\Routing\Middleware\SubstituteBindings::class,
+        ]);
+        
     })
     ->withSchedule(function (Schedule $schedule) {
         $schedule->command('media-library:delete-old-temporary-uploads')->daily();

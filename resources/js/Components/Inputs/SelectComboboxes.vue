@@ -1,5 +1,5 @@
 <script setup>
-    import { computed, ref, watch, watchEffect } from 'vue'
+    import { computed, ref, toRef, watch, watchEffect } from 'vue'
     import { CheckIcon, ChevronUpDownIcon } from '@heroicons/vue/20/solid'
     import {
         Combobox,
@@ -41,6 +41,7 @@
 
     const query = ref('')
     const selectedOption = ref(props.options.find(item => item.id === props.modelValue))
+    const div_ref = ref(null)
     const filteredOptions = computed(() =>
         query.value === ''
             ? props.options
@@ -52,13 +53,36 @@
     watch(selectedOption, (newValue) => {
         emit('update:modelValue', newValue.name)
     })
+
+    const errorMessage = toRef(props, 'errorMessage');
+
+    watch(errorMessage, (newValue) => {
+        if (newValue && div_ref.value) {
+            if (newValue && div_ref.value) {
+                div_ref.value.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                setTimeout(() => {
+                    div_ref.value.focus();
+                }, 300);
+            }
+        }
+    });
     
 </script>
 <template>
     <Combobox as="div" v-model="selectedOption" @update:modelValue="query = ''">
         <ComboboxLabel class="block text-sm/6 font-medium text-gray-900">{{ label }} <span v-if="required" class="text-red-600">*</span></ComboboxLabel>
         <div class="relative">
-            <ComboboxInput class="block w-full bg-white py-1.5 pl-3 pr-12 text-base text-gray-900 border-none ring-0 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-1 focus:-outline-offset-1 focus:outline-[#006FFD] sm:text-sm/6" @change="query = $event.target.value" @blur="query = ''" :display-value="(option) => option?.name" placeholder="Select from the options" autocomplete="off" />
+            <ComboboxInput 
+                :class="{
+                  'text-red-900 outline-2 outline-red-500 placeholder:text-red-500 focus:outline-red-600': errorMessage,
+                }"
+                class="block w-full bg-white py-1.5 pl-3 pr-12 text-base text-gray-900 border-none ring-0 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-1 focus:-outline-offset-1 focus:outline-[#006FFD] sm:text-sm/6" 
+                @change="query = $event.target.value" 
+                @blur="query = ''" 
+                :display-value="(option) => option?.name" 
+                placeholder="Select from the options" 
+                autocomplete="off" 
+            />
             <ComboboxButton class="absolute inset-y-0 right-0 flex items-center rounded-r-md px-2 focus:outline-none">
                 <ChevronUpDownIcon class="size-5 text-gray-400" aria-hidden="true" />
             </ComboboxButton>
@@ -78,7 +102,7 @@
             </ComboboxOptions>
         </div>
     </Combobox>
-    <p v-if="errorMessage" class="mt-2 text-sm text-red-600" id="email-error">{{ errorMessage }}</p>
+    <p v-if="errorMessage" ref="div_ref" class="mt-2 text-sm text-red-600" id="email-error">{{ errorMessage }}</p>
     <p v-if="helperMessage" class="mt-2 text-sm text-gray-500" id="email-description">{{ helperMessage }}</p>
 </template>
   
