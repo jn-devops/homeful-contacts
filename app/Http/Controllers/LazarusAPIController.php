@@ -138,10 +138,12 @@ class LazarusAPIController extends Controller
                 ], 404);
             }
             $homeful_id = VoucherEntity::where('entity_id', $validated['contact_id'])->first()->voucher->code ?? null;
-            $params = $this->convertContactToLazarus($data, $validated['reference_code'], $validated['project_code'] ?? null);
+            $params = [
+                'data' => $this->convertContactToLazarus($data, $validated['reference_code'], $validated['project_code'] ?? null),
+            ];
             $response = Http::withToken(config('homeful-contacts.lazarus_api_token'))
-                            ->post(config('homeful-contacts.lazarus_url').'api/admin/contacts', $params);
-            // dd(config('homeful-contacts.lazarus_api_token'), config('homeful-contacts.lazarus_url').'api/admin/contacts', $params);
+                            ->post(config('homeful-contacts.lazarus_url').'api/contact/create', $params);
+            // dd(config('homeful-contacts.lazarus_api_token'), config('homeful-contacts.lazarus_url').'api/contact/create', $params);
             if($response->successful()){
                 // Update the Lazarus Data with homeful_id
                 $lazarus_id = $response->json()['data']['id'];
