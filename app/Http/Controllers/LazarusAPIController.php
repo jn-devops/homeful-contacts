@@ -177,8 +177,11 @@ class LazarusAPIController extends Controller
                     $lazarus_data['order']['seller']['team_head'] = null;
                     $lazarus_data['order']['seller']['chief_seller_officer'] = null;
                 }
+                $lazarus_array_data = [
+                    "data" => $lazarus_data,
+                ];
                 $lazarus_api_contact_update = Http::withToken(config('homeful-contacts.lazarus_api_token'))
-                                ->put(config('homeful-contacts.lazarus_url').'api/admin/contacts/'.$lazarus_id, $lazarus_data);
+                                ->put(config('homeful-contacts.lazarus_url').'api/contact/update/'.$lazarus_id, $lazarus_array_data);
                 logger('Set Lazarus Status: '. $lazarus_api_contact_update->successful());
                 return response()->json([
                     'success' => true,
