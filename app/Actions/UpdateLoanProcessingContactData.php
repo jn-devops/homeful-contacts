@@ -15,13 +15,16 @@ class UpdateLoanProcessingContactData
                 $loan_processing_id = $loan_processing_data['id'] ?? null;
                 $homeful_contact = Contact::find($id);
                 $data = self::convertContactToLazarus($homeful_contact, $loan_processing_data['order']);
+                $data_array = [
+                    "data" => $data,
+                ];
                 $response = Http::withToken(config('homeful-contacts.lazarus_api_token'))
-                                ->put(config('homeful-contacts.lazarus_url').'api/admin/contacts/'.$loan_processing_id, $data);
+                                ->put(config('homeful-contacts.lazarus_url').'api/contact/update/'.$loan_processing_id, $data_array);
                 if($response->successful()){
-                    Log::error('Success Loan Processing API', ['api'=> config('homeful-contacts.lazarus_url').'api/admin/contacts/'.$loan_processing_id, 'data' => $data]);
+                    Log::error('Success Loan Processing API', ['api'=> config('homeful-contacts.lazarus_url').'api/contact/update/'.$loan_processing_id, 'data' => $data_array]);
                     return true;
                 }else{
-                    Log::error('Failed Loan Processing API', ['api'=> config('homeful-contacts.lazarus_url').'api/admin/contacts/'.$loan_processing_id, 'data' => $data]);
+                    Log::error('Failed Loan Processing API', ['api'=> config('homeful-contacts.lazarus_url').'api/contact/update/'.$loan_processing_id, 'data' => $data_array]);
                     return false;
                 }
             }else{
