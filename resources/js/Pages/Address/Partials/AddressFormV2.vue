@@ -101,6 +101,23 @@ const getCountries = async () => {
     }
 }
 
+const ownership = ref([])
+const ownership_loading = ref(true)
+const formatted_ownership = ref([])
+const getOwnership = async () => {
+    try {
+        const response = await axios.get(props.api_url+'api/admin/home-ownerships?per_page=1000', {
+        headers: {
+            Authorization: `Bearer ${props.api_token}`,
+        },
+        });
+        ownership.value = response.data
+        
+    } catch (error) {
+        console.error('Error fetching data:', error);
+    }
+}
+
 const api_regions = ref([]);
 const formatted_api_regions = ref([]);
 const regions_loading = ref(true);
@@ -198,6 +215,12 @@ const formatAPItoComponent = (data, type) => {
         case 'country':
             return data.data.map(list => ({
               id: list.code,
+              name: list.description
+            }));
+            break;
+        case 'ownership':
+            return data.data.map(list => ({
+              id: list.description,
               name: list.description
             }));
             break;
@@ -300,6 +323,10 @@ onMounted(() => {
         formatted_country.value = formatAPItoComponent(countries.value, 'country')
         country_loading.value = false
     })
+    getOwnership().then(() => {
+        formatted_ownership.value = formatAPItoComponent(ownership.value, 'ownership')
+        ownership_loading.value = false
+    })
 })
 
 </script>
@@ -338,14 +365,22 @@ onMounted(() => {
                 <h3 class="font-bold text-[#006FFD] mt-4 uppercase">{{ props.address_type }} Address:</h3>
             </div>
             <div class="grid grid-cols-12 gap-4">
-                <div class="col-span-full lg:col-span-2">
+                <div v-if="!ownership_loading" class="col-span-full lg:col-span-2">
                     <SelectInput
                         v-model="form.ownership"
                         label="Ownership"
-                        :options="ownershipList"
+                        :options="formatted_ownership"
                         :errorMessage="form.errors.ownership"
                         required
                     />
+                </div>
+                <div v-else class="col-span-full lg:col-span-2 flex items-center justify-center">
+                    <div class="w-20">
+                        <Vue3Lottie 
+                            animationLink="/animation/simple_loading_animation.json" 
+                            width="100%" 
+                        />
+                    </div>
                 </div>
                 <div v-if="!country_loading" class="col-span-full lg:col-span-2">
                     <SelectInput

@@ -116,6 +116,60 @@ const getTenure = async () => {
     }
 }
 
+const api_industries = ref([])
+const industry_loading = ref(true)
+const formatted_industry = ref([])
+const getIndustry = async () => {
+    try {
+        
+        const response = await axios.get(props.api_url+'api/admin/work-industries?per_page=300', {
+                headers: {
+                    Authorization: `Bearer ${props.api_token}`,
+                },
+            });
+            api_industries.value = response.data
+        
+    } catch (error) {
+        console.error('Error fetching data:', error);
+    }
+}
+
+const api_employment_type = ref([])
+const employment_type_loading = ref(true)
+const formatted_employment_type = ref([])
+const getEmploymentType = async () => {
+    try {
+        
+        const response = await axios.get(props.api_url+'api/admin/employment-types?per_page=300', {
+                headers: {
+                    Authorization: `Bearer ${props.api_token}`,
+                },
+            });
+            api_employment_type.value = response.data
+        
+    } catch (error) {
+        console.error('Error fetching data:', error);
+    }
+}
+
+const api_employment_status = ref([])
+const employment_status_loading = ref(true)
+const formatted_employment_status = ref([])
+const getEmploymentStatus = async () => {
+    try {
+        
+        const response = await axios.get(props.api_url+'api/admin/employment-statuses?per_page=300', {
+                headers: {
+                    Authorization: `Bearer ${props.api_token}`,
+                },
+            });
+            api_employment_status.value = response.data
+        
+    } catch (error) {
+        console.error('Error fetching data:', error);
+    }
+}
+
 const api_current_position = ref([])
 const current_position_loading = ref(true)
 const formatted_current_positions = ref([])
@@ -272,6 +326,24 @@ const formatAPItoComponent = (data, type) => {
               name: list.description
             }));
             break;
+        case 'industry':
+            return data.data.map(list => ({
+              id: list.description,
+              name: list.description
+            }));
+            break;
+        case 'employment_type':
+            return data.data.map(list => ({
+              id: list.description,
+              name: list.description
+            }));
+            break;
+        case 'employment_status':
+            return data.data.map(list => ({
+              id: list.description,
+              name: list.description
+            }));
+            break;
         default:
             break;
     }
@@ -365,6 +437,18 @@ onMounted(() => {
         formatted_tenure.value = formatAPItoComponent(api_tenure.value, 'tenure')
         tenure_loading.value = false
     })
+    getIndustry().then(() => {
+        formatted_industry.value = formatAPItoComponent(api_industries.value, 'industry')
+        industry_loading.value = false
+    })
+    getEmploymentType().then(() => {
+        formatted_employment_type.value = formatAPItoComponent(api_employment_type.value, 'employment_type')
+        employment_type_loading.value = false
+    })
+    getEmploymentStatus().then(() => {
+        formatted_employment_status.value = formatAPItoComponent(api_employment_status.value, 'employment_status')
+        employment_status_loading.value = false
+    })
 })
 
 </script>
@@ -404,7 +488,7 @@ onMounted(() => {
             <h6 class="font-semibold text-sm">Employment</h6>
 
             <div class="grid grid-cols-12 gap-4 px-4 mb-10">
-                <div class="col-span-full lg:col-span-4">
+                <div v-if="!employment_type_loading" class="col-span-full lg:col-span-4">
                     <SelectInput 
                         v-model="form.employment_type"
                         label="Employment Type"
@@ -413,8 +497,16 @@ onMounted(() => {
                         :errorMessage="form.errors.employment_type"
                     />
                 </div>
+                <div v-else class="col-span-full lg:col-span-4 flex items-center justify-center">
+                        <div class="w-20">
+                            <Vue3Lottie 
+                                animationLink="/animation/simple_loading_animation.json" 
+                                width="100%" 
+                            />
+                        </div>
+                    </div>
                 <template v-if="form.employment_type != 'Self-Employed'">
-                    <div class="col-span-full lg:col-span-2">
+                    <div v-if="!employment_status_loading" class="col-span-full lg:col-span-2">
                         <SelectInput 
                             v-model="form.employment_status"
                             label="Employment Status"
@@ -422,6 +514,14 @@ onMounted(() => {
                             :errorMessage="form.errors.employment_status"
                             required
                         />
+                    </div>
+                    <div v-else class="col-span-full lg:col-span-2 flex items-center justify-center">
+                        <div class="w-20">
+                            <Vue3Lottie 
+                                animationLink="/animation/simple_loading_animation.json" 
+                                width="100%" 
+                            />
+                        </div>
                     </div>
                     <div v-if="!tenure_loading" class="col-span-full lg:col-span-2">
                         <SelectInput 
@@ -464,14 +564,22 @@ onMounted(() => {
                         />
                     </div>
                 </template>
-                <div class="col-span-full lg:col-span-5">
+                <div v-if="!industry_loading" class="col-span-full lg:col-span-5">
                     <SelectInput 
                         v-model="form.employer_industry"
                         label="Industry"
                         required
-                        :options="industryList"
+                        :options="formatted_industry"
                         :errorMessage="form.errors.employer_industry"
                     />
+                </div>
+                <div v-else class="col-span-full lg:col-span-4 flex items-center justify-center">
+                    <div class="w-20">
+                        <Vue3Lottie 
+                            animationLink="/animation/simple_loading_animation.json" 
+                            width="100%" 
+                        />
+                    </div>
                 </div>
                 <div class="col-span-full lg:col-span-2">
                     <TextInput 

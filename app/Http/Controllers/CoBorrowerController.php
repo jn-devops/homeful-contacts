@@ -28,7 +28,7 @@ class CoBorrowerController extends Controller
         $user = $request->user();
 
         $records = $user->contact?->co_borrowers?->toCollection()?->mapWithKeys(function ($item) {
-            return [$item->type->value => $item];
+            return [$item->type => $item];
         })->toArray() ?? [];
 
         $data = $request->validated();

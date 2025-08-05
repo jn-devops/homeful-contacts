@@ -16,6 +16,8 @@ class PersonalController extends Controller
     {
         return Inertia::render('Personal/EditV2', [
             'contact' => $request->user()->contact->getData(),
+            'lazarus_url' => config('homeful-contacts.lazarus_url'),
+            'lazarus_token' => config('homeful-contacts.lazarus_api_token'),
         ]);
     }
 

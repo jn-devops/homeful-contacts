@@ -42,7 +42,8 @@ const routeToLogout = () => {
 
 const navigatePage = (link) => {
     navigateModalLink.value = link
-    if(spouseInfo.value.checkFormDirty() || spouseEmployment.value.checkFormDirty()){
+    // if(spouseInfo.value.checkFormDirty() || spouseEmployment.value.checkFormDirty()){
+    if(spouseInfo.value.checkFormDirty()){
         isNavigated.value = true
     }else{
         navigateToNext()
@@ -81,17 +82,19 @@ const saveFormToLogout = () => {
             <SpouseInformationForm
                 :spouse = "spouse"
                 ref="spouseInfo"
+                :api_token="lazarus_token"
+                :api_url="lazarus_url"
             />
 
             <hr class="h-px my-8 bg-gray-200 border-0 dark:bg-gray-700">
 
-            <SpouseEmploymentForm
+            <!-- <SpouseEmploymentForm
                 :spouse = "spouse"
                 ref="spouseEmployment"
                 employment_type = "Primary"
                 :api_token="lazarus_token"
                 :api_url="lazarus_url"
-            />
+            /> -->
 
         </div>
     </AuthenticatedLayout>

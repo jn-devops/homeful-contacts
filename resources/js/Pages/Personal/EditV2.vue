@@ -11,6 +11,8 @@ import InitialPopUp from '@/Components/Modals/InitialPopUp.vue';
 
 const props = defineProps({
    contact: Object,
+   lazarus_url: String,
+   lazarus_token: String,
 });
 
 const useForm = useFormStore()
@@ -78,6 +80,8 @@ const saveForm = (toSave = false) => {
                 :contact = "contact"
                 class="w-full"
                 ref="authChild"
+                :api_token="lazarus_token"
+                :api_url="lazarus_url"
             />
         </div>
     </AuthenticatedLayout>

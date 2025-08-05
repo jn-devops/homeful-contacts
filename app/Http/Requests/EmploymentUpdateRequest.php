@@ -18,10 +18,10 @@ class EmploymentUpdateRequest extends FormRequest
         return [
             'type' => ['required', Rule::enum(Employment::class)],
             'monthly_gross_income' => ['required', 'numeric', 'min:0'],
-            'employment_status' => ['nullable', Rule::enum(EmploymentStatus::class)],
+            'employment_status' => ['nullable', 'string'],
 
             'employer_name' =>  ['required', 'string', 'max:100'],
-            'employment_type' =>  ['required_with:employer_name', Rule::enum(EmploymentType::class)],
+            'employment_type' =>  ['required_with:employer_name', 'string'],
             'current_position' =>  ['nullable', 'string', 'max:100'],
             'rank' =>  ['nullable', 'string', 'max:100'],
             'years_in_service' =>  ['nullable', 'string', 'max:100'],
@@ -30,10 +30,10 @@ class EmploymentUpdateRequest extends FormRequest
 
             'employer_email' =>  ['required_with:employer_name', 'email'],
             'employer_contact_no' =>  ['required_with:employer_name', 'string', 'min:10'],
-            'employer_nationality' => ['nullable', Rule::enum(Nationality::class)],
-            'employer_industry' => ['nullable', Rule::enum(Industry::class)],
-            'employer_address_type' => ['nullable', Rule::enum(AddressType::class)],
-            'employer_address_ownership' => ['required_with:employer_name', Rule::enum(Ownership::class)],
+            'employer_nationality' => ['nullable', 'string'],
+            'employer_industry' => ['nullable', 'string'],
+            'employer_address_type' => ['nullable', 'string'],
+            'employer_address_ownership' => ['required_with:employer_name', 'string'],
             'employer_address_address1' => ['required_with:employer_name', 'string', 'max:100'],
             'employer_address_locality' => ['nullable', 'string', 'max:100'],
             'employer_address_sublocality' => ['nullable', 'string', 'max:100'],

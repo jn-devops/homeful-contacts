@@ -40,7 +40,7 @@
     const emit = defineEmits(['update:modelValue'])
 
     const query = ref('')
-    const selectedOption = ref(props.options.find(item => item.id === props.modelValue))
+    const selectedOption = ref('')
     const div_ref = ref(null)
     const filteredOptions = computed(() =>{
             let r_val = []
@@ -49,7 +49,7 @@
                 : r_val = props.options.filter((person) => {
                     return person.name.toLowerCase().includes(query.value.toLowerCase())
                 })
-            r_val.unshift({ 'id': null, 'name': 'N/A' })
+            // r_val.unshift({ 'id': null, 'name': 'N/A' })
             // Remove duplicates based on `id`
             r_val = r_val.filter((value, index, self) => 
                 index === self.findIndex((t) => t.id === value.id)
@@ -74,6 +74,25 @@
             }
         }
     });
+
+    watch(
+        () => [props.options, props.modelValue],
+        ([options, modelValue]) => {
+            if (!options || !Array.isArray(options)) {
+            selectedOption.value = '1b';
+            return;
+            }
+
+            if (modelValue == null) {
+            selectedOption.value = '2b';
+            return;
+            }
+
+            selectedOption.value =
+            options.find(item => String(item.id) === String(modelValue)) || '3c';
+        },
+        { immediate: true }
+    );
     
 </script>
 <template>

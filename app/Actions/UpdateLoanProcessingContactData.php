@@ -2,6 +2,7 @@
 
 namespace App\Actions;
 
+use Carbon\Carbon;
 use Homeful\Contacts\Models\Contact;
 use Illuminate\Log\Logger;
 use Illuminate\Support\Facades\Http;
@@ -39,7 +40,7 @@ class UpdateLoanProcessingContactData
     protected static function getLoanProcessingDataID($contact_id){
         $response = Http::withToken(config('homeful-contacts.lazarus_api_token'))
                         ->get(config('homeful-contacts.lazarus_url').'contact/get-by-buyers-id/'.$contact_id);
-        return (isset($response->json()['data'])) ? ($response->json()['data'][0] ?? null) : null;
+        return (isset($response->json()['data'])) ? ($response->json()['data'] ?? null) : null;
     }
 
     protected static function convertContactToLazarus(Contact $data, $loan_processing = null){
@@ -277,6 +278,23 @@ class UpdateLoanProcessingContactData
             $param['order']['aif']['mobile'] = ($data->aif['mobile']) ? substr($data->aif['mobile'] ?? '--', 1) : '--';
             $param['order']['aif']['date_of_birth'] = $data->aif['date_of_birth'] ?? '--';
 
+        }
+        if($data->spouse){
+            $param['spouse'] = [
+                "sex" => isset($data->spouse['sex']) ? $data->spouse['sex'] : 'Male',
+                "email" => isset($data->spouse['email']) ? $data->spouse['email'] : null,
+                "mobile" => isset($data->spouse['mobile']) ? substr($data->spouse['mobile'], 1) : null,
+                "landline" => isset($data->spouse['landline']) ? $data->spouse['landline'] : null,
+                "last_name" => isset($data->spouse['last_name']) ? $data->spouse['last_name'] : null,
+                "first_name" => isset($data->spouse['first_name']) ? $data->spouse['first_name'] : null,
+                "middle_name" => isset($data->spouse['middle_name']) ? $data->spouse['middle_name'] : null,
+                "name_suffix" => self::getMaintenanceDataCode(config('homeful-contacts.lazarus_url').'api/admin/name-suffixes', 'description', ($data->spouse['name_suffix'] ?? null), 'code') ?? '001',
+                "nationality" => self::getMaintenanceDataCode(config('homeful-contacts.lazarus_url').'api/admin/nationalities?per_page=1000', 'description', ($data->spouse['nationality'] ?? null), 'code') ?? '076',
+                "civil_status" => self::getMaintenanceDataCode(config('homeful-contacts.lazarus_url').'api/admin/civil-statuses', 'description', $data->civil_status ?? null, 'code') ?? '001',
+                "other_mobile" => isset($data->spouse['other_mobile']) ? $data->spouse['other_mobile'] : null,
+                "date_of_birth" => isset($data->spouse['date_of_birth']) ? Carbon::parse($data->spouse['date_of_birth'])->format('Y-m-d') : null,
+                "mothers_maiden_name" => isset($data->spouse['mothers_maiden_name']) ? $data->spouse['mothers_maiden_name'] : null,
+            ];
         }
 
         return $param;

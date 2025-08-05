@@ -27,7 +27,7 @@ class EmploymentController extends Controller
         $user = $request->user();
 
         $records = $user->contact?->employment?->toCollection()?->mapWithKeys(function ($item) {
-            return [$item->type->value => $item];
+            return [$item->type => $item];
         })->toArray() ?? [];
 
         $data = $request->validated();
