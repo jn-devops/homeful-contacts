@@ -437,21 +437,38 @@ class LazarusAPIController extends Controller
             ];
         }
         if(isset($data['spouse']) && !empty($data['spouse'])){
-            $customer_array['spouse'] = [
-                "sex" => $data['spouse']['sex'] ?? null,
-                "email" => $data['spouse']['email'] ?? null,
-                "mobile" => isset($data['spouse']['mobile']) ? '0'.$data['spouse']['mobile'] : null,
-                "landline" => $data['spouse']['landline'] ?? null,
-                "last_name" => $data['spouse']['last_name'] ?? null,
-                "first_name" => $data['spouse']['first_name'] ?? null,
-                "middle_name" => $data['spouse']['middle_name'] ?? null,
-                "name_suffix" => (($name_suffix = $this->getMaintenanceData(config('homeful-contacts.lazarus_url').'api/admin/name-suffixes?filter[code]='.($data['spouse']['name_suffix'] ?? '-'), pure_data:true) ?? '')[0]['code'] != '001') ? $name_suffix[0]['description'] : '',
-                "nationality" => $this->getMaintenanceData(config('homeful-contacts.lazarus_url').'api/admin/nationalities?filter[code]='.($data['spouse']['nationality'] ?? '-'), pure_data:true)[0]['description'] ?? '076',
-                "civil_status" => $this->getMaintenanceData(config('homeful-contacts.lazarus_url').'api/admin/civil-statuses?filter[code]='.($data['spouse']['civil_status'] ?? '-'), pure_data:true)[0]['description'] ?? '001',
-                "other_mobile" => $data['spouse']['other_mobile'] ?? null,
-                "date_of_birth" => isset($data['spouse']['date_of_birth']) ? Carbon::parse($data['spouse']['date_of_birth'] ?? '')->format('Y-m-d') : null,
-                "mothers_maiden_name" => $data['spouse']['mothers_maiden_name'] ?? null,
-            ];
+            $isAllNull = collect($data['spouse'])->every(fn($v) => is_null($v));
+            if(!$isAllNull){
+                $name_suffix = null;
+                if (!empty($data['spouse']['name_suffix'])) {
+                    $suffix_code = $data['spouse']['name_suffix'];
+                    $url = config('homeful-contacts.lazarus_url') . 'api/admin/name-suffixes?filter[code]=' . $suffix_code;
+                
+                    $result = $this->getMaintenanceData($url, pure_data: true);
+                
+                    if (!empty($result) && $result[0]['code'] !== '001') {
+                        $name_suffix = $result[0]['description'];
+                    } else {
+                        $name_suffix = '';
+                    }
+                }
+                $customer_array['spouse'] = [
+                    "sex" => $data['spouse']['sex'] ?? null,
+                    "email" => $data['spouse']['email'] ?? null,
+                    "mobile" => isset($data['spouse']['mobile']) ? '0'.$data['spouse']['mobile'] : null,
+                    "landline" => $data['spouse']['landline'] ?? null,
+                    "last_name" => $data['spouse']['last_name'] ?? null,
+                    "first_name" => $data['spouse']['first_name'] ?? null,
+                    "middle_name" => $data['spouse']['middle_name'] ?? null,
+                    // "name_suffix" => ($data['spouse']['name_suffix']) ? (($name_suffix = $this->getMaintenanceData(config('homeful-contacts.lazarus_url').'api/admin/name-suffixes?filter[code]='.($data['spouse']['name_suffix'] ?? '-'), pure_data:true) ?? '')[0]['code'] != '001') ? $name_suffix[0]['description'] : '' : null,
+                    "name_suffix" => $name_suffix ?? null,
+                    "nationality" => ($data['spouse']['nationality']) ? $this->getMaintenanceData(config('homeful-contacts.lazarus_url').'api/admin/nationalities?filter[code]='.($data['spouse']['nationality'] ?? '-'), pure_data:true)[0]['description'] ?? '076' : null,
+                    "civil_status" => ($data['spouse']['civil_status']) ? $this->getMaintenanceData(config('homeful-contacts.lazarus_url').'api/admin/civil-statuses?filter[code]='.($data['spouse']['civil_status'] ?? '-'), pure_data:true)[0]['description'] ?? '001' : null,
+                    "other_mobile" => $data['spouse']['other_mobile'] ?? null,
+                    "date_of_birth" => isset($data['spouse']['date_of_birth']) ? Carbon::parse($data['spouse']['date_of_birth'] ?? '')->format('Y-m-d') : null,
+                    "mothers_maiden_name" => $data['spouse']['mothers_maiden_name'] ?? null,
+                ];
+            }
         }
 
         return $customer_array;
