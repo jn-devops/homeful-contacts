@@ -26,6 +26,7 @@ class AddressUpdateRequest extends FormRequest
             'postal_code' => ['required', 'string', 'max:25'],
             'region' => ['required', 'string', 'max:100'],
             'country' => ['required', 'string', 'max:100'],
+            'full_address' => ['required', 'string'],
             'sameWithPermanentAddress' => ['required', 'boolean', 'max:100'],
         ];
     }
@@ -54,6 +55,7 @@ class AddressUpdateRequest extends FormRequest
             'region.max' => 'The Region must not exceed 100 characters.',
             'country.required' => 'The Country is required.',
             'country.max' => 'The country must not exceed 100 characters.',
+            'full_address.required' => 'The Full Address field is required.',
         ];
     }
 

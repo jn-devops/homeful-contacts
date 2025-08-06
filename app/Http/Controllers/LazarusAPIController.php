@@ -259,6 +259,7 @@ class LazarusAPIController extends Controller
                     'administrative_area' => $address_primary['administrative_area'],
                     'postal_code' => $address_primary['postal_code'] ?? '',
                     'region' => $address_primary['region'] ?? '',
+                    'full_address' => $address_primary['full_address'] ?? '',
                     'country' => $address_primary['country'] ?? '',
                 ],
                 [
@@ -270,6 +271,7 @@ class LazarusAPIController extends Controller
                     'administrative_area' => $address_present['administrative_area'],
                     'postal_code' => $address_present['postal_code'] ?? '',
                     'region' => $address_present['region'] ?? '',
+                    'full_address' => $address_present['full_address'] ?? '',
                     'country' => $address_present['country'] ?? '',
                 ],
                 [
@@ -281,6 +283,7 @@ class LazarusAPIController extends Controller
                     'administrative_area' => $address_permanent['administrative_area'],
                     'postal_code' => $address_permanent['postal_code'] ?? '',
                     'region' => $address_permanent['region'] ?? '',
+                    'full_address' => $address_permanent['full_address'] ?? '',
                     'country' => $address_permanent['country'] ?? '',
                 ],
             ],
@@ -307,6 +310,7 @@ class LazarusAPIController extends Controller
                             'postal_code' => $employment['employer']['address']['postal_code'] ?? null,
                             'region' => $employment['employer']['address']['region'],
                             'country' => $employment['employer']['address']['country'],
+                            'full_address' => $employment['employer']['address']['full_address'],
                         ],
                         'contact_no' => $employment['employer']['contact_no'] ?? null,
                         'email' => $employment['employer']['email'] ?? null,
@@ -349,6 +353,7 @@ class LazarusAPIController extends Controller
                                 "ownership" => $this->getMaintenanceData(config('homeful-contacts.lazarus_url').'api/admin/home-ownerships?filter[code]='.($address_co_borrower['ownership'] ?? '-'), pure_data: true)[0]['description'] ?? 'Unknown',
                                 "postal_code" => $address_co_borrower['postal_code'] ?? '',
                                 "sublocality" => $address_co_borrower['sublocality'] ?? '',
+                                "full_address" => $address_co_borrower['full_address'] ?? '',
                                 "administrative_area" => $address_co_borrower['administrative_area'] ?? ''
                             ],
                         ],
@@ -383,6 +388,7 @@ class LazarusAPIController extends Controller
                                         "locality" => $employment_co_borrower['employer']['address']['locality'] ?? '',
                                         "ownership" => 'Unknown',
                                         "sublocality" => $employment_co_borrower['employer']['address']['sublocality'] ?? '',
+                                        "full_address" => $employment_co_borrower['employer']['address']['full_address'] ?? '',
                                         "administrative_area" => $employment_co_borrower['employer']['address']['administrative_area'] ?? '',
                                     ],
                                 ],

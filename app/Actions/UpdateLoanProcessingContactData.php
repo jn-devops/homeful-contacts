@@ -73,7 +73,7 @@ class UpdateLoanProcessingContactData
                     "ownership" => self::getMaintenanceDataCode(config('homeful-contacts.lazarus_url').'api/admin/home-ownerships?per_page=1000', 'description', collect($data->addresses)->where('type', 'Present')->first()['ownership'] ?? null, 'code') ?? '001',
                     "postal_code" => collect($data->addresses)->where('type', 'Present')->first()['postal_code'] ?? '',
                     "sublocality" => collect($data->addresses)->where('type', 'Present')->first()['sublocality'] ?? '',
-                    "full_address" => "",
+                    "full_address" => collect($data->addresses)->where('type', 'Present')->first()['full_address'] ?? '',
                     "administrative_area" => collect($data->addresses)->where('type', 'Present')->first()['administrative_area'] ?? ''
                 ],
                 [
@@ -87,7 +87,7 @@ class UpdateLoanProcessingContactData
                     "ownership" => self::getMaintenanceDataCode(config('homeful-contacts.lazarus_url').'api/admin/home-ownerships?per_page=1000', 'description', collect($data->addresses)->where('type', 'Permanent')->first()['ownership'] ?? null, 'code') ?? '001',
                     "postal_code" => collect($data->addresses)->where('type', 'Permanent')->first()['postal_code'] ?? '',
                     "sublocality" => collect($data->addresses)->where('type', 'Permanent')->first()['sublocality'] ?? '',
-                    "full_address" => "",
+                    "full_address" => collect($data->addresses)->where('type', 'Permanent')->first()['full_address'] ?? '',
                     "administrative_area" => collect($data->addresses)->where('type', 'Permanent')->first()['administrative_area'] ?? ''
                 ],
                 [
@@ -101,7 +101,7 @@ class UpdateLoanProcessingContactData
                     "ownership" => self::getMaintenanceDataCode(config('homeful-contacts.lazarus_url').'api/admin/home-ownerships?per_page=1000', 'description', collect($data->addresses)->where('type', 'Primary')->first()['ownership'] ?? null, 'code') ?? '001',
                     "postal_code" => collect($data->addresses)->where('type', 'Primary')->first()['postal_code'] ?? '',
                     "sublocality" => collect($data->addresses)->where('type', 'Primary')->first()['sublocality'] ?? '',
-                    "full_address" => "",
+                    "full_address" => collect($data->addresses)->where('type', 'Primary')->first()['full_address'] ?? '',
                     "administrative_area" => collect($data->addresses)->where('type', 'Primary')->first()['administrative_area'] ?? ''
                 ]
             ],
@@ -127,7 +127,7 @@ class UpdateLoanProcessingContactData
                             "locality" => collect($data->employment)->where('type', 'Primary')->first()['employer']['address']['locality'] ?? '',
                             "ownership" => "001",
                             "sublocality" => collect($data->employment)->where('type', 'Primary')->first()['employer']['address']['sublocality'] ?? '',
-                            "full_address" => collect($data->employment)->where('type', 'Primary')->first()['employer']['address']['short_address'] ?? '',
+                            "full_address" => collect($data->employment)->where('type', 'Primary')->first()['employer']['address']['full_address'] ?? '',
                             "administrative_area" => collect($data->employment)->where('type', 'Primary')->first()['employer']['address']['administrative_area'] ?? ''
                         ],
                         "industry" => self::getMaintenanceDataCode(config('homeful-contacts.lazarus_url').'api/admin/work-industries?per_page=1000', 'description', collect($data->employment)->where('type', 'Primary')->first()['employer']['industry'] ?? null, 'code') ?? null,
@@ -170,7 +170,7 @@ class UpdateLoanProcessingContactData
                     "ownership" => self::getMaintenanceDataCode(config('homeful-contacts.lazarus_url').'api/admin/home-ownerships?per_page=1000', 'description', collect($data->co_borrowers[0]['addresses'])->where('type', 'Primary')->first()['ownership'] ?? null, 'code') ?? '001',
                     "postal_code" => collect($data->co_borrowers[0]['addresses'])->where('type', 'Primary')->first()['postal_code'] ?? '',
                     "sublocality" => collect($data->co_borrowers[0]['addresses'])->where('type', 'Primary')->first()['sublocality'] ?? '',
-                    "full_address" => "",
+                    "full_address" => collect($data->co_borrowers[0]['addresses'])->where('type', 'Primary')->first()['full_address'] ?? '',
                     "administrative_area" => collect($data->co_borrowers[0]['addresses'])->where('type', 'Primary')->first()['administrative_area'] ?? ''
                 ];
             }

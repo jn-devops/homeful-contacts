@@ -8,6 +8,7 @@ import WarningToast from '@/Components/Notification/WarningToast.vue';
 import { useForm, usePage } from '@inertiajs/vue3';
 import { onMounted, ref, watch } from 'vue';
 import PlainBlackButton from '@/Components/Buttons/PlainBlackButton.vue';
+import { Vue3Lottie } from 'vue3-lottie';
 
 const props = defineProps({
     aif: Object,
@@ -87,10 +88,81 @@ const getRelation = async () => {
         console.error('Error fetching data:', error);
     }
 }
+const api_name_suffix = ref([])
+const name_suffix_loading = ref(true)
+const formatted_name_suffix = ref([])
+const getNameSuffix = async () => {
+    try {
+        
+        const response = await axios.get(props.api_url+'api/admin/name-suffixes?per_page=300', {
+                headers: {
+                    Authorization: `Bearer ${props.api_token}`,
+                },
+            });
+            api_name_suffix.value = response.data
+        
+    } catch (error) {
+        console.error('Error fetching data:', error);
+    }
+}
+
+const api_civil_status = ref([])
+const civil_status_loading = ref(true)
+const formatted_civil_status = ref([])
+const getCivilStatus = async () => {
+    try {
+        
+        const response = await axios.get(props.api_url+'api/admin/civil-statuses?per_page=300', {
+                headers: {
+                    Authorization: `Bearer ${props.api_token}`,
+                },
+            });
+            api_civil_status.value = response.data
+        
+    } catch (error) {
+        console.error('Error fetching data:', error);
+    }
+}
+
+const api_nationality = ref([])
+const nationality_loading = ref(true)
+const formatted_nationality = ref([])
+const getNationality = async () => {
+    try {
+        
+        const response = await axios.get(props.api_url+'api/admin/nationalities?per_page=300', {
+                headers: {
+                    Authorization: `Bearer ${props.api_token}`,
+                },
+            });
+            api_nationality.value = response.data
+        
+    } catch (error) {
+        console.error('Error fetching data:', error);
+    }
+}
 
 const formatAPItoComponent = (data, type) => {
     switch (type) {
         case 'relation':
+            return data.data.map(list => ({
+              id: list.description,
+              name: list.description
+            }));
+            break;
+        case 'name_suffix':
+            return data.data.map(list => ({
+              id: list.description,
+              name: list.description
+            }));
+            break;
+        case 'civil_status':
+            return data.data.map(list => ({
+              id: list.description,
+              name: list.description
+            }));
+            break;
+        case 'nationality':
             return data.data.map(list => ({
               id: list.description,
               name: list.description
@@ -115,6 +187,18 @@ onMounted(() => {
     getRelation().then(() => {
         formatted_relation.value = formatAPItoComponent(api_relation.value, 'relation')
         relation_loading.value = false
+    })
+    getNameSuffix().then(() => {
+        formatted_name_suffix.value = formatAPItoComponent(api_name_suffix.value, 'name_suffix')
+        name_suffix_loading.value = false
+    })
+    getCivilStatus().then(() => {
+        formatted_civil_status.value = formatAPItoComponent(api_civil_status.value, 'civil_status')
+        civil_status_loading.value = false
+    })
+    getNationality().then(() => {
+        formatted_nationality.value = formatAPItoComponent(api_nationality.value, 'nationality')
+        nationality_loading.value = false
     })
 })
 
@@ -176,13 +260,21 @@ onMounted(() => {
                         required
                     />
                 </div>
-                <div class="col-span-full lg:col-span-3">
+                <div v-if="!name_suffix_loading" class="col-span-full lg:col-span-3">
                     <SelectInput 
                         v-model="form.name_suffix"
                         label="Suffix"
-                        :options="nameSuffixList"
+                        :options="formatted_name_suffix"
                         :errorMessage="form.errors.name_suffix"
                     />
+                </div>
+                <div v-else class="col-span-full lg:col-span-3 flex items-center justify-center">
+                    <div class="w-20">
+                        <Vue3Lottie 
+                            animationLink="/animation/simple_loading_animation.json" 
+                            width="100%" 
+                        />
+                    </div>
                 </div>
                 <div class="col-span-full lg:col-span-4">
                     <TextInput 
@@ -192,13 +284,21 @@ onMounted(() => {
                         :errorMessage="form.errors.mothers_maiden_name"
                     />
                 </div>
-                <div class="col-span-full lg:col-span-3">
+                <div v-if="!civil_status_loading" class="col-span-full lg:col-span-3">
                     <SelectInput 
                         v-model="form.civil_status"
                         label="Civil Status"
-                        :options="civilStatusList"
+                        :options="formatted_civil_status"
                         :errorMessage="form.errors.civil_status"
                     />
+                </div>
+                <div v-else class="col-span-full lg:col-span-3 flex items-center justify-center">
+                    <div class="w-20">
+                        <Vue3Lottie 
+                            animationLink="/animation/simple_loading_animation.json" 
+                            width="100%" 
+                        />
+                    </div>
                 </div>
                 <div class="col-span-full lg:col-span-2">
                     <SelectInput 
@@ -208,13 +308,21 @@ onMounted(() => {
                         :errorMessage="form.errors.sex"
                     />
                 </div>
-                <div class="col-span-full lg:col-span-3">
+                <div v-if="!nationality_loading" class="col-span-full lg:col-span-3">
                     <SelectInput 
                         v-model="form.nationality"
                         label="Nationality"
                         :options="nationalityList"
                         :errorMessage="form.errors.nationality"
                     />
+                </div>
+                <div v-else class="col-span-full lg:col-span-3 flex items-center justify-center">
+                    <div class="w-20">
+                        <Vue3Lottie 
+                            animationLink="/animation/simple_loading_animation.json" 
+                            width="100%" 
+                        />
+                    </div>
                 </div>
                 <div class="col-span-full lg:col-span-3">
                     <DatePicker 

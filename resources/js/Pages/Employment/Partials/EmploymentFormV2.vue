@@ -158,7 +158,7 @@ const formatted_employment_status = ref([])
 const getEmploymentStatus = async () => {
     try {
         
-        const response = await axios.get(props.api_url+'api/admin/employment-statuses?per_page=300', {
+        const response = await axios.get(props.api_url+'api/admin/employment-statuses?filter[active]=1&per_page=300', {
                 headers: {
                     Authorization: `Bearer ${props.api_token}`,
                 },
@@ -493,24 +493,24 @@ onMounted(() => {
                         v-model="form.employment_type"
                         label="Employment Type"
                         required
-                        :options="employmentTypeList"
+                        :options="formatted_employment_type"
                         :errorMessage="form.errors.employment_type"
                     />
                 </div>
                 <div v-else class="col-span-full lg:col-span-4 flex items-center justify-center">
-                        <div class="w-20">
-                            <Vue3Lottie 
-                                animationLink="/animation/simple_loading_animation.json" 
-                                width="100%" 
-                            />
-                        </div>
+                    <div class="w-20">
+                        <Vue3Lottie 
+                            animationLink="/animation/simple_loading_animation.json" 
+                            width="100%" 
+                        />
                     </div>
+                </div>
                 <template v-if="form.employment_type != 'Self-Employed'">
                     <div v-if="!employment_status_loading" class="col-span-full lg:col-span-2">
                         <SelectInput 
                             v-model="form.employment_status"
                             label="Employment Status"
-                            :options="employmentStatusList"
+                            :options="formatted_employment_status"
                             :errorMessage="form.errors.employment_status"
                             required
                         />

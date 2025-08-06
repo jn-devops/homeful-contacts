@@ -63,6 +63,7 @@ const form = useForm({
     postal_code: address()?.postal_code,
     region: address()?.region,
     country: address()?.country ?? 'PH',
+    full_address: address()?.full_address ?? '',
     sameWithPermanentAddress: props.sameWithPermanentAddress,
 })
 
@@ -229,6 +230,17 @@ const formatAPItoComponent = (data, type) => {
     }
 };
 
+const concatinateFullAddress = () => {
+    let sublocality = formatted_api_barangay.value.find(item => item.id === form.sublocality);
+    let locality = formatted_api_city.value.find(item => item.id === form.locality);
+    let administrative_area = formatted_api_province.value.find(item => item.id === form.administrative_area);
+    if(form.region == 13){
+        form.full_address = `${form.address1} ${sublocality?.name ?? ''} ${locality?.name ?? ''}`;
+    }else{
+        form.full_address = `${form.address1} ${sublocality?.name ?? ''} ${locality?.name ?? ''} ${administrative_area?.name ?? ''}`;
+    }
+}
+
 watch(form, (newValue, oldValue) => {
     hasValidationError.value = (form.hasErrors) ? true : false;
 });
@@ -281,6 +293,7 @@ watch(
         getProvince(newValue).then(() => {
             formatted_api_province.value = formatAPItoComponent(api_province.value, 'province')
             province_loading.value = false
+            concatinateFullAddress()
         })
     }
 )
@@ -292,6 +305,7 @@ watch(
         getCity(form.region, newValue).then(() => {
             formatted_api_city.value = formatAPItoComponent(api_city.value, 'city')
             city_loading.value = false
+            concatinateFullAddress()
         })
     }
 )
@@ -303,7 +317,22 @@ watch(
         getBarangay(form.region, form.administrative_area, newValue).then(() => {
             formatted_api_barangay.value = formatAPItoComponent(api_barangay.value, 'barangay')
             barangay_loading.value = false
+            concatinateFullAddress()
         })
+    }
+)
+
+watch(
+    () => form.sublocality,
+    (newValue, oldValue) => {
+        concatinateFullAddress()
+    }
+)
+
+watch(
+    () => form.address1,
+    (newValue, oldValue) => {
+        concatinateFullAddress()
     }
 )
 
@@ -482,6 +511,15 @@ onMounted(() => {
                         label="Zip Code"
                         placeholder="Enter Zip Code"
                         :errorMessage="form.errors.postal_code"
+                        required
+                    />
+                </div>
+                <div class="col-span-full">
+                    <TextInput
+                        v-model="form.full_address"
+                        label="Full Address"
+                        placeholder="Enter Full Address"
+                        :errorMessage="form.errors.full_address"
                         required
                     />
                 </div>

@@ -134,6 +134,8 @@ const saveFormToLogout = () => {
                 :contact = "page.props.auth.user.contact"
                 co_borrower_type = "Primary"
                 ref="primaryCoboSpouse"
+                :api_token="lazarus_token"
+                :api_url="lazarus_url"
             />
 
             <CoBorrowerAddress

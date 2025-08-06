@@ -77,6 +77,7 @@ const form = useForm({
     administrative_area: address()?.administrative_area,
     postal_code: address()?.postal_code,
     region: address()?.region,
+    full_address: address()?.full_address ?? '',
     country: address()?.country ?? 'PH'
 })
 
@@ -165,6 +166,34 @@ const getBarangay = async (region_code = null, province_code = null, city_code =
     }
 }
 
+const ownership = ref([])
+const ownership_loading = ref(true)
+const formatted_ownership = ref([])
+const getOwnership = async () => {
+    try {
+        const response = await axios.get(props.api_url+'api/admin/home-ownerships?per_page=1000', {
+        headers: {
+            Authorization: `Bearer ${props.api_token}`,
+        },
+        });
+        ownership.value = response.data
+        
+    } catch (error) {
+        console.error('Error fetching data:', error);
+    }
+}
+
+const concatinateFullAddress = () => {
+    let sublocality = formatted_api_barangay.value.find(item => item.id === form.sublocality);
+    let locality = formatted_api_city.value.find(item => item.id === form.locality);
+    let administrative_area = formatted_api_province.value.find(item => item.id === form.administrative_area);
+    if(form.region == 13){
+        form.full_address = `${form.address1} ${sublocality?.name ?? ''} ${locality?.name ?? ''}`;
+    }else{
+        form.full_address = `${form.address1} ${sublocality?.name ?? ''} ${locality?.name ?? ''} ${administrative_area?.name ?? ''}`;
+    }
+}
+
 const formatAPItoComponent = (data, type) => {
     switch (type) {
         case 'region':
@@ -194,6 +223,12 @@ const formatAPItoComponent = (data, type) => {
         case 'country':
             return data.data.map(list => ({
               id: list.code,
+              name: list.description
+            }));
+            break;
+        case 'ownership':
+            return data.data.map(list => ({
+              id: list.description,
               name: list.description
             }));
             break;
@@ -262,6 +297,7 @@ watch(
         getProvince(newValue).then(() => {
             formatted_api_province.value = formatAPItoComponent(api_province.value, 'province')
             province_loading.value = false
+            concatinateFullAddress()
         })
     }
 )
@@ -273,6 +309,7 @@ watch(
         getCity(form.region, newValue).then(() => {
             formatted_api_city.value = formatAPItoComponent(api_city.value, 'city')
             city_loading.value = false
+            concatinateFullAddress()
         })
     }
 )
@@ -284,7 +321,22 @@ watch(
         getBarangay(form.region, form.administrative_area, newValue).then(() => {
             formatted_api_barangay.value = formatAPItoComponent(api_barangay.value, 'barangay')
             barangay_loading.value = false
+            concatinateFullAddress()
         })
+    }
+)
+
+watch(
+    () => form.sublocality,
+    (newValue, oldValue) => {
+        concatinateFullAddress()
+    }
+)
+
+watch(
+    () => form.address1,
+    (newValue, oldValue) => {
+        concatinateFullAddress()
     }
 )
 
@@ -296,6 +348,10 @@ onMounted(() => {
     getCountries().then(() => {
         formatted_country.value = formatAPItoComponent(countries.value, 'country')
         country_loading.value = false
+    })
+    getOwnership().then(() => {
+        formatted_ownership.value = formatAPItoComponent(ownership.value, 'ownership')
+        ownership_loading.value = false
     })
 })
 
@@ -333,14 +389,22 @@ onMounted(() => {
         >
             <h3 class="font-bold text-[#006FFD] mt-4">CO-BORROWER ADDRESS:</h3>
             <div class="grid grid-cols-12 gap-4">
-                <div class="col-span-full lg:col-span-2">
+                <div v-if="!ownership_loading" class="col-span-full lg:col-span-2">
                     <SelectInput
                         v-model="form.ownership"
                         label="Ownership"
-                        :options="ownershipList"
+                        :options="formatted_ownership"
                         :errorMessage="form.errors.ownership"
                         required
                     />
+                </div>
+                <div v-else class="col-span-full lg:col-span-2 flex items-center justify-center">
+                    <div class="w-20">
+                        <Vue3Lottie 
+                            animationLink="/animation/simple_loading_animation.json" 
+                            width="100%" 
+                        />
+                    </div>
                 </div>
                 <div v-if="!country_loading" class="col-span-full lg:col-span-2">
                     <SelectInput
@@ -445,7 +509,15 @@ onMounted(() => {
                         required
                     />
                 </div>
-                
+                <div class="col-span-full">
+                    <TextInput
+                        v-model="form.full_address"
+                        label="Full Address"
+                        placeholder="Enter Full Address"
+                        :errorMessage="form.errors.full_address"
+                        required
+                    />
+                </div>
             </div>
             <div class="w-full lg:flex lg:flex-row lg:items-center lg:justify-center text-center pb-10">
                 <div class="w-full lg:w-64">
