@@ -149,6 +149,7 @@ class LazarusAPIController extends Controller
                 $lazarus_id = $response->json()['data']['id'];
                 $lazarus_data = [
                     'order' => $response->json()['data']['order'] ?? [],
+                    'homeful_contact_id' => $validated['contact_id'] ?? null,
                 ];
                 $lazarus_data['order']['homeful_id'] = $homeful_id;
                 if($validated['project_code']){
