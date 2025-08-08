@@ -290,7 +290,7 @@ const formatted_industry = ref([])
 const getIndustry = async () => {
     try {
         
-        const response = await axios.get(props.api_url+'api/admin/work-industries?per_page=300', {
+        const response = await axios.get(props.api_url+'api/admin/work-industries?filter[active]=1&per_page=300', {
                 headers: {
                     Authorization: `Bearer ${props.api_token}`,
                 },
