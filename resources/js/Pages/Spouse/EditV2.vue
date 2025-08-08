@@ -58,9 +58,9 @@ const navigateToNext = (toSave = false) => {
 }
 
 const saveForm = () => {
-    if (spouseEmployment.value.checkFormDirty()){
-        spouseEmployment.value.saveThisForm()
-    }
+    // if (spouseEmployment.value.checkFormDirty()){
+    //     spouseEmployment.value.saveThisForm()
+    // }
     if (spouseInfo.value.checkFormDirty()){
         spouseInfo.value.saveThisForm()
     }
