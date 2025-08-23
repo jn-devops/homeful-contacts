@@ -11,7 +11,7 @@ class SendSMS
 
     public function handle(string $mobile, string $message)
     {
-        $apiUrl = 'https://api.engagespark.com/v1/sms/contact';
+        $apiUrl = 'https://api.engagespark.com/v1/sms/phonenumber';
         $apiKey = config('engagespark.api_key');
 
         $response = Http::withHeaders([
