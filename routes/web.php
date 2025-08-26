@@ -61,6 +61,7 @@ Route::get('/signature', function () {
 Route::get('/get-number-of-attachments', [MediaController::class, 'getNumberOfAttachments'])->name('media.get_number_of_attachments');
 
 Route::get('/consult-page', [RedirectControllers::class, 'redirect_to_consult'])->name('consult-page');
+Route::get('/redirect-via-homeful-id/{homeful_id}', [RedirectControllers::class, 'redirect_via_homeful_id'])->name('redurect-via-homeful-id');
 Route::resource('unqualified-user', UnqualifiedUser::class)->only(['create', 'store']);
 
 
